@@ -1,0 +1,8 @@
+{
+  "name": "local-matters",
+  "version": "1.0.0",
+  "description": "Local Matters — personal advocacy website",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
