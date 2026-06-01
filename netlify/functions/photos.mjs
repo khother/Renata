@@ -116,4 +116,4 @@ export default async (req) => {
   return json({ error: `Unknown action: ${action}` }, 400);
 };
 
-export const config = { path: '/photos' };
+// No custom path - function is available at /.netlify/functions/photos
