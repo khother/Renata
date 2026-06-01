@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Local Matters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --sage:#4A6741; --sage2:#5D7F54; --sage3:#3A5232; --sagel:#EEF3EB; --sagelm:#DCE9D6;
+  --moss:#2D4A25; --leaf:#8AB87A; --leafl:#C8DFC0;
+  --ink:#1E2B1A; --ink2:#3A4A36; --mid:#6B7B66; --faint:#9BAA96;
+  --paper:#FAFDF7; --card:#FFFFFF; --surface:#F2F7EE; --border:rgba(74,103,65,.13);
+  --serif:'Lora',Georgia,serif; --sans:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',monospace;
+  --nav-h:56px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);}
+nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:5000;background:var(--moss);display:flex;align-items:center;border-bottom:3px solid var(--leaf);}
+.nav-brand{font-family:var(--serif);font-size:19px;color:#fff;padding:0 22px;border-right:1px solid rgba(255,255,255,.15);font-style:italic;white-space:nowrap;}
+.nav-main{display:flex;align-items:stretch;flex:1;height:100%;}
+.nav-main a{display:flex;align-items:center;padding:0 16px;font-size:12px;font-weight:500;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.6);text-decoration:none;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .15s;white-space:nowrap;}
+.nav-main a:hover,.nav-main a.on{color:#fff;border-bottom-color:var(--leaf);}
+.nav-side-link{padding:0 14px;font-size:11px;color:rgba(255,255,255,.5);text-decoration:none;display:flex;align-items:center;white-space:nowrap;border-left:1px solid rgba(255,255,255,.1);transition:color .15s;}
+.nav-side-link:hover{color:var(--leaf);}
+.admin-badge{display:none;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5);padding:0 14px;border-left:1px solid rgba(255,255,255,.12);}
+.admin-badge.on{display:flex;}
+.admin-dot{width:6px;height:6px;border-radius:50%;background:#8FBD5A;}
+.shell{display:flex;min-height:calc(100vh - var(--nav-h));margin-top:var(--nav-h);}
+.main-col{flex:1;min-width:0;}
+.side-col{width:240px;flex-shrink:0;background:var(--surface);border-left:1px solid var(--border);padding:28px 20px;display:flex;flex-direction:column;gap:24px;}
+.side-h{font-family:var(--serif);font-size:13px;color:var(--sage3);font-weight:600;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.side-link{display:block;padding:7px 10px;font-size:13px;color:var(--ink2);text-decoration:none;border-radius:5px;transition:background .12s;margin-bottom:2px;line-height:1.4;}
+.side-link:hover{background:var(--sagelm);}
+.side-link small{display:block;font-size:11px;color:var(--faint);margin-top:1px;}
+.page{display:none;}
+.page.on{display:block;}
+/* HOME */
+.home-hero{background:linear-gradient(135deg,var(--moss) 0%,var(--sage) 60%,var(--sage2) 100%);color:#fff;padding:60px 52px 52px;}
+.home-hero h1{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:600;line-height:1.15;margin-bottom:12px;}
+.home-hero h1 em{font-style:italic;font-weight:400;color:var(--leaf);}
+.home-hero p{font-size:15px;color:rgba(255,255,255,.7);max-width:480px;line-height:1.7;font-weight:300;}
+.stories-main{padding:40px 52px;}
+.upload-bar{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--sagel);border:1px dashed var(--leafl);border-radius:8px;margin-bottom:28px;cursor:pointer;transition:background .15s;}
+.upload-bar:hover{background:var(--sagelm);}
+.upload-bar p{font-size:13px;color:var(--sage);flex:1;}
+.upload-bar p small{display:block;color:var(--faint);font-size:11px;}
+.upload-btn{padding:7px 16px;background:var(--sage);color:#fff;border:none;border-radius:5px;font-size:12px;font-weight:500;font-family:var(--sans);cursor:pointer;}
+.year-row{display:flex;align-items:center;gap:8px;margin-bottom:24px;flex-wrap:wrap;}
+.year-row span{font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.6px;}
+.ybtn{padding:4px 13px;border-radius:20px;font-size:12px;border:1px solid var(--border);background:var(--card);color:var(--mid);cursor:pointer;font-family:var(--sans);transition:all .12s;}
+.ybtn:hover,.ybtn.on{background:var(--sage);color:#fff;border-color:var(--sage);}
+.story-group{margin-bottom:52px;}
+.sg-bar{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--sagelm);}
+.sg-year{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--sage3);letter-spacing:-1px;}
+.sg-meta{font-size:11px;color:var(--faint);}
+.sg-story{font-size:14px;color:var(--ink2);line-height:1.8;padding:16px 18px;background:var(--sagel);border-radius:6px;border-left:3px solid var(--leaf);min-height:50px;outline:none;margin-bottom:6px;}
+.sg-story[contenteditable="true"]:focus{border-left-color:var(--sage);background:var(--sagelm);}
+.sg-save-btn{font-size:11px;color:var(--sage);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;margin-bottom:14px;display:block;}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+.photo-card{border-radius:6px;overflow:hidden;position:relative;aspect-ratio:4/3;cursor:pointer;background:var(--surface);}
+.photo-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+.photo-card:hover img{transform:scale(1.04);}
+.photo-cap{position:absolute;bottom:0;left:0;right:0;padding:6px 10px;background:linear-gradient(transparent,rgba(0,0,0,.55));color:#fff;font-size:11px;opacity:0;transition:opacity .2s;}
+.photo-card:hover .photo-cap{opacity:1;}
+.del-ph{position:absolute;top:5px;right:5px;background:rgba(0,0,0,.45);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:11px;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1;}
+.photo-card:hover .del-ph{display:flex;}
+/* BLOG */
+.blog-wrap{padding:48px 52px;max-width:780px;}
+.blog-wrap h2{font-family:var(--serif);font-size:38px;font-weight:600;letter-spacing:-.5px;margin-bottom:6px;}
+.blog-wrap .sub{font-size:14px;color:var(--mid);margin-bottom:32px;}
+.new-post-box{background:var(--sagel);border:1px solid var(--border);border-radius:8px;padding:22px;margin-bottom:36px;}
+.new-post-box h4{font-family:var(--serif);font-size:14px;color:var(--sage3);margin-bottom:12px;}
+.field{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:13px;color:var(--ink);background:#fff;outline:none;margin-bottom:10px;}
+.field:focus{border-color:var(--sage);}
+textarea.field{min-height:90px;resize:vertical;}
+.post-btn{background:var(--sage);color:#fff;border:none;padding:9px 20px;border-radius:5px;font-size:12px;font-weight:500;font-family:var(--sans);cursor:pointer;}
+.blog-feed{display:flex;flex-direction:column;gap:32px;}
+.bpost{border-bottom:1px solid var(--border);padding-bottom:32px;}
+.bpost:last-child{border-bottom:none;}
+.bpost-date{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.8px;margin-bottom:6px;}
+.bpost-title{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.2px;margin-bottom:8px;line-height:1.3;}
+.bpost-body{font-size:14px;color:var(--ink2);line-height:1.8;}
+.bpost-del{margin-top:8px;font-size:11px;color:var(--faint);background:none;border:none;cursor:pointer;font-family:var(--sans);}
+/* ACT PAGE */
+#pg-act{display:none;flex-direction:column;}
+#pg-act.on{display:flex;}
+.act-header{background:var(--moss);color:#fff;padding:36px 52px;}
+.act-header h2{font-family:var(--serif);font-size:34px;font-weight:600;margin-bottom:8px;}
+.act-header p{font-size:14px;color:rgba(255,255,255,.65);max-width:560px;line-height:1.7;}
+.act-vote{display:flex;gap:0;margin-top:18px;border-radius:6px;overflow:hidden;max-width:460px;}
+.avb{padding:10px 18px;font-size:12px;}
+.avb .vn{font-family:var(--serif);font-size:22px;font-weight:600;color:#fff;line-height:1;}
+.avb .vl{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:rgba(255,255,255,.6);margin-top:2px;}
+.avb.for{background:rgba(180,50,30,.4);}
+.avb.against{background:rgba(80,160,60,.3);}
+.avb.note{background:rgba(255,255,255,.08);}
+.act-body{display:flex;flex:1;min-height:0;}
+.act-map-col{flex:1;display:flex;flex-direction:column;}
+.act-map-top{background:var(--card);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap;}
+.search-wrap{position:relative;flex:1;max-width:280px;}
+.search-input{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:13px;color:var(--ink);background:var(--surface);outline:none;}
+.search-input:focus{border-color:var(--sage);}
+.sr-drop{position:absolute;top:38px;left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:5px;z-index:6000;max-height:200px;overflow-y:auto;box-shadow:0 4px 14px rgba(0,0,0,.10);}
+.sr-item{padding:8px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid var(--border);}
+.sr-item:last-child{border-bottom:none;}
+.sr-item:hover{background:var(--surface);}
+.lbtn{padding:5px 12px;border-radius:20px;font-size:11px;border:1px solid var(--border);background:var(--surface);color:var(--mid);cursor:pointer;font-family:var(--sans);transition:all .12s;}
+.lbtn.on{background:var(--sage);color:#fff;border-color:var(--sage);}
+#map-canvas{flex:1;min-height:500px;}
+.map-ov{position:absolute;inset:0;background:rgba(242,247,238,.9);z-index:4000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;}
+.spin{width:30px;height:30px;border:3px solid rgba(74,103,65,.2);border-top-color:var(--sage);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.map-legend{position:absolute;bottom:16px;right:10px;z-index:900;background:rgba(255,255,255,.95);border:1px solid var(--border);border-radius:6px;padding:10px 14px;font-size:11px;}
+.map-legend h5{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:7px;}
+.lr{display:flex;align-items:center;gap:7px;margin-bottom:4px;color:var(--mid);}
+.ls{width:13px;height:9px;border-radius:2px;flex-shrink:0;}
+.act-sb{width:300px;flex-shrink:0;border-left:1px solid var(--border);background:var(--card);display:flex;flex-direction:column;overflow:hidden;}
+.abtabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface);}
+.abtab{flex:1;padding:9px 4px;font-size:10px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;border:none;background:none;cursor:pointer;color:var(--faint);border-bottom:2px solid transparent;font-family:var(--sans);}
+.abtab.on{color:var(--ink);border-bottom-color:var(--sage);background:var(--card);}
+.abpanel{display:none;flex:1;overflow-y:auto;flex-direction:column;}
+.abpanel.on{display:flex;}
+.map-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;color:var(--faint);text-align:center;gap:10px;padding:24px;}
+.map-empty p{font-size:13px;line-height:1.6;}
+.icard{padding:16px;overflow-y:auto;}
+.icard h3{font-family:var(--serif);font-size:15px;margin-bottom:5px;line-height:1.3;}
+.atag{display:inline-block;padding:3px 9px;border-radius:3px;font-size:11px;font-weight:500;margin-bottom:12px;background:#F5EBE8;color:#8B2010;}
+.isec{margin-bottom:14px;}
+.isec-t{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.6px;color:var(--faint);margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.idot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.irow{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.05);font-size:12px;}
+.irow:last-child{border-bottom:none;}
+.irow .k{color:var(--faint);}
+.irow .v{color:var(--ink);font-weight:500;text-align:right;max-width:65%;}
+.stags{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px;}
+.stag{background:var(--surface);border:1px solid var(--border);border-radius:3px;padding:3px 7px;font-size:11px;color:var(--ink2);}
+.stag.a{border-left:3px solid #8B2010;}
+.stag.p{border-left:3px solid var(--sage);}
+.mp-box{background:var(--sagel);border-radius:6px;padding:12px;margin-top:6px;border:1px solid var(--border);}
+.mpn{font-weight:500;font-size:13px;margin-bottom:2px;}
+.mps{font-size:11px;color:var(--faint);margin-bottom:6px;}
+.mpill{display:inline-block;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;margin-bottom:8px;}
+.vote-line{display:flex;align-items:flex-start;gap:8px;font-size:11px;margin-bottom:5px;}
+.vi{font-size:13px;width:18px;flex-shrink:0;}
+.mbtn{display:block;width:100%;padding:9px;margin-top:8px;border-radius:5px;font-size:12px;font-family:var(--sans);font-weight:500;cursor:pointer;text-align:center;text-decoration:none;border:none;transition:background .12s;}
+.mbtn-solid{background:var(--sage);color:#fff;}.mbtn-solid:hover{background:var(--sage3);}
+.mbtn-ghost{background:transparent;color:var(--ink);border:1px solid var(--border);}.mbtn-ghost:hover{background:var(--sagelm);}
+/* LIGHTBOX */
+#lb{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
+#lb.open{display:flex;}
+#lb-img{max-width:90vw;max-height:82vh;object-fit:contain;border-radius:4px;}
+#lb-close{position:absolute;top:14px;right:18px;color:#fff;font-size:26px;cursor:pointer;background:none;border:none;}
+.lb-nav{display:flex;gap:16px;}
+.lb-nav button{background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:4px;padding:7px 18px;cursor:pointer;font-size:14px;}
+/* PASSWORD */
+#pw-modal{display:none;position:fixed;inset:0;background:rgba(26,43,26,.8);z-index:9999;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+#pw-modal.open{display:flex;}
+.pw-box{background:var(--card);border-radius:10px;padding:36px 40px;width:320px;max-width:92vw;box-shadow:0 8px 40px rgba(0,0,0,.3);}
+.pw-box h3{font-family:var(--serif);font-size:20px;margin-bottom:6px;}
+.pw-box p{font-size:13px;color:var(--mid);margin-bottom:20px;line-height:1.6;}
+.pw-input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:5px;font-size:14px;font-family:var(--sans);outline:none;margin-bottom:10px;}
+.pw-input:focus{border-color:var(--sage);}
+.pw-input.error{border-color:#C0392B;background:#FEF5F5;}
+.pw-btn{width:100%;padding:11px;background:var(--sage);color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:500;font-family:var(--sans);cursor:pointer;}
+.pw-err{font-size:12px;color:#C0392B;margin-top:6px;display:none;}
+body:not(.is-admin) .admin-only{display:none!important;}
+/* TOAST */
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:rgba(30,43,26,.92);color:#fff;padding:8px 20px;border-radius:20px;font-size:12px;z-index:9998;pointer-events:none;opacity:0;transition:opacity .4s;white-space:nowrap;max-width:90vw;text-align:center;}
+/* MOBILE */
+@media(max-width:900px){.side-col{display:none;}.stories-main,.act-header,.blog-wrap,.act-blog-wrap{padding-left:24px;padding-right:24px;}.home-hero{padding:40px 24px 32px;}}
+@media(max-width:700px){.nav-side-link{display:none;}.act-body{flex-direction:column;}.act-sb{width:100%;border-left:none;border-top:1px solid var(--border);}.photo-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));}.blog-wrap{padding:32px 20px;}.stories-main{padding:24px 20px;}.home-hero{padding:32px 20px 24px;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Local Matters</div>
+  <div class="nav-main">
+    <a href="#" onclick="nav('home')"  id="nl-home" class="on">Stories</a>
+    <a href="#" onclick="nav('blog')"  id="nl-blog">Blog</a>
+    <a href="#" onclick="nav('act')"   id="nl-act">Conservation Map</a>
+  </div>
+  <div class="admin-badge" id="admin-badge">
+    <span class="admin-dot"></span><span>Admin</span>
+    <button onclick="signOut()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:11px;cursor:pointer;padding:0 0 0 8px;font-family:var(--sans)">Sign out</button>
+  </div>
+  <a href="https://www.forestandbird.org.nz" target="_blank" class="nav-side-link">Forest &amp; Bird</a>
+  <a href="https://fmc.org.nz" target="_blank" class="nav-side-link">FMC</a>
+</nav>
+
+<div class="shell">
+  <div class="main-col">
+
+    <!-- STORIES PAGE -->
+    <div class="page on" id="pg-home">
+      <div class="home-hero">
+        <h1>My <em>local</em> matters.</h1>
+        <p>Photos, places and stories from Aotearoa New Zealand — collected over the years.</p>
+      </div>
+      <div class="stories-main">
+        <div class="upload-bar admin-only" onclick="document.getElementById('ph-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
+          <span style="font-size:24px;opacity:.5">📷</span>
+          <p>Add photos<small>Drag & drop or click · Year auto-detected from filename</small></p>
+          <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('ph-input').click()">Upload</button>
+          <input type="file" id="ph-input" multiple accept="image/*" onchange="handleFiles(this.files)" style="display:none">
+        </div>
+        <div class="year-row">
+          <span>Filter:</span>
+          <div id="year-nav"></div>
+        </div>
+        <div id="story-groups"></div>
+      </div>
+    </div>
+
+    <!-- BLOG PAGE -->
+    <div class="page" id="pg-blog">
+      <div class="blog-wrap">
+        <h2>Blog</h2>
+        <p class="sub">Personal notes and reflections</p>
+        <div class="new-post-box admin-only">
+          <h4>New post</h4>
+          <input class="field" type="text" id="bp-title" placeholder="Title…">
+          <textarea class="field" id="bp-body" placeholder="Write here…"></textarea>
+          <button class="post-btn" onclick="addPost('personal')">Publish</button>
+        </div>
+        <div class="blog-feed" id="blog-feed"></div>
+      </div>
+    </div>
+
+    <!-- CONSERVATION MAP PAGE -->
+    <div class="page" id="pg-act">
+      <div class="act-header">
+        <h2>Conservation Map</h2>
+        <p>The Conservation Amendment Bill would open approximately 60% of New Zealand's conservation land to sale or commercial development.</p>
+        <div class="act-vote">
+          <div class="avb for"><div class="vn">68</div><div class="vl">Voted FOR bill<br>Nat · ACT · NZ First</div></div>
+          <div class="avb against"><div class="vn">54</div><div class="vl">Voted AGAINST<br>Labour · Green · TPM</div></div>
+          <div class="avb note"><div class="vn" style="font-size:12px;margin-top:4px">First reading<br>May 2026</div></div>
+        </div>
+      </div>
+      <div class="act-body">
+        <div class="act-map-col">
+          <div class="act-map-top">
+            <div class="search-wrap">
+              <input class="search-input" id="place-search" type="text" placeholder="Search any NZ place…" oninput="searchPlace(this.value)" autocomplete="off">
+              <div class="sr-drop" id="sr-drop" style="display:none"></div>
+            </div>
+            <button class="lbtn on" id="lb-risk" onclick="toggleL('risk',this)">At-risk land</button>
+          </div>
+          <div style="position:relative;flex:1;min-height:500px;">
+            <div class="map-ov" id="map-ov">
+              <div class="spin"></div>
+              <p id="map-ovmsg" style="font-size:13px;color:var(--mid)">Loading…</p>
+              <p id="map-ovprog" style="font-size:11px;color:var(--faint)"></p>
+            </div>
+            <div id="map-canvas" style="height:100%;min-height:500px;"></div>
+            <div class="map-legend">
+              <h5>At-risk land</h5>
+              <div class="lr"><div class="ls" style="background:#8B1A0A;opacity:.8"></div>Conservation Park</div>
+              <div class="lr"><div class="ls" style="background:#C0392B;opacity:.7"></div>Stewardship Area</div>
+              <div class="lr"><div class="ls" style="background:#E67E22;opacity:.6"></div>Other</div>
+            </div>
+          </div>
+        </div>
+        <div class="act-sb">
+          <div class="abtabs">
+            <button class="abtab on" onclick="mst('info')">Area info</button>
+            <button class="abtab"    onclick="mst('filter')">Filter</button>
+          </div>
+          <div class="abpanel on" id="asp-info">
+            <div class="map-empty" id="map-empty">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+              <p>Click any polygon to see threatened species and your local MP</p>
+            </div>
+            <div class="icard" id="icard" style="display:none">
+              <h3 id="ic-name"></h3>
+              <span class="atag">At risk of disposal</span>
+              <div class="isec"><div class="isec-t">Details</div><div id="ic-det"></div></div>
+              <div class="isec"><div class="isec-t"><span class="idot" style="background:#8B2010"></span>Threatened animals</div><div class="stags" id="ic-ani"></div></div>
+              <div class="isec"><div class="isec-t"><span class="idot" style="background:var(--sage)"></span>Threatened plants</div><div class="stags" id="ic-pla"></div></div>
+              <div class="isec"><div class="isec-t">Local MP &amp; voting record</div><div id="ic-mp"></div></div>
+            </div>
+          </div>
+          <div class="abpanel" id="asp-filter" style="padding:14px;">
+            <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.6px;color:var(--faint);margin-bottom:8px">Section type</div>
+            <div id="fl-sec"></div>
+          </div>
+        </div>
+      </div>
+      <div class="act-blog-wrap blog-wrap">
+        <h3 style="font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:6px">What I'm learning</h3>
+        <p class="sub">Day-to-day notes on the Conservation Amendment Bill</p>
+        <div class="new-post-box admin-only">
+          <h4>Add a note</h4>
+          <input class="field" type="text" id="act-title" placeholder="Title…">
+          <textarea class="field" id="act-body" placeholder="What did you find out today?"></textarea>
+          <button class="post-btn" onclick="addPost('act')">Save note</button>
+        </div>
+        <div class="blog-feed" id="act-feed"></div>
+      </div>
+    </div>
+
+  </div><!-- /main-col -->
+
+  <div class="side-col">
+    <div>
+      <div class="side-h">Things that matter to me</div>
+      <a href="#" onclick="nav('act');return false;" class="side-link">🌿 Conservation Map<small>Tracking the amendment bill</small></a>
+      <a href="https://www.forestandbird.org.nz" target="_blank" class="side-link">🦅 Forest &amp; Bird NZ</a>
+      <a href="https://fmc.org.nz" target="_blank" class="side-link">🥾 Federated Mountain Clubs</a>
+      <a href="https://www.parliament.nz/en/pb/sc/make-a-submission/" target="_blank" class="side-link">✍️ Make a submission<small>Parliament NZ</small></a>
+    </div>
+    <div>
+      <div class="side-h">Recent posts</div>
+      <div id="side-recent" style="font-size:12px;color:var(--mid);line-height:1.6"></div>
+    </div>
+    <div style="margin-top:auto">
+      <div class="side-h">Photo stats</div>
+      <div id="side-stats" style="font-size:12px;color:var(--mid);line-height:1.8"></div>
+    </div>
+    <div>
+      <div class="side-h">Admin</div>
+      <button onclick="showPasswordModal()" style="width:100%;padding:8px;background:var(--sage);color:#fff;border:none;border-radius:5px;font-size:12px;font-family:var(--sans);cursor:pointer;">Sign in as admin</button>
+    </div>
+  </div>
+</div><!-- /shell -->
+
+<div id="lb" onclick="if(event.target===this)closeLB()">
+  <button id="lb-close" onclick="closeLB()">✕</button>
+  <img id="lb-img" src="" alt="">
+  <div class="lb-nav">
+    <button onclick="lbMove(-1)">← Prev</button>
+    <button onclick="lbMove(1)">Next →</button>
+  </div>
+</div>
+
+<div id="pw-modal">
+  <div class="pw-box">
+    <h3>Admin sign in</h3>
+    <p>Enter the password to show upload and editing controls.</p>
+    <input class="pw-input" type="password" id="pw-input" placeholder="Password…" onkeydown="if(event.key==='Enter')tryPassword()">
+    <button class="pw-btn" onclick="tryPassword()">Sign in</button>
+    <div class="pw-err" id="pw-err">Incorrect password — try again.</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION
+// Change ADMIN_PASSWORD to your own password
+// ═══════════════════════════════════════════════════════════════
+const ADMIN_PASSWORD = 'localmatters2026';
+const API = '/.netlify/functions/photos';
+
+// ═══════════════════════════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════════════════════════
+let mapReady = false;
+function nav(name) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('.nav-main a').forEach(function(a){ a.classList.remove('on'); });
+  var pg = document.getElementById('pg-' + name);
+  if (pg) pg.classList.add('on');
+  var nl = document.getElementById('nl-' + name);
+  if (nl) nl.classList.add('on');
+  if (name === 'act' && !mapReady) { mapReady = true; setTimeout(initMap, 100); }
+  window.scrollTo(0, 0);
+  return false;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════
+var toastTimer;
+function toast(msg, dur) {
+  dur = dur || 3500;
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.opacity = '1';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.style.opacity = '0'; }, dur);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PASSWORD / ADMIN
+// ═══════════════════════════════════════════════════════════════
+var PW_KEY = 'lm-admin-pw';
+
+function isAdmin() { return document.body.classList.contains('is-admin'); }
+
+function setAdmin(on) {
+  document.body.classList.toggle('is-admin', on);
+  var b = document.getElementById('admin-badge');
+  if (b) b.classList.toggle('on', on);
+}
+
+function showPasswordModal() {
+  document.getElementById('pw-modal').classList.add('open');
+  setTimeout(function(){ document.getElementById('pw-input').focus(); }, 50);
+}
+
+function tryPassword() {
+  var input = document.getElementById('pw-input');
+  var pw = input.value.trim();
+  input.classList.remove('error');
+  document.getElementById('pw-err').style.display = 'none';
+  if (pw === ADMIN_PASSWORD) {
+    localStorage.setItem(PW_KEY, pw);
+    setAdmin(true);
+    document.getElementById('pw-modal').classList.remove('open');
+    input.value = '';
+    renderStories(); // re-render to show editable stories
+    toast('Admin on — editing controls now visible');
+  } else {
+    input.classList.add('error');
+    document.getElementById('pw-err').style.display = 'block';
+    input.select();
+  }
+}
+
+function signOut() {
+  localStorage.removeItem(PW_KEY);
+  setAdmin(false);
+  renderStories();
+  toast('Signed out');
+}
+
+function checkSavedPassword() {
+  var pw = localStorage.getItem(PW_KEY);
+  if (pw && pw === ADMIN_PASSWORD) { setAdmin(true); }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// API HELPERS
+// ═══════════════════════════════════════════════════════════════
+function apiUrl(action, key, overwrite) {
+  var url = API + '?action=' + action;
+  if (key) url += '&key=' + encodeURIComponent(key);
+  if (overwrite) url += '&overwrite=' + encodeURIComponent(overwrite);
+  return url;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// PHOTOS — loaded from Netlify Blobs
+// ═══════════════════════════════════════════════════════════════
+var photoCache = null;
+var IMAGE_EXT = /\.(jpg|jpeg|png|gif|webp|heic|heif)$/i;
+
+async function loadPhotos() {
+  try {
+    var res = await fetch(apiUrl('list'));
+    if (!res.ok) throw new Error('list failed ' + res.status);
+    var items = await res.json();
+    photoCache = items.filter(function(p) {
+      if (!p.key) return false;
+      if (p.key.startsWith('meta/')) return false;
+      return IMAGE_EXT.test(p.key);
+    }).map(function(p) {
+      if (!p.year || p.year === 'meta') {
+        var m = p.key.match(/^(20\d\d)\//);
+        p.year = m ? m[1] : String(new Date().getFullYear());
+      }
+      if (!p.name) {
+        p.name = p.key.split('/').pop().replace(/^\d+-/, '');
+      }
+      return p;
+    });
+    return photoCache;
+  } catch(e) {
+    console.warn('loadPhotos:', e.message);
+    photoCache = [];
+    return [];
+  }
+}
+
+function photoSrc(key) {
+  return apiUrl('get', key);
+}
+
+function yearFromFile(file) {
+  var m = file.name.match(/(20\d\d)/);
+  return m ? m[1] : String(new Date().getFullYear());
+}
+
+function handleFiles(files) {
+  Array.from(files).forEach(processFile);
+}
+
+function handleDrop(ev) {
+  ev.preventDefault();
+  ev.currentTarget.classList.remove('drag');
+  handleFiles(ev.dataTransfer.files);
+}
+
+function resizeImage(file, maxWidth) {
+  maxWidth = maxWidth || 1400;
+  return new Promise(function(resolve) {
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function() {
+      URL.revokeObjectURL(url);
+      var scale = Math.min(1, maxWidth / img.width);
+      var canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(resolve, 'image/jpeg', 0.82);
+    };
+    img.onerror = function() { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
+async function processFile(file) {
+  if (!file.type.startsWith('image/')) return;
+  var year = yearFromFile(file);
+  var tempKey = '__temp__' + Date.now();
+  if (!photoCache) photoCache = [];
+  photoCache.push({ key: tempKey, name: file.name, year: year, uploading: true });
+  renderStories();
+  toast('Uploading ' + file.name + '…', 8000);
+  try {
+    var resized = await resizeImage(file);
+    var form = new FormData();
+    form.append('file', resized, file.name);
+    form.append('year', year);
+    form.append('name', file.name);
+    var res = await fetch(apiUrl('upload'), { method: 'POST', body: form });
+    var data;
+    try { data = await res.json(); } catch(e) { data = {}; }
+    if (!res.ok) throw new Error(res.status + ': ' + (data.error || res.statusText));
+    var idx = photoCache.findIndex(function(p){ return p.key === tempKey; });
+    if (idx >= 0) photoCache[idx] = { key: data.key, name: file.name, year: year };
+    renderStories();
+    updateSideStats();
+    toast('Saved — ' + year);
+  } catch(e) {
+    photoCache = photoCache.filter(function(p){ return p.key !== tempKey; });
+    renderStories();
+    toast('Upload failed: ' + e.message, 7000);
+    console.error('Upload:', e);
+  }
+}
+
+async function delPhoto(key) {
+  if (!confirm('Delete this photo?')) return;
+  try {
+    await fetch(apiUrl('delete', key), { method: 'POST' });
+    photoCache = (photoCache || []).filter(function(p){ return p.key !== key; });
+    renderStories();
+    updateSideStats();
+    toast('Photo deleted');
+  } catch(e) {
+    toast('Delete failed: ' + e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STORIES — stored in Netlify Blobs as meta/stories.json
+// ═══════════════════════════════════════════════════════════════
+var storyCache = null;
+
+async function loadStories() {
+  try {
+    var res = await fetch(apiUrl('get', 'meta/stories.json'));
+    if (res.ok) {
+      var text = await res.text();
+      try {
+        var parsed = JSON.parse(text);
+        storyCache = (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {};
+      } catch(e) { storyCache = {}; }
+    } else {
+      storyCache = {};
+    }
+  } catch(e) {
+    storyCache = {};
+  }
+  return storyCache;
+}
+
+async function saveStory(year) {
+  var el = document.getElementById('st-' + year);
+  if (!el) return;
+  if (!storyCache) storyCache = {};
+  storyCache[year] = el.innerText;
+  var blob = new Blob([JSON.stringify(storyCache)], { type: 'application/json' });
+  var form = new FormData();
+  form.append('file', blob, 'stories.json');
+  form.append('year', 'meta');
+  form.append('name', 'stories.json');
+  try {
+    var res = await fetch(apiUrl('upload', null, 'meta/stories.json'), { method: 'POST', body: form });
+    if (res.ok) { toast('Story saved for ' + year); }
+    else { toast('Story save failed'); }
+  } catch(e) {
+    toast('Story save failed: ' + e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER STORIES
+// ═══════════════════════════════════════════════════════════════
+var activeYear = 'all';
+function filterYear(y) { activeYear = y; renderStories(); }
+
+function renderStories() {
+  var photos  = photoCache || [];
+  var stories = storyCache || {};
+  var admin   = isAdmin();
+
+  // Group by year
+  var byYear = {};
+  photos.forEach(function(p) {
+    var yr = (p.year && p.year !== 'meta') ? p.year : null;
+    if (!yr) return;
+    if (!byYear[yr]) byYear[yr] = [];
+    byYear[yr].push(p);
+  });
+
+  var years = Object.keys(byYear).sort(function(a,b){ return Number(b) - Number(a); });
+
+  // Year nav
+  var nav = document.getElementById('year-nav');
+  if (nav) {
+    nav.innerHTML = '<button class="ybtn ' + (activeYear==='all'?'on':'') + '" onclick="filterYear(\'all\')">All years</button>' +
+      years.map(function(y){
+        return '<button class="ybtn ' + (activeYear===y?'on':'') + '" onclick="filterYear(\'' + y + '\')">' + y + '</button>';
+      }).join('');
+  }
+
+  var showing = activeYear === 'all' ? years : years.filter(function(y){ return y === activeYear; });
+  var el = document.getElementById('story-groups');
+  if (!el) return;
+
+  if (!showing.length) {
+    el.innerHTML = '<p style="color:var(--faint);font-size:14px;text-align:center;padding:40px 0">Photos will appear here once uploaded.</p>';
+    return;
+  }
+
+  el.innerHTML = showing.map(function(year) {
+    var ps    = byYear[year] || [];
+    var story = stories[year] || '';
+    var editAttr = admin ? ' contenteditable="true"' : '';
+    var storyContent = story || (admin ? 'Click to write your story for ' + year + '…' : '');
+    return '<div class="story-group">' +
+      '<div class="sg-bar"><div class="sg-year">' + year + '</div><div class="sg-meta">' + ps.length + ' photo' + (ps.length!==1?'s':'') + '</div></div>' +
+      '<div class="sg-story-wrap">' +
+        '<div class="sg-story" id="st-' + year + '"' + editAttr + '>' + storyContent + '</div>' +
+        (admin ? '<button class="sg-save-btn" onclick="saveStory(\'' + year + '\')">Save story ↑</button>' : '') +
+      '</div>' +
+      '<div class="photo-grid">' +
+        ps.map(function(ph, i) {
+          var key = ph.key.replace(/'/g, "\\'");
+          return '<div class="photo-card" onclick="openLB(\'' + year + '\',' + i + ')">' +
+            '<img src="' + photoSrc(ph.key) + '" alt="' + (ph.name||'') + '" loading="lazy" onerror="this.style.opacity=\'.2\'">' +
+            '<div class="photo-cap">' + (ph.name||'') + (ph.uploading?' (uploading…)':'') + '</div>' +
+            (admin && !ph.uploading ? '<button class="del-ph" onclick="event.stopPropagation();delPhoto(\'' + key + '\')">✕</button>' : '') +
+          '</div>';
+        }).join('') +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  updateSideStats();
+}
+
+function updateSideStats() {
+  var photos = (photoCache || []).filter(function(p){ return p.key && !p.key.startsWith('meta/'); });
+  var byYear = {};
+  photos.forEach(function(p){ byYear[p.year] = (byYear[p.year]||0) + 1; });
+  var years = Object.keys(byYear).sort();
+  var total = photos.length;
+  var el = document.getElementById('side-stats');
+  if (el) el.innerHTML = total + ' photo' + (total!==1?'s':'') + ' across ' + years.length + ' year' + (years.length!==1?'s':'') + (years.length ? '<br>' + years.join(', ') : '');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LIGHTBOX
+// ═══════════════════════════════════════════════════════════════
+var lbYear = '', lbIdx = 0;
+function openLB(year, idx) {
+  var photos = (photoCache||[]).filter(function(p){ return p.year === year; });
+  lbYear = year; lbIdx = idx;
+  document.getElementById('lb-img').src = photoSrc(photos[idx] ? photos[idx].key : '');
+  document.getElementById('lb').classList.add('open');
+}
+function closeLB() { document.getElementById('lb').classList.remove('open'); }
+function lbMove(dir) {
+  var photos = (photoCache||[]).filter(function(p){ return p.year === lbYear; });
+  lbIdx = Math.max(0, Math.min(photos.length - 1, lbIdx + dir));
+  document.getElementById('lb-img').src = photoSrc(photos[lbIdx] ? photos[lbIdx].key : '');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLB();
+  if (e.key === 'ArrowRight') lbMove(1);
+  if (e.key === 'ArrowLeft')  lbMove(-1);
+});
+
+// ═══════════════════════════════════════════════════════════════
+// BLOG — stored in Netlify Blobs
+// ═══════════════════════════════════════════════════════════════
+var blogCache = { personal: null, act: null };
+var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json' };
+var BLOG_SEEDS = {
+  personal: [{ id:1, title:'Why I started this site', date:'2026-05-10', body:'This is a place for me to share what I\'m seeing, thinking about, and caring about. The landscape, the birds, the politics — all of it.' }],
+  act:      [{ id:1, title:'Bill introduced — 7 May 2026', date:'2026-05-07', body:'The Conservation Amendment Bill was introduced today. First reading passed 68\u201354 along coalition/opposition lines. The bill removes disposal protections from stewardship areas and opens conservation parks to commercial infrastructure.' }]
+};
+
+async function loadOneFeed(type) {
+  try {
+    var res = await fetch(apiUrl('get', BLOG_KEYS[type]));
+    if (res.ok) {
+      var text = await res.text();
+      try {
+        var parsed = JSON.parse(text);
+        return Array.isArray(parsed) ? parsed : BLOG_SEEDS[type];
+      } catch(e) { return BLOG_SEEDS[type]; }
+    }
+    return BLOG_SEEDS[type];
+  } catch(e) { return BLOG_SEEDS[type]; }
+}
+
+async function loadBlogs() {
+  var results = await Promise.all([loadOneFeed('personal'), loadOneFeed('act')]);
+  blogCache.personal = results[0];
+  blogCache.act      = results[1];
+  renderFeed('personal', 'blog-feed');
+  renderFeed('act',      'act-feed');
+  renderSideRecent();
+}
+
+function renderFeed(type, elId) {
+  var posts = blogCache[type] || [];
+  var el    = document.getElementById(elId);
+  if (!el) return;
+  var admin = isAdmin();
+  if (!posts.length) {
+    el.innerHTML = '<p style="color:var(--faint);font-size:14px;padding:16px 0">No posts yet.</p>';
+    return;
+  }
+  el.innerHTML = posts.slice().reverse().map(function(p) {
+    return '<div class="bpost">' +
+      '<div class="bpost-date">' + p.date + '</div>' +
+      '<div class="bpost-title">' + p.title + '</div>' +
+      '<div class="bpost-body">' + p.body.replace(/\n/g,'<br>') + '</div>' +
+      (admin ? '<button class="bpost-del" onclick="delPost(\'' + type + '\',\'' + p.id + '\',\'' + elId + '\')">Delete</button>' : '') +
+    '</div>';
+  }).join('');
+}
+
+async function saveFeed(type) {
+  var blob = new Blob([JSON.stringify(blogCache[type])], { type: 'application/json' });
+  var fname = BLOG_KEYS[type].split('/').pop();
+  var form = new FormData();
+  form.append('file', blob, fname);
+  form.append('year', 'meta');
+  form.append('name', fname);
+  var res = await fetch(apiUrl('upload', null, BLOG_KEYS[type]), { method: 'POST', body: form });
+  if (!res.ok) throw new Error('save failed ' + res.status);
+}
+
+async function addPost(type) {
+  if (!isAdmin()) { showPasswordModal(); return; }
+  var isAct = type === 'act';
+  var tid   = isAct ? 'act-title' : 'bp-title';
+  var bid   = isAct ? 'act-body'  : 'bp-body';
+  var fid   = isAct ? 'act-feed'  : 'blog-feed';
+  var title = document.getElementById(tid).value.trim();
+  var body  = document.getElementById(bid).value.trim();
+  if (!title || !body) { toast('Add a title and text first'); return; }
+  var posts = blogCache[type] || [];
+  posts.push({ id: Date.now(), title: title, date: new Date().toISOString().slice(0,10), body: body });
+  blogCache[type] = posts;
+  document.getElementById(tid).value = '';
+  document.getElementById(bid).value = '';
+  renderFeed(type, fid);
+  renderSideRecent();
+  toast('Saving…', 2000);
+  try { await saveFeed(type); toast('Published'); }
+  catch(e) { toast('Saved locally, sync failed: ' + e.message, 5000); }
+}
+
+async function delPost(type, id, fid) {
+  if (!isAdmin()) { showPasswordModal(); return; }
+  blogCache[type] = (blogCache[type]||[]).filter(function(p){ return String(p.id) !== String(id); });
+  renderFeed(type, fid);
+  renderSideRecent();
+  try { await saveFeed(type); toast('Deleted'); }
+  catch(e) { toast('Deleted locally, sync failed: ' + e.message, 5000); }
+}
+
+function renderSideRecent() {
+  var p   = (blogCache.personal||[]).map(function(x){ return Object.assign({}, x, {tag:'Personal'}); });
+  var a   = (blogCache.act||[]).map(function(x){ return Object.assign({}, x, {tag:'Act'}); });
+  var all = p.concat(a).sort(function(a,b){ return b.id - a.id; }).slice(0,4);
+  var el  = document.getElementById('side-recent');
+  if (el) el.innerHTML = all.map(function(x){
+    return '<div style="margin-bottom:10px"><div style="font-size:10px;color:var(--faint)">' + x.date + ' · ' + x.tag + '</div><div style="font-size:12px;color:var(--ink2);line-height:1.4">' + x.title + '</div></div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CONSERVATION MAP
+// ═══════════════════════════════════════════════════════════════
+var leafMap = null, selLyr = null, mapLoaded = 0;
+var LG = { risk: null };
+var secCounts = {};
+var DOC_API = 'https://services1.arcgis.com/3JjYDyG3oajxU6HO/ArcGIS/rest/services/DOC_Public_Conservation_Land/FeatureServer/0/query';
+
+var SLABELS = {
+  'S19_CONSERVATION_PARK':'Conservation Park','S25_STEWARDSHIP_AREA':'Stewardship Area',
+  'S7_CONSERVATION_PURPOSES':'Conservation Purposes','20_WILDERNESS_AREA':'Wilderness Area',
+  'S21_ECOLOGICAL_AREA':'Ecological Area','S22_SANCTUARY_AREA':'Sanctuary Area',
+  'S24_1_2_MOVEABLE_MARGINAL_STRIP':'Marginal Strip','S24_3_FIXED_MARGINAL_STRIP':'Fixed Marginal Strip',
+};
+
+var PVOTES = {
+  'National':{ for:true, icon:'❌', label:'Voted FOR bill' },
+  'ACT':     { for:true, icon:'❌', label:'Voted FOR bill' },
+  'NZ First':{ for:true, icon:'❌', label:'Voted FOR bill' },
+  'Labour':  { for:false,icon:'✅', label:'Voted AGAINST bill' },
+  'Green':   { for:false,icon:'✅', label:'Voted AGAINST bill' },
+  'Te Pāti Māori':{ for:false, icon:'✅', label:'Voted AGAINST bill' },
+};
+
+var MPs = {
+  'Northland':{n:'Grant McCallum',p:'National',e:'g.mccallum@parliament.govt.nz',c:'#00529F'},
+  'Whangārei':{n:'Shane Jones',p:'NZ First',e:'s.jones@parliament.govt.nz',c:'#000080'},
+  'Coromandel':{n:'Mark Patterson',p:'NZ First',e:'m.patterson@parliament.govt.nz',c:'#000080'},
+  'Waikato':{n:'Tim van de Molen',p:'National',e:'t.vandmolen@parliament.govt.nz',c:'#00529F'},
+  'Bay of Plenty':{n:'Tom Rutherford',p:'National',e:'t.rutherford@parliament.govt.nz',c:'#00529F'},
+  'Taupō':{n:'Louise Upston',p:'National',e:'l.upston@parliament.govt.nz',c:'#00529F'},
+  "Hawke's Bay":{n:'Lawrence Yule',p:'National',e:'l.yule@parliament.govt.nz',c:'#00529F'},
+  'Taranaki-King Country':{n:'David MacLeod',p:'National',e:'d.macleod@parliament.govt.nz',c:'#00529F'},
+  'New Plymouth':{n:'Glen Bennett',p:'Labour',e:'g.bennett@parliament.govt.nz',c:'#D82A20'},
+  'Whanganui':{n:'Steph Lewis',p:'Labour',e:'s.lewis@parliament.govt.nz',c:'#D82A20'},
+  'Rangitīkei':{n:'Ian McKelvie',p:'National',e:'i.mckelvie@parliament.govt.nz',c:'#00529F'},
+  'Ōtaki':{n:'Tim Costley',p:'National',e:'t.costley@parliament.govt.nz',c:'#00529F'},
+  'Wellington Central':{n:'Nicola Willis',p:'National',e:'n.willis@parliament.govt.nz',c:'#00529F'},
+  'Remutaka':{n:'Camilla Belich',p:'Labour',e:'c.belich@parliament.govt.nz',c:'#D82A20'},
+  'Nelson':{n:'Rachel Boyack',p:'Labour',e:'r.boyack@parliament.govt.nz',c:'#D82A20'},
+  'West Coast-Tasman':{n:'Stuart Smith',p:'National',e:'s.smith@parliament.govt.nz',c:'#00529F'},
+  'Kaikōura':{n:'Stuart Smith',p:'National',e:'s.smith@parliament.govt.nz',c:'#00529F'},
+  'Ilam':{n:'Sarah Pallett',p:'National',e:'s.pallett@parliament.govt.nz',c:'#00529F'},
+  'Selwyn':{n:'Nicola Grigg',p:'National',e:'n.grigg@parliament.govt.nz',c:'#00529F'},
+  'Rangitata':{n:'James Meager',p:'National',e:'j.meager@parliament.govt.nz',c:'#00529F'},
+  'Waitaki':{n:'Jo Luxton',p:'National',e:'j.luxton@parliament.govt.nz',c:'#00529F'},
+  'Taieri':{n:'Ingrid Leary',p:'Labour',e:'i.leary@parliament.govt.nz',c:'#D82A20'},
+  'Dunedin':{n:'David Clark',p:'Labour',e:'d.clark@parliament.govt.nz',c:'#D82A20'},
+  'Southland':{n:'Joseph Mooney',p:'National',e:'j.mooney@parliament.govt.nz',c:'#00529F'},
+  'Invercargill':{n:'Penny Simmonds',p:'National',e:'p.simmonds@parliament.govt.nz',c:'#00529F'},
+  'Clutha-Southland':{n:'Hamish Walker',p:'National',e:'h.walker@parliament.govt.nz',c:'#00529F'},
+};
+
+var SP = {
+  'Northland':{a:['Northland brown kiwi','Long-tailed bat','NZ fairy tern','Longfin eel'],p:['Swamp maire','Poor Knights lily','NZ mistletoe']},
+  'Auckland':{a:['Little spotted kiwi','NZ pigeon','Long-tailed bat'],p:['Karo','Coastal mānuka','Tōtara']},
+  'Waikato':{a:['Brown kiwi','Long-tailed bat','Longfin eel','Kōkako'],p:['Swamp maire','King fern','Lancewood']},
+  'Bay of Plenty':{a:['Brown kiwi','Kōkako','Yellowhead'],p:['Swamp maire','Pohutukawa','Rātā']},
+  "Hawke's Bay":{a:['Brown kiwi','Longfin eel','Kōkako','NZ falcon'],p:['Tōtara','Lancewood','Swamp maire']},
+  'Taranaki':{a:['Brown kiwi','Long-tailed bat','Kōkako'],p:['Tōtara','Swamp maire','Rātā']},
+  'Manawatu-Whanganui':{a:['Brown kiwi','Longfin eel','Kōkako','Kākā'],p:['Tōtara','Rātā','Lancewood']},
+  'Wellington':{a:['Kākāpō','Takahē','Little spotted kiwi'],p:['Rātā','Lancewood','Swamp maire']},
+  'Nelson':{a:['Great spotted kiwi','Kākā','Yellowhead','Kea'],p:['Mountain beech','Olearia lacunosa','Rātā']},
+  'Marlborough':{a:['Great spotted kiwi','Kea','NZ falcon','Yellowhead'],p:['Rātā','Mountain beech','Mistletoe']},
+  'West Coast':{a:['Great spotted kiwi','Kea','Rock wren','Kākāpō','Yellowhead'],p:['Rātā','Mountain beech','King fern']},
+  'Canterbury':{a:['Kea','NZ falcon','Wrybill','Black stilt','Long-tailed bat'],p:['Aciphylla spp.','Celmisia spp.']},
+  'Otago':{a:['Yellowhead','Rock wren','Kea','NZ falcon','Black stilt'],p:['Aciphylla spp.','Celmisia spp.','Tōtara']},
+  'Southland':{a:['Kākāpō','Fiordland penguin','Rock wren','Yellowhead','Kea'],p:['Rātā','Olearia lacunosa','Celmisia spp.']},
+};
+
+var STATS_WFS = 'https://datafinder.stats.govt.nz/services;key=c4a76e7f47124de0a69b9c5a39ba3ac7/wfs/layer-104580/';
+
+function regionFrom(lat, lng) {
+  if (lat > -36.5) return 'Northland';
+  if (lat > -37.5 && lng > 174.2) return 'Auckland';
+  if (lat > -38.5 && lng < 175.5) return 'Waikato';
+  if (lat > -38.5) return 'Bay of Plenty';
+  if (lat > -40.0 && lng > 176.0) return "Hawke's Bay";
+  if (lat > -39.8 && lng < 174.5) return 'Taranaki';
+  if (lat > -40.5 && lng < 176.5) return 'Manawatu-Whanganui';
+  if (lat > -41.5 && lng > 174.5) return 'Wellington';
+  if (lat > -41.8 && lng > 172.5 && lng < 174.5) return 'Nelson';
+  if (lat > -42.5 && lng > 173.5) return 'Marlborough';
+  if (lat > -43.5 && lng < 171.0) return 'West Coast';
+  if (lat > -44.5 && lng > 170.5) return 'Canterbury';
+  if (lat > -45.5 && lng > 168.0) return 'Otago';
+  return 'Southland';
+}
+
+async function getElectorates(minLng, minLat, maxLng, maxLat) {
+  var bbox = minLat + ',' + minLng + ',' + maxLat + ',' + maxLng + ',urn:ogc:def:crs:EPSG::4326';
+  var url = STATS_WFS + '?service=WFS&version=2.0.0&request=GetFeature&typeNames=layer-104580&outputFormat=application/json&propertyName=GED2020_V1_00_NAME_ASCII&BBOX=' + bbox;
+  try {
+    var res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+    if (!res.ok) return null;
+    var data = await res.json();
+    var names = [];
+    (data.features||[]).forEach(function(f) {
+      var n = f.properties && f.properties.GED2020_V1_00_NAME_ASCII;
+      if (n && names.indexOf(n) === -1) names.push(n);
+    });
+    return names.slice(0, 4);
+  } catch(e) { return null; }
+}
+
+function gstyle(sec, hover, sel) {
+  var fill = sec === 'S19_CONSERVATION_PARK' ? '#8B1A0A' : sec === 'S25_STEWARDSHIP_AREA' ? '#C0392B' : '#E67E22';
+  var op   = hover ? 0.75 : 0.5;
+  if (sel) { fill = '#E74C3C'; op = 0.9; }
+  return { color: '#5A0A00', weight: sel ? 2 : 0.6, fillColor: fill, fillOpacity: op };
+}
+
+function initMap() {
+  if (leafMap) return;
+  leafMap = L.map('map-canvas', { preferCanvas: true }).setView([-41.5, 172.5], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> | DOC NZ CC BY 4.0',
+    maxZoom: 16
+  }).addTo(leafMap);
+  LG.risk = L.layerGroup().addTo(leafMap);
+  loadDOC();
+}
+
+function toggleL(name, btn) {
+  btn.classList.toggle('on');
+  if (btn.classList.contains('on')) LG[name].addTo(leafMap);
+  else leafMap.removeLayer(LG[name]);
+}
+
+function addFeature(f) {
+  var p   = f.properties || {};
+  var sec = p.Section || '';
+  var lbl = SLABELS[sec] || sec || 'Other';
+  secCounts[lbl] = (secCounts[lbl] || 0) + 1;
+  try {
+    var gl = L.geoJSON(f, {
+      style: function(){ return gstyle(sec, false, false); },
+      onEachFeature: function(feat, layer) {
+        layer.on('click', function() {
+          if (selLyr) try { selLyr.setStyle(gstyle(selLyr._sec, false, false)); } catch(e) {}
+          layer.setStyle(gstyle(sec, false, true));
+          layer.bringToFront();
+          selLyr = layer; selLyr._sec = sec;
+          showInfo(feat.properties, sec);
+        });
+        layer.on('mouseover', function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, true, false)); });
+        layer.on('mouseout',  function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, false, false)); });
+      }
+    });
+    gl.addTo(LG.risk);
+    mapLoaded++;
+  } catch(e) {}
+}
+
+async function showInfo(p, sec) {
+  var name = p.Name || p.name || 'Unnamed area';
+  var lbl  = SLABELS[sec] || sec || 'Unknown';
+  var ha   = p.Recorded_Area ? Math.round(p.Recorded_Area).toLocaleString() + ' ha'
+           : (p.Shape__Area  ? Math.round(p.Shape__Area / 10000).toLocaleString() + ' ha' : null);
+  document.getElementById('map-empty').style.display = 'none';
+  document.getElementById('icard').style.display     = 'block';
+  document.getElementById('ic-name').textContent     = name;
+  document.getElementById('ic-det').innerHTML = [
+    ['Type', lbl], ha && ['Area', ha], ['Risk', 'Eligible for disposal']
+  ].filter(Boolean).map(function(r){ return '<div class="irow"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div>'; }).join('');
+
+  var lat = -41.5, lng = 172.5, minLat, minLng, maxLat, maxLng;
+  try {
+    var b = selLyr.getBounds();
+    var c = b.getCenter(); lat = c.lat; lng = c.lng;
+    minLat = b.getSouth(); minLng = b.getWest(); maxLat = b.getNorth(); maxLng = b.getEast();
+  } catch(e) {}
+
+  var region = regionFrom(lat, lng);
+  var sp     = SP[region] || SP['West Coast'];
+  document.getElementById('ic-ani').innerHTML = sp.a.map(function(s){ return '<span class="stag a">' + s + '</span>'; }).join('');
+  document.getElementById('ic-pla').innerHTML = sp.p.map(function(s){ return '<span class="stag p">' + s + '</span>'; }).join('');
+  document.getElementById('ic-mp').innerHTML  = '<div style="font-size:11px;color:var(--faint)">Loading electorate data…</div>';
+  mst('info');
+
+  var elNames = null;
+  if (minLat !== undefined) elNames = await getElectorates(minLng, minLat, maxLng, maxLat);
+  if (!elNames || !elNames.length) {
+    var REG_EL = {
+      'Northland':['Northland','Whangārei'],'Auckland':['Coromandel'],'Waikato':['Waikato','Taupō'],
+      'Bay of Plenty':['Bay of Plenty','Rotorua'],"Hawke's Bay":["Hawke's Bay",'Tukituki'],
+      'Taranaki':['Taranaki-King Country','New Plymouth'],'Manawatu-Whanganui':['Rangitīkei','Whanganui'],
+      'Wellington':['Ōtaki','Wellington Central','Remutaka'],'Nelson':['Nelson','West Coast-Tasman'],
+      'Marlborough':['Kaikōura'],'West Coast':['West Coast-Tasman','Kaikōura'],
+      'Canterbury':['Kaikōura','Selwyn','Rangitata','Ilam'],'Otago':['Waitaki','Taieri','Dunedin'],
+      'Southland':['Southland','Invercargill','Clutha-Southland'],
+    };
+    elNames = REG_EL[region] || ['Kaikōura'];
+  }
+
+  var bills = ['Conservation Amendment Bill 2026','Fisheries Amendment Bill 2026','Fast-track Approvals Act 2024'];
+  var allVotes = {
+    'Conservation Amendment Bill 2026':{ 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
+    'Fisheries Amendment Bill 2026':   { 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR (partial U-turn on size limits)'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
+    'Fast-track Approvals Act 2024':   { 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
+  };
+
+  var mpHtml = elNames.map(function(el) {
+    var mp = MPs[el];
+    if (!mp) return '';
+    var voteRows = bills.map(function(bill) {
+      var v = allVotes[bill] && allVotes[bill][mp.p];
+      if (!v) return '';
+      return '<div class="vote-line"><span class="vi">' + (v.for ? '❌' : '✅') + '</span><span style="flex:1"><span style="color:var(--ink2)">' + bill + '</span><br><span style="color:' + (v.for ? '#8B1A0A' : 'var(--sage3)') + ';font-size:10px">' + v.lbl + '</span></span></div>';
+    }).join('');
+    var subj = encodeURIComponent('Conservation Act Amendment Bill — ' + name);
+    var body = encodeURIComponent('Dear ' + mp.n + ',\n\nI am writing about the Conservation Amendment Bill 2026 and its impact on ' + name + '.\n\nThis area provides habitat for threatened species including ' + sp.a.slice(0,3).join(', ') + '.\n\nI urge you to oppose the disposal provisions in this Bill.\n\nYours sincerely');
+    return '<div class="mp-box" style="margin-bottom:10px">' +
+      '<div class="mpn">' + mp.n + '</div>' +
+      '<div class="mps">' + el + ' electorate</div>' +
+      '<span class="mpill" style="background:' + mp.c + '18;color:' + mp.c + '">' + mp.p + '</span>' +
+      '<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:8px 0 5px">Environment voting record</div>' +
+      voteRows +
+      '<a class="mbtn mbtn-solid" href="mailto:' + mp.e + '?subject=' + subj + '&body=' + body + '" style="margin-top:10px">✉ Email ' + mp.n + '</a>' +
+    '</div>';
+  }).join('');
+
+  if (!mpHtml) mpHtml = '<p style="font-size:12px;color:var(--faint)">Electorate data unavailable.</p>';
+  document.getElementById('ic-mp').innerHTML = mpHtml +
+    '<p style="font-size:10px;color:var(--faint);margin-top:6px">Source: Stats NZ 2020 boundaries. Large areas may span additional electorates.</p>' +
+    '<a class="mbtn mbtn-ghost" href="https://www.parliament.nz/en/pb/sc/make-a-submission/" target="_blank" style="margin-top:8px">Parliament submission →</a>';
+}
+
+function buildFilters() {
+  var el = document.getElementById('fl-sec');
+  if (el) el.innerHTML = Object.entries(secCounts).sort(function(a,b){ return b[1]-a[1]; }).map(function(e){
+    return '<label style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:12px;cursor:pointer;color:var(--ink2)"><input type="checkbox" checked style="accent-color:var(--sage)"><span style="flex:1">' + e[0] + '</span><span style="font-size:10px;color:var(--faint)">' + e[1] + '</span></label>';
+  }).join('');
+}
+
+function mst(name) {
+  ['info','filter'].forEach(function(n, i) {
+    document.querySelectorAll('.abtab')[i].classList.toggle('on', n === name);
+    document.getElementById('asp-' + n).classList.toggle('on', n === name);
+  });
+}
+
+var searchTimer;
+function searchPlace(q) {
+  clearTimeout(searchTimer);
+  var box = document.getElementById('sr-drop');
+  if (!q || q.length < 2) { box.style.display = 'none'; return; }
+  searchTimer = setTimeout(async function() {
+    try {
+      var res = await fetch('https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(q + ' New Zealand') + '&format=json&limit=5');
+      var d   = await res.json();
+      if (!d.length) { box.style.display = 'none'; return; }
+      box.style.display = 'block';
+      box.innerHTML = d.map(function(r) {
+        var name = r.display_name.split(',').slice(0,2).join(', ').replace(/'/g, "\\'");
+        return '<div class="sr-item" onclick="flyTo(' + r.lat + ',' + r.lon + ',\'' + name + '\')">📍 ' + name + '</div>';
+      }).join('');
+    } catch(e) { box.style.display = 'none'; }
+  }, 350);
+}
+function flyTo(lat, lng, name) {
+  document.getElementById('sr-drop').style.display = 'none';
+  document.getElementById('place-search').value = name;
+  if (leafMap) leafMap.flyTo([lat, lng], 11, { duration: 1.2 });
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.search-wrap')) {
+    var d = document.getElementById('sr-drop');
+    if (d) d.style.display = 'none';
+  }
+});
+
+async function loadDOC() {
+  document.getElementById('map-ovmsg').textContent = 'Loading Conservation Act polygons…';
+  var offset = 0, pages = 0;
+  try {
+    while (pages < 15) {
+      var params = new URLSearchParams({
+        where: "Legislation='CONSERVATION_ACT'",
+        outFields: 'Name,Section,Legislation,Recorded_Area,Shape__Area',
+        returnGeometry: 'true', f: 'geojson', outSR: '4326', geometryPrecision: '5',
+        resultRecordCount: '1000', resultOffset: String(offset)
+      });
+      var res  = await fetch(DOC_API + '?' + params, { signal: AbortSignal.timeout(20000) });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      var data = await res.json();
+      if (data.error) throw new Error(JSON.stringify(data.error));
+      var feats = data.features || [];
+      if (!feats.length) break;
+      feats.forEach(addFeature);
+      offset += feats.length; pages++;
+      document.getElementById('map-ovprog').textContent = mapLoaded.toLocaleString() + ' polygons…';
+      if (!(data.properties && data.properties.exceededTransferLimit) && feats.length < 1000) break;
+    }
+    document.getElementById('map-ov').style.display = 'none';
+    buildFilters();
+    toast('Loaded ' + mapLoaded.toLocaleString() + ' at-risk polygons.', 4000);
+  } catch(e) {
+    document.getElementById('map-ovmsg').textContent = 'Loading sample data…';
+    loadFallback();
+  }
+}
+
+function loadFallback() {
+  var FB = [
+    {n:'Victoria Forest Park',s:'S19_CONSERVATION_PARK',ha:201000,box:[-42.4,171.3,-41.9,172.2]},
+    {n:'Tararua Forest Park',s:'S19_CONSERVATION_PARK',ha:116500,box:[-40.9,175.1,-40.3,175.8]},
+    {n:'Ruahine Forest Park',s:'S19_CONSERVATION_PARK',ha:90000,box:[-40.2,175.9,-39.4,176.6]},
+    {n:'West Coast Stewardship N',s:'S25_STEWARDSHIP_AREA',ha:165000,box:[-42.0,171.0,-41.4,172.1]},
+    {n:'West Coast Stewardship S',s:'S25_STEWARDSHIP_AREA',ha:195000,box:[-43.8,168.4,-42.5,170.3]},
+    {n:'Fiordland Stewardship',s:'S25_STEWARDSHIP_AREA',ha:220000,box:[-46.0,166.5,-44.8,168.2]},
+    {n:'Otago Stewardship',s:'S25_STEWARDSHIP_AREA',ha:180000,box:[-45.5,168.5,-44.2,170.2]},
+    {n:'Canterbury Stewardship',s:'S25_STEWARDSHIP_AREA',ha:155000,box:[-44.2,170.5,-43.1,172.3]},
+  ];
+  FB.forEach(function(d) {
+    var s=d.box[0], w=d.box[1], n=d.box[2], e=d.box[3];
+    addFeature({ type:'Feature', properties:{ Name:d.n, Section:d.s, Recorded_Area:d.ha }, geometry:{ type:'Polygon', coordinates:[[[w,s],[e,s],[e,n],[w,n],[w,s]]] } });
+  });
+  document.getElementById('map-ov').style.display = 'none';
+  buildFilters();
+  toast('DOC API unavailable — showing key areas.', 5000);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+checkSavedPassword();
+Promise.all([loadPhotos(), loadStories(), loadBlogs()]).then(function() {
+  renderStories();
+  updateSideStats();
+});
+</script>
+</body>
+</html>

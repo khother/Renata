@@ -1,0 +1,13 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+  command = "npm install"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["node_modules/@netlify/blobs/**"]
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
