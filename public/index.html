@@ -1008,13 +1008,6 @@ async function showInfo(p, sec) {
     'Fast-track Approvals Act 2024':   { 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
   };
 
-  // Build email text for copy-paste (no mailto needed)
-  var emailSubject = 'Conservation Act Amendment Bill — ' + name;
-  var emailBody = 'Dear ' + mp.n + ',\n\nI am writing about the Conservation Amendment Bill 2026 and its impact on ' + name + '.\n\nThis area provides habitat for threatened species including ' + sp.a.slice(0,3).join(', ') + '.\n\nI urge you to oppose the disposal provisions in this Bill.\n\nYours sincerely';
-
-  // Use a unique ID per call so multiple MPs can have separate copy buttons
-  var callId = Date.now();
-
   var mpHtml = elNames.map(function(el) {
     var mp = MPs[el];
     if (!mp) return '';
@@ -1023,22 +1016,15 @@ async function showInfo(p, sec) {
       if (!v) return '';
       return '<div class="vote-line"><span class="vi">' + (v.for ? '❌' : '✅') + '</span><span style="flex:1"><span style="color:var(--ink2)">' + bill + '</span><br><span style="color:' + (v.for ? '#8B1A0A' : 'var(--sage3)') + ';font-size:10px">' + v.lbl + '</span></span></div>';
     }).join('');
-    var safeId = el.replace(/[^a-zA-Z0-9]/g, '_') + '_' + callId;
-    var emailText = 'To: ' + mp.e + '\nSubject: ' + emailSubject + '\n\n' + emailBody;
-    // Store email text on window so copy button can access it
-    window['_email_' + safeId] = emailText;
+    var subj = encodeURIComponent('Conservation Act Amendment Bill — ' + name);
+    var body = encodeURIComponent('Dear ' + mp.n + ',\n\nI am writing about the Conservation Amendment Bill 2026 and its impact on ' + name + '.\n\nThis area provides habitat for threatened species including ' + sp.a.slice(0,3).join(', ') + '.\n\nI urge you to oppose the disposal provisions in this Bill.\n\nYours sincerely');
     return '<div class="mp-box" style="margin-bottom:10px">' +
       '<div class="mpn">' + mp.n + '</div>' +
       '<div class="mps">' + el + ' electorate</div>' +
       '<span class="mpill" style="background:' + mp.c + '18;color:' + mp.c + '">' + mp.p + '</span>' +
       '<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:8px 0 5px">Environment voting record</div>' +
       voteRows +
-      '<div style="margin-top:10px;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:10px 12px;">' +
-        '<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:6px">Email this MP</div>' +
-        '<div style="font-size:12px;color:var(--sage3);font-weight:500;margin-bottom:4px">' + mp.e + '</div>' +
-        '<textarea id="etxt_' + safeId + '" readonly style="width:100%;height:110px;font-size:11px;font-family:var(--mono);color:var(--ink2);background:#fff;border:1px solid var(--border);border-radius:4px;padding:8px;resize:none;line-height:1.5;">' + emailText + '</textarea>' +
-        '<button onclick="copyEmail('' + safeId + '')" id="ecbtn_' + safeId + '" style="margin-top:6px;width:100%;padding:8px;background:var(--sage);color:#fff;border:none;border-radius:5px;font-size:12px;font-family:var(--sans);font-weight:500;cursor:pointer;">Copy email text</button>' +
-      '</div>' +
+      '<a class="mbtn mbtn-solid" href="mailto:' + mp.e + '?subject=' + subj + '&body=' + body + '" style="margin-top:10px">✉ Email ' + mp.n + '</a>' +
     '</div>';
   }).join('');
 
@@ -1141,30 +1127,6 @@ function loadFallback() {
   document.getElementById('map-ov').style.display = 'none';
   buildFilters();
   toast('DOC API unavailable — showing key areas.', 5000);
-}
-
-// ═══════════════════════════════════════════════════════════════
-// COPY EMAIL HELPER
-// ═══════════════════════════════════════════════════════════════
-function copyEmail(safeId) {
-  var txt = document.getElementById('etxt_' + safeId);
-  var btn = document.getElementById('ecbtn_' + safeId);
-  if (!txt) return;
-  try {
-    // Modern clipboard API
-    navigator.clipboard.writeText(txt.value).then(function() {
-      btn.textContent = '✓ Copied!';
-      btn.style.background = 'var(--sage3)';
-      setTimeout(function(){ btn.textContent = 'Copy email text'; btn.style.background = 'var(--sage)'; }, 2500);
-    });
-  } catch(e) {
-    // Fallback: select text in textarea so user can Ctrl+C
-    txt.select();
-    txt.setSelectionRange(0, 99999);
-    try { document.execCommand('copy'); } catch(e2) {}
-    btn.textContent = '✓ Copied! (or press Ctrl+C)';
-    setTimeout(function(){ btn.textContent = 'Copy email text'; }, 2500);
-  }
 }
 
 // ═══════════════════════════════════════════════════════════════
