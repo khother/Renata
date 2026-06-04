@@ -85,7 +85,14 @@ textarea.field{min-height:90px;resize:vertical;}
 .bpost-date{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.8px;margin-bottom:6px;}
 .bpost-title{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.2px;margin-bottom:8px;line-height:1.3;}
 .bpost-body{font-size:14px;color:var(--ink2);line-height:1.8;}
-.bpost-del{margin-top:8px;font-size:11px;color:var(--faint);background:none;border:none;cursor:pointer;font-family:var(--sans);}
+.bpost-actions{margin-top:10px;display:flex;gap:14px;}
+.bpost-edit,.bpost-del{font-size:11px;color:var(--faint);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;}
+.bpost-edit:hover{color:var(--sage3);}
+.bpost-del:hover{color:#8B2010;}
+.bpost-editor{border-bottom:1px solid var(--border);padding-bottom:32px;}
+.bpost-editor .field{margin-bottom:10px;}
+.bpost-edit-btns{display:flex;gap:10px;align-items:center;}
+.bpost-cancel{background:none;border:1px solid var(--border);color:var(--mid);padding:9px 18px;border-radius:5px;font-size:12px;font-family:var(--sans);cursor:pointer;}
 /* ACT PAGE */
 #pg-act{display:none;flex-direction:column;}
 #pg-act.on{display:flex;}
@@ -442,6 +449,7 @@ function tryPassword() {
     document.getElementById('pw-modal').classList.remove('open');
     input.value = '';
     renderStories(); // re-render to show editable stories
+    renderFeed('personal', 'blog-feed'); renderFeed('act', 'act-feed');
     toast('Admin on — editing controls now visible');
   } else {
     input.classList.add('error');
@@ -453,7 +461,9 @@ function tryPassword() {
 function signOut() {
   localStorage.removeItem(PW_KEY);
   setAdmin(false);
+  editingPost['blog-feed'] = null; editingPost['act-feed'] = null;
   renderStories();
+  renderFeed('personal', 'blog-feed'); renderFeed('act', 'act-feed');
   toast('Signed out');
 }
 
@@ -732,6 +742,7 @@ document.addEventListener('keydown', function(e) {
 // BLOG — stored in Netlify Blobs
 // ═══════════════════════════════════════════════════════════════
 var blogCache = { personal: null, act: null };
+var editingPost = { 'blog-feed': null, 'act-feed': null };
 var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json' };
 var BLOG_SEEDS = {
   personal: [{ id:1, title:'Why I started this site', date:'2026-05-10', body:'This is a place for me to share what I\'m seeing, thinking about, and caring about. The landscape, the birds, the politics — all of it.' }],
@@ -771,11 +782,25 @@ function renderFeed(type, elId) {
     return;
   }
   el.innerHTML = posts.slice().reverse().map(function(p) {
+    if (admin && String(editingPost[elId]) === String(p.id)) {
+      return '<div class="bpost-editor" id="editor-' + elId + '-' + p.id + '">' +
+        '<div class="bpost-date">' + p.date + '</div>' +
+        '<input class="field" type="text" id="edit-title-' + elId + '-' + p.id + '" value="' + esc(p.title) + '" placeholder="Title…">' +
+        '<textarea class="field" id="edit-body-' + elId + '-' + p.id + '" placeholder="Write here…">' + esc(p.body) + '</textarea>' +
+        '<div class="bpost-edit-btns">' +
+          '<button class="post-btn" onclick="saveEdit(\'' + type + '\',\'' + p.id + '\',\'' + elId + '\')">Save changes</button>' +
+          '<button class="bpost-cancel" onclick="cancelEdit(\'' + type + '\',\'' + elId + '\')">Cancel</button>' +
+        '</div>' +
+      '</div>';
+    }
     return '<div class="bpost">' +
       '<div class="bpost-date">' + p.date + '</div>' +
-      '<div class="bpost-title">' + p.title + '</div>' +
-      '<div class="bpost-body">' + p.body.replace(/\n/g,'<br>') + '</div>' +
-      (admin ? '<button class="bpost-del" onclick="delPost(\'' + type + '\',\'' + p.id + '\',\'' + elId + '\')">Delete</button>' : '') +
+      '<div class="bpost-title">' + esc(p.title) + '</div>' +
+      '<div class="bpost-body">' + esc(p.body).replace(/\n/g,'<br>') + '</div>' +
+      (admin ? '<div class="bpost-actions">' +
+        '<button class="bpost-edit" onclick="startEdit(\'' + type + '\',\'' + p.id + '\',\'' + elId + '\')">Edit</button>' +
+        '<button class="bpost-del" onclick="delPost(\'' + type + '\',\'' + p.id + '\',\'' + elId + '\')">Delete</button>' +
+      '</div>' : '') +
     '</div>';
   }).join('');
 }
@@ -814,11 +839,42 @@ async function addPost(type) {
 
 async function delPost(type, id, fid) {
   if (!isAdmin()) { showPasswordModal(); return; }
+  if (!confirm('Delete this post? This cannot be undone.')) return;
+  if (String(editingPost[fid]) === String(id)) editingPost[fid] = null;
   blogCache[type] = (blogCache[type]||[]).filter(function(p){ return String(p.id) !== String(id); });
   renderFeed(type, fid);
   renderSideRecent();
   try { await saveFeed(type); toast('Deleted'); }
   catch(e) { toast('Deleted locally, sync failed: ' + e.message, 5000); }
+}
+
+function startEdit(type, id, fid) {
+  if (!isAdmin()) { showPasswordModal(); return; }
+  editingPost[fid] = id;
+  renderFeed(type, fid);
+  var ti = document.getElementById('edit-title-' + fid + '-' + id);
+  if (ti) ti.focus();
+}
+
+function cancelEdit(type, fid) {
+  editingPost[fid] = null;
+  renderFeed(type, fid);
+}
+
+async function saveEdit(type, id, fid) {
+  if (!isAdmin()) { showPasswordModal(); return; }
+  var title = document.getElementById('edit-title-' + fid + '-' + id).value.trim();
+  var body  = document.getElementById('edit-body-'  + fid + '-' + id).value.trim();
+  if (!title || !body) { toast('Add a title and text first'); return; }
+  blogCache[type] = (blogCache[type]||[]).map(function(p){
+    return String(p.id) === String(id) ? Object.assign({}, p, { title: title, body: body }) : p;
+  });
+  editingPost[fid] = null;
+  renderFeed(type, fid);
+  renderSideRecent();
+  toast('Saving…', 2000);
+  try { await saveFeed(type); toast('Saved'); }
+  catch(e) { toast('Saved locally, sync failed: ' + e.message, 5000); }
 }
 
 function renderSideRecent() {
