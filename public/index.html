@@ -319,7 +319,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
     </div>
     <div>
       <div class="side-h">Recent posts</div>
-      <div id="side-recent" style="font-size:12px;color:var(--mid);line-height:1.6"></div>
+      <div id="side-recent" style="font-size:12px;color:var(--mid);line-height:1.6;max-height:300px;overflow-y:auto;padding-right:4px;"></div>
     </div>
     <div style="margin-top:auto">
       <div class="side-h">Photo stats</div>
@@ -824,10 +824,16 @@ async function delPost(type, id, fid) {
 function renderSideRecent() {
   var p   = (blogCache.personal||[]).map(function(x){ return Object.assign({}, x, {tag:'Personal'}); });
   var a   = (blogCache.act||[]).map(function(x){ return Object.assign({}, x, {tag:'Act'}); });
-  var all = p.concat(a).sort(function(a,b){ return b.id - a.id; }).slice(0,4);
+  var all = p.concat(a).sort(function(a,b){ return b.id - a.id; });
   var el  = document.getElementById('side-recent');
-  if (el) el.innerHTML = all.map(function(x){
-    return '<div style="margin-bottom:10px"><div style="font-size:10px;color:var(--faint)">' + x.date + ' · ' + x.tag + '</div><div style="font-size:12px;color:var(--ink2);line-height:1.4">' + x.title + '</div></div>';
+  if (!el) return;
+  if (!all.length) {
+    el.innerHTML = '<div style="font-size:11px;color:var(--faint)">No posts yet.</div>';
+    return;
+  }
+  el.innerHTML = all.map(function(x){
+    var page = x.tag === 'Act' ? 'act' : 'blog';
+    return '<div style="margin-bottom:10px;cursor:pointer" onclick="nav(\'' + page + '\')"><div style="font-size:10px;color:var(--faint)">' + x.date + ' · ' + x.tag + '</div><div style="font-size:12px;color:var(--ink2);line-height:1.4">' + esc(x.title) + '</div></div>';
   }).join('');
 }
 
