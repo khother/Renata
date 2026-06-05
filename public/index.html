@@ -890,28 +890,48 @@ var secCounts = {};
 var DOC_API = 'https://services1.arcgis.com/3JjYDyG3oajxU6HO/ArcGIS/rest/services/DOC_Public_Conservation_Land/FeatureServer/0/query';
 
 var SLABELS = {
-  // Conservation Act land — excluded from disposal (NOT shown on map)
-  // 'S14_NATIONAL_PARK' — National Parks Act, not in this dataset
-  // 'S20_WILDERNESS_AREA' — not eligible for disposal
-  // 'S23_NATURE_RESERVE' — not eligible for disposal
-
-  // AT-RISK: eligible for disposal/exchange under the bill
+  // Conservation Act land
   'S19_CONSERVATION_PARK':   'Conservation Park',
   'S18_FOREST_PARK':         'Forest Park',
   'S25_STEWARDSHIP_AREA':    'Stewardship Area',
   'S7_CONSERVATION_PURPOSES':'Conservation Purposes',
   'S21_ECOLOGICAL_AREA':     'Ecological Area',
   'S22_SANCTUARY_AREA':      'Sanctuary Area',
-  // Scenic & Recreation reserves — explicitly named in the bill as eligible
-  'S17_SCENIC_RESERVE':      'Scenic Reserve',
-  'S17_RECREATION_RESERVE':  'Recreation Reserve',
-  'S17_HISTORIC_RESERVE':    'Historic Reserve',
-  'S17_SCIENTIFIC_RESERVE':  'Scientific Reserve',
-  'S17_GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
-  // Marginal strips (lower risk but under Conservation Act)
   'S24_1_2_MOVEABLE_MARGINAL_STRIP':'Marginal Strip',
   'S24_3_FIXED_MARGINAL_STRIP':'Fixed Marginal Strip',
+  // Reserves Act land — possible Section field values from DOC NaPALIS
+  // (exact strings vary; we cover known variants)
+  'S17_SCENIC_RESERVE':      'Scenic Reserve',
+  'SCENIC_RESERVE':          'Scenic Reserve',
+  'SCENIC':                  'Scenic Reserve',
+  'S16_SCENIC_RESERVE':      'Scenic Reserve',
+  'S17_RECREATION_RESERVE':  'Recreation Reserve',
+  'RECREATION_RESERVE':      'Recreation Reserve',
+  'S18_RECREATION_RESERVE':  'Recreation Reserve',
+  'S17_HISTORIC_RESERVE':    'Historic Reserve',
+  'HISTORIC_RESERVE':        'Historic Reserve',
+  'S17_SCIENTIFIC_RESERVE':  'Scientific Reserve',
+  'SCIENTIFIC_RESERVE':      'Scientific Reserve',
+  'S17_GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
+  'GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
 };
+
+function sectionLabel(sec, legislation) {
+  if (SLABELS[sec]) return SLABELS[sec];
+  if (legislation === 'RESERVES_ACT') {
+    // Infer from section string patterns
+    if (!sec) return 'Reserve';
+    var s = sec.toUpperCase();
+    if (s.indexOf('SCENIC') > -1)      return 'Scenic Reserve';
+    if (s.indexOf('RECREATION') > -1)  return 'Recreation Reserve';
+    if (s.indexOf('HISTORIC') > -1)    return 'Historic Reserve';
+    if (s.indexOf('SCIENTIFIC') > -1)  return 'Scientific Reserve';
+    if (s.indexOf('GOVERNMENT') > -1)  return 'Government Purpose Reserve';
+    if (s.indexOf('LOCAL') > -1)       return 'Local Purpose Reserve';
+    return 'Reserve';
+  }
+  return sec || 'Conservation Area';
+}
 
 var PVOTES = {
   'National':{ for:true, icon:'❌', label:'Voted FOR bill' },
@@ -1050,14 +1070,20 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
   } catch(e) { return null; }
 }
 
-function gstyle(sec, hover, sel) {
+function gstyle(sec, leg, hover, sel) {
   var fill;
-  if (sec === 'S19_CONSERVATION_PARK' || sec === 'S18_FOREST_PARK') fill = '#8B1A0A';
-  else if (sec === 'S25_STEWARDSHIP_AREA') fill = '#C0392B';
-  else if (sec === 'S17_SCENIC_RESERVE' || sec === 'S17_RECREATION_RESERVE') fill = '#E67E22';
-  else if (sec === 'S17_HISTORIC_RESERVE' || sec === 'S17_SCIENTIFIC_RESERVE') fill = '#9B59B6';
+  var s = (sec || '').toUpperCase();
+  var l = (leg || '');
+  if (s === 'S19_CONSERVATION_PARK' || s === 'S18_FOREST_PARK') fill = '#8B1A0A';
+  else if (s === 'S25_STEWARDSHIP_AREA') fill = '#C0392B';
+  else if (l === 'RESERVES_ACT') {
+    if (s.indexOf('SCENIC') > -1) fill = '#E67E22';
+    else if (s.indexOf('RECREATION') > -1) fill = '#D4880A';
+    else if (s.indexOf('HISTORIC') > -1 || s.indexOf('SCIENTIFIC') > -1) fill = '#9B59B6';
+    else fill = '#E67E22';
+  }
   else fill = '#E67E22';
-  var op   = hover ? 0.75 : 0.5;
+  var op = hover ? 0.75 : 0.5;
   if (sel) { fill = '#E74C3C'; op = 0.9; }
   return { color: '#5A0A00', weight: sel ? 2 : 0.6, fillColor: fill, fillOpacity: op };
 }
@@ -1082,21 +1108,22 @@ function toggleL(name, btn) {
 function addFeature(f) {
   var p   = f.properties || {};
   var sec = p.Section || '';
-  var lbl = SLABELS[sec] || sec || 'Other';
+  var leg = p.Legislation || '';
+  var lbl = sectionLabel(sec, leg);
   secCounts[lbl] = (secCounts[lbl] || 0) + 1;
   try {
     var gl = L.geoJSON(f, {
-      style: function(){ return gstyle(sec, false, false); },
+      style: function(){ return gstyle(sec, leg, false, false); },
       onEachFeature: function(feat, layer) {
         layer.on('click', function() {
-          if (selLyr) try { selLyr.setStyle(gstyle(selLyr._sec, false, false)); } catch(e) {}
-          layer.setStyle(gstyle(sec, false, true));
+          if (selLyr) try { selLyr.setStyle(gstyle(selLyr._sec, selLyr._leg, false, false)); } catch(e) {}
+          layer.setStyle(gstyle(sec, leg, false, true));
           layer.bringToFront();
-          selLyr = layer; selLyr._sec = sec;
-          showInfo(feat.properties, sec);
+          selLyr = layer; selLyr._sec = sec; selLyr._leg = leg;
+          showInfo(feat.properties, sec, leg);
         });
-        layer.on('mouseover', function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, true, false)); });
-        layer.on('mouseout',  function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, false, false)); });
+        layer.on('mouseover', function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, leg, true, false)); });
+        layer.on('mouseout',  function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, leg, false, false)); });
       }
     });
     gl.addTo(LG.risk);
@@ -1104,9 +1131,9 @@ function addFeature(f) {
   } catch(e) {}
 }
 
-async function showInfo(p, sec) {
+async function showInfo(p, sec, leg) {
   var name = p.Name || p.name || 'Unnamed area';
-  var lbl  = SLABELS[sec] || sec || 'Unknown';
+  var lbl  = sectionLabel(sec, leg || p.Legislation || '');
   var ha   = p.Recorded_Area ? Math.round(p.Recorded_Area).toLocaleString() + ' ha'
            : (p.Shape__Area  ? Math.round(p.Shape__Area / 10000).toLocaleString() + ' ha' : null);
   document.getElementById('map-empty').style.display = 'none';
@@ -1228,23 +1255,35 @@ document.addEventListener('click', function(e) {
 });
 
 // At-risk section codes under the Conservation Amendment Bill 2026
-// Excluded (not at risk): S20_WILDERNESS_AREA, S23_NATURE_RESERVE, National Parks (NPA)
-var AT_RISK_SECTIONS = [
+// These are the Conservation Act section codes (Legislation='CONSERVATION_ACT')
+// Excluded: S20_WILDERNESS_AREA, S23_NATURE_RESERVE (not eligible for disposal)
+var CA_AT_RISK_SECTIONS = [
   'S19_CONSERVATION_PARK','S18_FOREST_PARK','S25_STEWARDSHIP_AREA',
   'S7_CONSERVATION_PURPOSES','S21_ECOLOGICAL_AREA','S22_SANCTUARY_AREA',
-  'S17_SCENIC_RESERVE','S17_RECREATION_RESERVE','S17_HISTORIC_RESERVE',
-  'S17_SCIENTIFIC_RESERVE','S17_GOVERNMENT_PURPOSE_RESERVE',
   'S24_1_2_MOVEABLE_MARGINAL_STRIP','S24_3_FIXED_MARGINAL_STRIP'
 ];
+// Reserves Act land: all types are at risk EXCEPT nature reserves (s.26)
+// We include all RESERVES_ACT land and exclude nature reserves by name pattern
+// Section values in the DOC API for Reserves Act use different codes — safest to include all
+var RA_EXCLUDED_SECTIONS = ['S26_NATURE_RESERVE','NATURE_RESERVE'];
+
 
 async function loadDOC() {
   document.getElementById('map-ovmsg').textContent = 'Loading Conservation Act polygons…';
   var offset = 0, pages = 0;
   try {
     while (pages < 15) {
-      var sectionFilter = AT_RISK_SECTIONS.map(function(s){ return "Section='" + s + "'"; }).join(' OR ');
+      // Two-part filter:
+      // 1. Conservation Act land — filter by known at-risk section codes
+      // 2. Reserves Act land — include all (scenic, recreation, historic, scientific, govt purpose)
+      //    but exclude nature reserves which are not eligible for disposal
+      var caFilter = CA_AT_RISK_SECTIONS.map(function(s){ return "Section='" + s + "'"; }).join(' OR ');
+      var raExclude = RA_EXCLUDED_SECTIONS.map(function(s){ return "Section<>'" + s + "'"; }).join(' AND ');
+      var combinedWhere = "(Legislation='CONSERVATION_ACT' AND (" + caFilter + "))" +
+                         " OR " +
+                         "(Legislation='RESERVES_ACT' AND " + raExclude + ")";
       var params = new URLSearchParams({
-        where: "(Legislation='CONSERVATION_ACT') AND (" + sectionFilter + ")",
+        where: combinedWhere,
         outFields: 'Name,Section,Legislation,Recorded_Area,Shape__Area',
         returnGeometry: 'true', f: 'geojson', outSR: '4326', geometryPrecision: '5',
         resultRecordCount: '1000', resultOffset: String(offset)
