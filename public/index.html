@@ -315,7 +315,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
               <div class="lr"><div class="ls" style="background:#8B1A0A;opacity:.8"></div>Conservation/Forest Park</div>
               <div class="lr"><div class="ls" style="background:#C0392B;opacity:.7"></div>Stewardship Area</div>
               <div class="lr"><div class="ls" style="background:#E67E22;opacity:.6"></div>Scenic/Recreation Reserve</div>
-              <div class="lr"><div class="ls" style="background:#9B59B6;opacity:.6"></div>Historic/Scientific Reserve</div>
+              <div class="lr"><div class="ls" style="background:#9B59B6;opacity:.6"></div>Historic Reserve</div>
             </div>
           </div>
         </div>
@@ -890,17 +890,14 @@ var secCounts = {};
 var DOC_API = 'https://services1.arcgis.com/3JjYDyG3oajxU6HO/ArcGIS/rest/services/DOC_Public_Conservation_Land/FeatureServer/0/query';
 
 var SLABELS = {
-  // Conservation Act land
+  // Conservation Act — at-risk
   'S19_CONSERVATION_PARK':   'Conservation Park',
   'S18_FOREST_PARK':         'Forest Park',
   'S25_STEWARDSHIP_AREA':    'Stewardship Area',
   'S7_CONSERVATION_PURPOSES':'Conservation Purposes',
-  'S21_ECOLOGICAL_AREA':     'Ecological Area',
-  'S22_SANCTUARY_AREA':      'Sanctuary Area',
   'S24_1_2_MOVEABLE_MARGINAL_STRIP':'Marginal Strip',
   'S24_3_FIXED_MARGINAL_STRIP':'Fixed Marginal Strip',
-  // Reserves Act land — possible Section field values from DOC NaPALIS
-  // (exact strings vary; we cover known variants)
+  // Reserves Act — at-risk (scenic, recreation, historic, govt purpose)
   'S17_SCENIC_RESERVE':      'Scenic Reserve',
   'SCENIC_RESERVE':          'Scenic Reserve',
   'SCENIC':                  'Scenic Reserve',
@@ -910,8 +907,6 @@ var SLABELS = {
   'S18_RECREATION_RESERVE':  'Recreation Reserve',
   'S17_HISTORIC_RESERVE':    'Historic Reserve',
   'HISTORIC_RESERVE':        'Historic Reserve',
-  'S17_SCIENTIFIC_RESERVE':  'Scientific Reserve',
-  'SCIENTIFIC_RESERVE':      'Scientific Reserve',
   'S17_GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
   'GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
 };
@@ -919,13 +914,11 @@ var SLABELS = {
 function sectionLabel(sec, legislation) {
   if (SLABELS[sec]) return SLABELS[sec];
   if (legislation === 'RESERVES_ACT') {
-    // Infer from section string patterns
     if (!sec) return 'Reserve';
     var s = sec.toUpperCase();
     if (s.indexOf('SCENIC') > -1)      return 'Scenic Reserve';
     if (s.indexOf('RECREATION') > -1)  return 'Recreation Reserve';
     if (s.indexOf('HISTORIC') > -1)    return 'Historic Reserve';
-    if (s.indexOf('SCIENTIFIC') > -1)  return 'Scientific Reserve';
     if (s.indexOf('GOVERNMENT') > -1)  return 'Government Purpose Reserve';
     if (s.indexOf('LOCAL') > -1)       return 'Local Purpose Reserve';
     return 'Reserve';
@@ -1106,6 +1099,10 @@ function toggleL(name, btn) {
 }
 
 function addFeature(f) {
+  // Client-side Schedule 5 exclusions that can't easily be done in the API query:
+  // 1. Hauraki Gulf island bbox (cl.13) — except Mercury Islands exceptions
+  // 2. Two named scenic reserves (cl.8)
+  if (isIslandExcluded(f) || isNamedExclusion(f)) return;
   var p   = f.properties || {};
   var sec = p.Section || '';
   var leg = p.Legislation || '';
@@ -1254,22 +1251,80 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// At-risk section codes under the Conservation Amendment Bill 2026
-// These are the Conservation Act section codes (Legislation='CONSERVATION_ACT')
-// Excluded: S20_WILDERNESS_AREA, S23_NATURE_RESERVE (not eligible for disposal)
+// Schedule 5 of the Conservation Amendment Bill 2026 — Land INELIGIBLE for exchange/disposal:
+// Conservation Act: wilderness areas (s.18AA/18(1)(a)), ecological areas (b), sanctuary areas (c)
+// National Parks Act: national parks
+// Reserves Act: national reserves (s.13), nature reserves (s.20), SCIENTIFIC reserves (s.21),
+//               wilderness areas (s.47(1))
+// Marine Reserves Act: marine reserves (s.4(1))
+// Wildlife Act: wildlife sanctuaries (s.9(1))
+// Ramsar wetlands
+// Otahu Dedicated Area, Parakawai Geological Area
+// ALL conservation land on islands in bbox lat 35°50'S–37°10'S, lon 174°35'E–177°E
+//   EXCEPT: Red Mercury (Whakau), Ātiu/Middle, Green, Korapuki islands
+
+// Conservation Act at-risk section codes (ecological areas & sanctuary areas are INELIGIBLE per Sch 5)
 var CA_AT_RISK_SECTIONS = [
   'S19_CONSERVATION_PARK','S18_FOREST_PARK','S25_STEWARDSHIP_AREA',
-  'S7_CONSERVATION_PURPOSES','S21_ECOLOGICAL_AREA','S22_SANCTUARY_AREA',
+  'S7_CONSERVATION_PURPOSES',
   'S24_1_2_MOVEABLE_MARGINAL_STRIP','S24_3_FIXED_MARGINAL_STRIP'
 ];
-// Reserves Act land: all types are at risk EXCEPT nature reserves (s.26)
-// We include all RESERVES_ACT land and exclude nature reserves by name pattern
-// Section values in the DOC API for Reserves Act use different codes — safest to include all
-var RA_EXCLUDED_SECTIONS = ['S26_NATURE_RESERVE','NATURE_RESERVE'];
+
+// Reserves Act: include scenic (s.17), recreation (s.18), historic (s.19), govt purpose (s.23) reserves
+// EXCLUDE: nature reserves (s.20), scientific reserves (s.21), national reserves (s.13),
+//          wilderness areas within reserves (s.47), marine reserves
+var RA_EXCLUDED_SECTIONS = [
+  'S26_NATURE_RESERVE','NATURE_RESERVE',
+  'S21_SCIENTIFIC_RESERVE','SCIENTIFIC_RESERVE','SCIENTIFIC',
+  'S13_NATIONAL_RESERVE','NATIONAL_RESERVE',
+  'S47_WILDERNESS_AREA',
+  'MARINE_RESERVE'
+];
+
+// Hauraki Gulf island exclusion bbox from Schedule 5 cl.13
+// lat 35°50'S = -35.833, lat 37°10'S = -37.167, lon 174°35'E = 174.583, lon 177°E = 177.0
+// All conservation land in this bbox is ineligible EXCEPT the 4 named Mercury Islands
+var ISLAND_BBOX = { minLat: -37.167, maxLat: -35.833, minLng: 174.583, maxLng: 177.0 };
+// Mercury Islands exception (these 4 ARE eligible): Red Mercury/Whakau, Ātiu/Middle, Green, Korapuki
+// We can't easily filter by island name in the API, so we filter client-side in addFeature()
+var MERCURY_EXCEPTIONS = ['red mercury','whakau','\u0101tiu','middle island','green island','korapuki'];
+
+function isIslandExcluded(feat) {
+  // Returns true if this feature falls in the Hauraki Gulf island exclusion zone
+  // and is NOT one of the 4 Mercury Island exceptions
+  try {
+    var coords = feat.geometry && feat.geometry.coordinates;
+    if (!coords) return false;
+    // Get centroid approximation from first coordinate ring
+    var ring = feat.geometry.type === 'Polygon' ? coords[0] :
+               feat.geometry.type === 'MultiPolygon' ? coords[0][0] : null;
+    if (!ring || !ring.length) return false;
+    var lngSum = 0, latSum = 0;
+    ring.forEach(function(c){ lngSum += c[0]; latSum += c[1]; });
+    var cLng = lngSum / ring.length, cLat = latSum / ring.length;
+    if (cLat >= ISLAND_BBOX.minLat && cLat <= ISLAND_BBOX.maxLat &&
+        cLng >= ISLAND_BBOX.minLng && cLng <= ISLAND_BBOX.maxLng) {
+      // In bbox — check if it's a Mercury Islands exception
+      var name = ((feat.properties && feat.properties.Name) || '').toLowerCase();
+      var isMercuryException = MERCURY_EXCEPTIONS.some(function(e){ return name.indexOf(e) > -1; });
+      return !isMercuryException; // excluded unless it's an exception island
+    }
+  } catch(e) {}
+  return false;
+}
+
+// Two specific named scenic reserves are also ineligible per Sch 5 cl.8:
+// Kaikoura Island Scenic Reserve and Rakitu Island Scenic Reserve
+var NAMED_EXCLUSIONS = ['kaikoura island scenic reserve','rakitu island scenic reserve'];
+function isNamedExclusion(feat) {
+  var name = ((feat.properties && feat.properties.Name) || '').toLowerCase();
+  return NAMED_EXCLUSIONS.some(function(e){ return name.indexOf(e) > -1; });
+}
+
 
 
 async function loadDOC() {
-  document.getElementById('map-ovmsg').textContent = 'Loading Conservation Act polygons…';
+  document.getElementById('map-ovmsg').textContent = 'Loading at-risk conservation land…';
   var offset = 0, pages = 0;
   try {
     while (pages < 15) {
@@ -1277,11 +1332,20 @@ async function loadDOC() {
       // 1. Conservation Act land — filter by known at-risk section codes
       // 2. Reserves Act land — include all (scenic, recreation, historic, scientific, govt purpose)
       //    but exclude nature reserves which are not eligible for disposal
+      // Conservation Act at-risk sections
       var caFilter = CA_AT_RISK_SECTIONS.map(function(s){ return "Section='" + s + "'"; }).join(' OR ');
+      // Reserves Act: exclude nature, scientific, national reserves and marine reserves by Section
       var raExclude = RA_EXCLUDED_SECTIONS.map(function(s){ return "Section<>'" + s + "'"; }).join(' AND ');
-      var combinedWhere = "(Legislation='CONSERVATION_ACT' AND (" + caFilter + "))" +
-                         " OR " +
-                         "(Legislation='RESERVES_ACT' AND " + raExclude + ")";
+      // Also exclude ecological/sanctuary areas from Conservation Act (they're in Sch 5)
+      var combinedWhere =
+        "(Legislation='CONSERVATION_ACT' AND (" + caFilter + "))" +
+        " OR " +
+        "(Legislation='RESERVES_ACT' AND " + raExclude +
+          " AND Section<>'S20_WILDERNESS_AREA'" +
+          " AND (Name NOT LIKE '%Marine Reserve%')" +
+          " AND (Name NOT LIKE '%Nature Reserve%')" +
+          " AND (Name NOT LIKE '%Scientific Reserve%')" +
+        ")";
       var params = new URLSearchParams({
         where: combinedWhere,
         outFields: 'Name,Section,Legislation,Recorded_Area,Shape__Area',
