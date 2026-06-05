@@ -40,11 +40,16 @@ nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:5000;backgro
 .page{display:none;}
 .page.on{display:block;}
 /* HOME */
-.home-hero{background:linear-gradient(135deg,var(--moss) 0%,var(--sage) 60%,var(--sage2) 100%);color:#fff;padding:60px 52px 52px;}
+.home-hero{background:linear-gradient(135deg,var(--moss) 0%,var(--sage) 60%,var(--sage2) 100%);color:#fff;padding:60px 52px 52px;position:relative;overflow:hidden;}
 .home-hero h1{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:600;line-height:1.15;margin-bottom:12px;}
 .home-hero h1 em{font-style:italic;font-weight:400;color:var(--leaf);}
 .home-hero p{font-size:15px;color:rgba(255,255,255,.7);max-width:480px;line-height:1.7;font-weight:300;}
-.stories-main{padding:40px 52px;}
+/* WALLPAPER STRIP */
+.hero-wallpaper{position:absolute;top:0;right:0;bottom:0;width:220px;display:flex;flex-direction:column;justify-content:center;padding:16px 18px;pointer-events:none;overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.45) 28%,rgba(0,0,0,.45) 100%);}
+.hero-wallpaper span{display:block;font-family:var(--serif);font-size:11px;color:rgba(255,255,255,.18);line-height:1.9;letter-spacing:.2px;white-space:nowrap;}
+.stories-main{padding:40px 52px;position:relative;overflow:hidden;}
+.stories-wallpaper{position:absolute;top:0;right:0;bottom:0;width:200px;display:flex;flex-direction:column;justify-content:flex-start;padding:40px 18px;pointer-events:none;overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.6) 30%,rgba(0,0,0,.6) 100%);}
+.stories-wallpaper span{display:block;font-family:var(--serif);font-size:11px;color:rgba(74,103,65,.22);line-height:2.0;letter-spacing:.2px;white-space:nowrap;}
 .upload-bar{display:flex;align-items:center;gap:12px;padding:16px 20px;background:var(--sagel);border:1px dashed var(--leafl);border-radius:8px;margin-bottom:28px;cursor:pointer;transition:background .15s;}
 .upload-bar:hover{background:var(--sagelm);}
 .upload-bar p{font-size:13px;color:var(--sage);flex:1;}
@@ -89,7 +94,7 @@ textarea.field{min-height:90px;resize:vertical;}
 /* ACT PAGE */
 #pg-act{display:none;flex-direction:column;}
 #pg-act.on{display:flex;}
-.act-header{background:var(--moss);color:#fff;padding:36px 52px;}
+.act-header{background:var(--moss);color:#fff;padding:36px 52px;position:relative;overflow:hidden;}
 .act-header h2{font-family:var(--serif);font-size:34px;font-weight:600;margin-bottom:8px;}
 .act-header p{font-size:14px;color:rgba(255,255,255,.65);max-width:560px;line-height:1.7;}
 .act-vote{display:flex;gap:0;margin-top:18px;border-radius:6px;overflow:hidden;max-width:460px;}
@@ -202,9 +207,42 @@ body:not(.is-admin) .admin-only{display:none!important;}
         <h1>My <em>local</em> matters.</h1>
         <p>The places you and I love and what we can do to protect them.</p>
         <p style="font-size:15px;color:rgba(255,255,255,.85);max-width:680px;line-height:1.8;font-weight:300;margin-top:14px;font-style:italic;border-left:3px solid rgba(138,184,122,.6);padding-left:16px;"><strong style="font-style:normal;color:#8FBD5A">ALERT!</strong> Right now the government wants to change the why and the how of the Conservation Act. At present we, as the public, through conservation boards get a say in how our public lands are used. The proposed changes not only open public lands to ‘disposal’ (for commercial use) but also places that sometimes irreversible decision in the hands of one person — a Minister who reflects the thinking of the day. Our forests, mountains and rivers deserve a more thoughtful approach.</p>
-        <p style="font-size:14px;color:rgba(255,255,255,.6);max-width:680px;line-height:1.8;font-weight:300;margin-top:14px;">Denniston Plateau (drilling for coal), Te Kuha (open-cast coal mine), Waitaha River (damming), Reefton native forest (coal), Victoria (gold), Te Waahīpounamu (gold and coal — this is a world heritage site), Mt Aspiring (tungsten), Coromandel (gold), Rotorua (lithium) to name a few.
+        <div class="hero-wallpaper" aria-hidden="true">
+          <span>Denniston Plateau</span><span>(drilling for coal)</span>
+          <span>Te Kuha</span><span>(open-cast coal mine)</span>
+          <span>Waitaha River</span><span>(damming)</span>
+          <span>Reefton native forest</span><span>(coal)</span>
+          <span>Victoria (gold)</span>
+          <span>Te Waahīpounamu</span><span>(gold and coal)</span>
+          <span>Mt Aspiring (tungsten)</span>
+          <span>Coromandel (gold)</span>
+          <span>Rotorua (lithium)</span>
+          <span>Denniston Plateau</span><span>(drilling for coal)</span>
+          <span>Te Kuha</span><span>(open-cast coal mine)</span>
+          <span>Waitaha River</span><span>(damming)</span>
+        </div>
       </div>
       <div class="stories-main">
+        <div class="stories-wallpaper" aria-hidden="true">
+          <span>Denniston Plateau</span><span>(drilling for coal)</span>
+          <span>Te Kuha</span><span>(open-cast coal mine)</span>
+          <span>Waitaha River (damming)</span>
+          <span>Reefton native forest</span><span>(coal)</span>
+          <span>Victoria (gold)</span>
+          <span>Te Waahīpounamu</span><span>(gold and coal)</span>
+          <span>Mt Aspiring (tungsten)</span>
+          <span>Coromandel (gold)</span>
+          <span>Rotorua (lithium)</span>
+          <span>Denniston Plateau</span><span>(drilling for coal)</span>
+          <span>Te Kuha</span><span>(open-cast coal mine)</span>
+          <span>Waitaha River (damming)</span>
+          <span>Reefton native forest</span><span>(coal)</span>
+          <span>Victoria (gold)</span>
+          <span>Te Waahīpounamu</span><span>(gold and coal)</span>
+          <span>Mt Aspiring (tungsten)</span>
+          <span>Coromandel (gold)</span>
+          <span>Rotorua (lithium)</span>
+        </div>
         <div class="upload-bar admin-only" onclick="document.getElementById('ph-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
           <span style="font-size:24px;opacity:.5">📷</span>
           <p>Add photos<small>Drag & drop or click · Year auto-detected from filename</small></p>
@@ -244,6 +282,17 @@ body:not(.is-admin) .admin-only{display:none!important;}
           <div class="avb against"><div class="vn">54</div><div class="vl">Voted AGAINST<br>Labour · Green · TPM</div></div>
           <div class="avb note"><div class="vn" style="font-size:12px;margin-top:4px">First reading<br>May 2026</div></div>
         </div>
+        <div class="hero-wallpaper" aria-hidden="true">
+          <span>Denniston Plateau</span><span>(drilling for coal)</span>
+          <span>Te Kuha</span><span>(open-cast coal mine)</span>
+          <span>Waitaha River (damming)</span>
+          <span>Reefton native forest</span><span>(coal)</span>
+          <span>Victoria (gold)</span>
+          <span>Te Waahīpounamu</span><span>(gold and coal)</span>
+          <span>Mt Aspiring (tungsten)</span>
+          <span>Coromandel (gold)</span>
+          <span>Rotorua (lithium)</span>
+        </div>
       </div>
       <div class="act-body">
         <div class="act-map-col">
@@ -263,9 +312,10 @@ body:not(.is-admin) .admin-only{display:none!important;}
             <div id="map-canvas" style="height:100%;min-height:500px;"></div>
             <div class="map-legend">
               <h5>At-risk land</h5>
-              <div class="lr"><div class="ls" style="background:#8B1A0A;opacity:.8"></div>Conservation Park</div>
+              <div class="lr"><div class="ls" style="background:#8B1A0A;opacity:.8"></div>Conservation/Forest Park</div>
               <div class="lr"><div class="ls" style="background:#C0392B;opacity:.7"></div>Stewardship Area</div>
-              <div class="lr"><div class="ls" style="background:#E67E22;opacity:.6"></div>Other</div>
+              <div class="lr"><div class="ls" style="background:#E67E22;opacity:.6"></div>Scenic/Recreation Reserve</div>
+              <div class="lr"><div class="ls" style="background:#9B59B6;opacity:.6"></div>Historic/Scientific Reserve</div>
             </div>
           </div>
         </div>
@@ -840,10 +890,27 @@ var secCounts = {};
 var DOC_API = 'https://services1.arcgis.com/3JjYDyG3oajxU6HO/ArcGIS/rest/services/DOC_Public_Conservation_Land/FeatureServer/0/query';
 
 var SLABELS = {
-  'S19_CONSERVATION_PARK':'Conservation Park','S25_STEWARDSHIP_AREA':'Stewardship Area',
-  'S7_CONSERVATION_PURPOSES':'Conservation Purposes','20_WILDERNESS_AREA':'Wilderness Area',
-  'S21_ECOLOGICAL_AREA':'Ecological Area','S22_SANCTUARY_AREA':'Sanctuary Area',
-  'S24_1_2_MOVEABLE_MARGINAL_STRIP':'Marginal Strip','S24_3_FIXED_MARGINAL_STRIP':'Fixed Marginal Strip',
+  // Conservation Act land — excluded from disposal (NOT shown on map)
+  // 'S14_NATIONAL_PARK' — National Parks Act, not in this dataset
+  // 'S20_WILDERNESS_AREA' — not eligible for disposal
+  // 'S23_NATURE_RESERVE' — not eligible for disposal
+
+  // AT-RISK: eligible for disposal/exchange under the bill
+  'S19_CONSERVATION_PARK':   'Conservation Park',
+  'S18_FOREST_PARK':         'Forest Park',
+  'S25_STEWARDSHIP_AREA':    'Stewardship Area',
+  'S7_CONSERVATION_PURPOSES':'Conservation Purposes',
+  'S21_ECOLOGICAL_AREA':     'Ecological Area',
+  'S22_SANCTUARY_AREA':      'Sanctuary Area',
+  // Scenic & Recreation reserves — explicitly named in the bill as eligible
+  'S17_SCENIC_RESERVE':      'Scenic Reserve',
+  'S17_RECREATION_RESERVE':  'Recreation Reserve',
+  'S17_HISTORIC_RESERVE':    'Historic Reserve',
+  'S17_SCIENTIFIC_RESERVE':  'Scientific Reserve',
+  'S17_GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
+  // Marginal strips (lower risk but under Conservation Act)
+  'S24_1_2_MOVEABLE_MARGINAL_STRIP':'Marginal Strip',
+  'S24_3_FIXED_MARGINAL_STRIP':'Fixed Marginal Strip',
 };
 
 var PVOTES = {
@@ -856,77 +923,77 @@ var PVOTES = {
 };
 
 var MPs = {
-  'Auckland Central':      {n:'Chloë Swarbrick',          p:'Green',          e:'Chloe.Swarbrick@parliament.govt.nz',              c:'#098137'},
-  'Banks Peninsula':       {n:'Vanessa Weenink',             p:'National',        e:'Vanessa.Weenink@parliament.govt.nz',             c:'#00529F'},
-  'Bay of Plenty':         {n:'Tom Rutherford',              p:'National',        e:'Tom.Rutherford@parliament.govt.nz',              c:'#00529F'},
-  'Botany':                {n:'Christopher Luxon',           p:'National',        e:'Christopher.Luxon@parliament.govt.nz',           c:'#00529F'},
-  'Christchurch Central':  {n:'Duncan Webb',                 p:'Labour',          e:'Duncan.Webb@parliament.govt.nz',                 c:'#D82A20'},
-  'Christchurch East':     {n:'Reuben Davidson',             p:'Labour',          e:'Reuben.Davidson@parliament.govt.nz',             c:'#D82A20'},
-  'Coromandel':            {n:'Scott Simpson',               p:'National',        e:'Scott.Simpson@parliament.govt.nz',               c:'#00529F'},
-  'Dunedin':               {n:'Rachel Brooking',             p:'Labour',          e:'Rachel.Brooking@parliament.govt.nz',             c:'#D82A20'},
-  'East Coast':            {n:'Dana Kirkpatrick',            p:'National',        e:'Dana.Kirkpatrick@parliament.govt.nz',            c:'#00529F'},
-  'East Coast Bays':       {n:'Erica Stanford',              p:'National',        e:'Erica.Stanford@parliament.govt.nz',              c:'#00529F'},
-  'Epsom':                 {n:'David Seymour',               p:'ACT',             e:'David.Seymour@parliament.govt.nz',               c:'#FFC72C'},
-  'Hamilton East':         {n:'Ryan Hamilton',               p:'National',        e:'Ryan.Hamilton@parliament.govt.nz',               c:'#00529F'},
-  'Hamilton West':         {n:'Tama Potaka',                 p:'National',        e:'Tama.Potaka@parliament.govt.nz',                 c:'#00529F'},
-  'Hauraki-Waikato':       {n:'Hana-Rawhiti Maipi-Clarke',   p:'Te Pāti Māori',   e:'Hana-Rawhiti.Maipi-Clarke@parliament.govt.nz',    c:'#B5002B'},
-  'Hutt South':            {n:'Chris Bishop',                p:'National',        e:'Chris.Bishop@parliament.govt.nz',                c:'#00529F'},
-  'Ikaroa-Rawhiti':        {n:'Cushla Tangaere-Manuel',      p:'Labour',          e:'Cushla.Tangaere-Manuel@parliament.govt.nz',      c:'#D82A20'},
-  'Ilam':                  {n:'Hamish Campbell',             p:'National',        e:'Hamish.Campbell@parliament.govt.nz',             c:'#00529F'},
-  'Invercargill':          {n:'Penny Simmonds',              p:'National',        e:'Penny.Simmonds@parliament.govt.nz',              c:'#00529F'},
-  'Kaikoura':              {n:'Stuart Smith',                p:'National',        e:'Stuart.Smith@parliament.govt.nz',                c:'#00529F'},
-  'Kaipara ki Mahurangi':  {n:'Chris Penk',                  p:'National',        e:'Chris.Penk@parliament.govt.nz',                  c:'#00529F'},
-  'Kelston':               {n:'Carmel Sepuloni',             p:'Labour',          e:'Carmel.Sepuloni@parliament.govt.nz',             c:'#D82A20'},
-  'Mana':                  {n:'Barbara Edmonds',             p:'Labour',          e:'Barbara.Edmonds@parliament.govt.nz',             c:'#D82A20'},
-  'Mangere':               {n:'Lemauga Lydia Sosene',        p:'Labour',          e:'Lemauga.Lydia.Sosene@parliament.govt.nz',        c:'#D82A20'},
-  'Manurewa':              {n:'Arena Williams',              p:'Labour',          e:'Arena.Williams@parliament.govt.nz',              c:'#D82A20'},
-  'Maungakiekie':          {n:'Greg Fleming',                p:'National',        e:'Greg.Fleming@parliament.govt.nz',                c:'#00529F'},
-  'Mt Albert':             {n:'Helen White',                 p:'Labour',          e:'Helen.White@parliament.govt.nz',                 c:'#D82A20'},
-  'Mt Roskill':            {n:'Carlos Cheung',               p:'National',        e:'Carlos.Cheung@parliament.govt.nz',               c:'#00529F'},
-  'Napier':                {n:'Katie Nimon',                 p:'National',        e:'Katie.Nimon@parliament.govt.nz',                 c:'#00529F'},
-  'Nelson':                {n:'Rachel Boyack',               p:'Labour',          e:'Rachel.Boyack@parliament.govt.nz',               c:'#D82A20'},
-  'New Lynn':              {n:'Paulo Garcia',                p:'National',        e:'Paulo.Garcia@parliament.govt.nz',                c:'#00529F'},
-  'New Plymouth':          {n:'David MacLeod',               p:'National',        e:'David.MacLeod@parliament.govt.nz',               c:'#00529F'},
-  'North Shore':           {n:'Simon Watts',                 p:'National',        e:'Simon.Watts@parliament.govt.nz',                 c:'#00529F'},
-  'Northcote':             {n:'Daniel Bidois',               p:'National',        e:'Dan.Bidois@parliament.govt.nz',                  c:'#00529F'},
-  'Northland':             {n:'Grant McCallum',              p:'National',        e:'Grant.McCallum@parliament.govt.nz',              c:'#00529F'},
-  'Ohariu':                {n:'Greg O’Connor',          p:'Labour',          e:'Greg.OConnor@parliament.govt.nz',                c:'#D82A20'},
-  'Otaki':                 {n:'Tim Costley',                 p:'National',        e:'Tim.Costley@parliament.govt.nz',                 c:'#00529F'},
-  'Pakuranga':             {n:'Simeon Brown',                p:'National',        e:'Simeon.Brown@parliament.govt.nz',                c:'#00529F'},
-  'Palmerston North':      {n:'Tangi Utikere',               p:'Labour',          e:'Tangi.Utikere@parliament.govt.nz',               c:'#D82A20'},
-  'Panmure-Otahuhu':       {n:'Jenny Salesa',                p:'Labour',          e:'Jenny.Salesa@parliament.govt.nz',                c:'#D82A20'},
-  'Papakura':              {n:'Judith Collins',              p:'National',        e:'Judith.Collins@parliament.govt.nz',              c:'#00529F'},
-  'Port Waikato':          {n:'Andrew Bayly',                p:'National',        e:'Andrew.Bayly@parliament.govt.nz',                c:'#00529F'},
-  'Rangitata':             {n:'James Meager',                p:'National',        e:'James.Meager@parliament.govt.nz',                c:'#00529F'},
-  'Rangitikei':            {n:'Suze Redmayne',               p:'National',        e:'Suze.Redmayne@parliament.govt.nz',               c:'#00529F'},
-  'Remutaka':              {n:'Chris Hipkins',               p:'Labour',          e:'Chris.Hipkins@parliament.govt.nz',               c:'#D82A20'},
-  'Rongotai':              {n:'Julie Anne Genter',           p:'Green',           e:'JulieAnne.Genter@parliament.govt.nz',            c:'#098137'},
-  'Rotorua':               {n:'Todd McClay',                 p:'National',        e:'Todd.McClay@parliament.govt.nz',                 c:'#00529F'},
-  'Selwyn':                {n:'Nicola Grigg',                p:'National',        e:'Nicola.Grigg@parliament.govt.nz',                c:'#00529F'},
-  'Southland':             {n:'Joseph Mooney',               p:'National',        e:'Joseph.Mooney@parliament.govt.nz',               c:'#00529F'},
-  'Taieri':                {n:'Ingrid Leary',                p:'Labour',          e:'Ingrid.Leary@parliament.govt.nz',                c:'#D82A20'},
-  'Takanini':              {n:'Rima Nakhle',                 p:'National',        e:'Rima.Nakhle@parliament.govt.nz',                 c:'#00529F'},
-  'Tamaki':                {n:'Brooke van Velden',           p:'ACT',             e:'Brooke.vanVelden@parliament.govt.nz',            c:'#FFC72C'},
-  'Taranaki-King Country': {n:'Barbara Kuriger',             p:'National',        e:'Barbara.Kuriger@parliament.govt.nz',             c:'#00529F'},
-  'Taupo':                 {n:'Louise Upston',               p:'National',        e:'Louise.Upston@parliament.govt.nz',               c:'#00529F'},
-  'Tauranga':              {n:'Sam Uffindell',               p:'National',        e:'Sam.Uffindell@parliament.govt.nz',               c:'#00529F'},
-  'Te Atatu':              {n:'Philip Twyford',              p:'Labour',          e:'Philip.Twyford@parliament.govt.nz',              c:'#D82A20'},
-  'Te Tai Hauauru':        {n:'Debbie Ngarewa-Packer',       p:'Te Pāti Māori',   e:'Debbie.Ngarewa-Packer@parliament.govt.nz',        c:'#B5002B'},
-  'Te Tai Tokerau':        {n:'Mariameno Kapa-Kingi',        p:'Te Pāti Māori',   e:'Mariameno.Kapa-Kingi@parliament.govt.nz',         c:'#B5002B'},
-  'Te Tai Tonga':          {n:'Tākuta Ferris',          p:'Te Pāti Māori',   e:'Takuta.Ferris@parliament.govt.nz',               c:'#B5002B'},
-  'Tukituki':              {n:'Catherine Wedd',              p:'National',        e:'Catherine.Wedd@parliament.govt.nz',              c:'#00529F'},
-  'Upper Harbour':         {n:'Cameron Brewer',              p:'National',        e:'Cameron.Brewer@parliament.govt.nz',              c:'#00529F'},
-  'Waiariki':              {n:'Rawiri Waititi',              p:'Te Pāti Māori',   e:'Rawiri.Waititi@parliament.govt.nz',              c:'#B5002B'},
-  'Waikato':               {n:'Tim van de Molen',            p:'National',        e:'Tim.vandeMolen@parliament.govt.nz',              c:'#00529F'},
-  'Waimakariri':           {n:'Matt Doocey',                 p:'National',        e:'Matt.Doocey@parliament.govt.nz',                 c:'#00529F'},
-  'Wairarapa':             {n:'Mike Butterick',              p:'National',        e:'Mike.Butterick@parliament.govt.nz',              c:'#00529F'},
-  'Waitaki':               {n:'Miles Anderson',              p:'National',        e:'Miles.Anderson@parliament.govt.nz',              c:'#00529F'},
-  'Wellington Central':    {n:'Tamatha Paul',                p:'Green',           e:'Tamatha.Paul@parliament.govt.nz',                c:'#098137'},
-  'West Coast-Tasman':     {n:'Maureen Pugh',                p:'National',        e:'Maureen.Pugh@parliament.govt.nz',                c:'#00529F'},
-  'Whanganui':             {n:'Carl Bates',                  p:'National',        e:'Carl.Bates@parliament.govt.nz',                  c:'#00529F'},
-  'Whangaparaoa':          {n:'Mark Mitchell',               p:'National',        e:'Mark.Mitchell@parliament.govt.nz',               c:'#00529F'},
-  'Whangarei':             {n:'Shane Reti',                  p:'National',        e:'Shane.Reti@parliament.govt.nz',                  c:'#00529F'},
-  'Wigram':                {n:'Megan Woods',                 p:'Labour',          e:'Megan.Woods@parliament.govt.nz',                 c:'#D82A20'},
+  'Auckland Central':      {n:'Chloë Swarbrick',            p:'Green',          e:'Chloe.Swarbrick@parliament.govt.nz',              c:'#098137'},
+  'Banks Peninsula':       {n:'Vanessa Weenink',             p:'National',       e:'Vanessa.Weenink@parliament.govt.nz',              c:'#00529F'},
+  'Bay of Plenty':         {n:'Tom Rutherford',              p:'National',       e:'Tom.Rutherford@parliament.govt.nz',               c:'#00529F'},
+  'Botany':                {n:'Christopher Luxon',           p:'National',       e:'Christopher.Luxon@parliament.govt.nz',            c:'#00529F'},
+  'Christchurch Central':  {n:'Duncan Webb',                 p:'Labour',         e:'Duncan.Webb@parliament.govt.nz',                  c:'#D82A20'},
+  'Christchurch East':     {n:'Reuben Davidson',             p:'Labour',         e:'Reuben.Davidson@parliament.govt.nz',              c:'#D82A20'},
+  'Coromandel':            {n:'Scott Simpson',               p:'National',       e:'Scott.Simpson@parliament.govt.nz',                c:'#00529F'},
+  'Dunedin':               {n:'Rachel Brooking',             p:'Labour',         e:'Rachel.Brooking@parliament.govt.nz',              c:'#D82A20'},
+  'East Coast':            {n:'Dana Kirkpatrick',            p:'National',       e:'Dana.Kirkpatrick@parliament.govt.nz',             c:'#00529F'},
+  'East Coast Bays':       {n:'Erica Stanford',              p:'National',       e:'Erica.Stanford@parliament.govt.nz',               c:'#00529F'},
+  'Epsom':                 {n:'David Seymour',               p:'ACT',            e:'David.Seymour@parliament.govt.nz',                c:'#FFC72C'},
+  'Hamilton East':         {n:'Ryan Hamilton',               p:'National',       e:'Ryan.Hamilton@parliament.govt.nz',                c:'#00529F'},
+  'Hamilton West':         {n:'Tama Potaka',                 p:'National',       e:'Tama.Potaka@parliament.govt.nz',                  c:'#00529F'},
+  'Hauraki-Waikato':       {n:'Hana-Rawhiti Maipi-Clarke',   p:'Te Pāti Māori',  e:'Hana-Rawhiti.Maipi-Clarke@parliament.govt.nz',    c:'#B5002B'},
+  'Hutt South':            {n:'Chris Bishop',                p:'National',       e:'Chris.Bishop@parliament.govt.nz',                 c:'#00529F'},
+  'Ikaroa-Rāwhiti':        {n:'Cushla Tangaere-Manuel',      p:'Labour',         e:'Cushla.Tangaere-Manuel@parliament.govt.nz',       c:'#D82A20'},
+  'Ilam':                  {n:'Hamish Campbell',             p:'National',       e:'Hamish.Campbell@parliament.govt.nz',              c:'#00529F'},
+  'Invercargill':          {n:'Penny Simmonds',              p:'National',       e:'Penny.Simmonds@parliament.govt.nz',               c:'#00529F'},
+  'Kaikōura':              {n:'Stuart Smith',                p:'National',       e:'Stuart.Smith@parliament.govt.nz',                 c:'#00529F'},
+  'Kaipara ki Mahurangi':  {n:'Chris Penk',                  p:'National',       e:'Chris.Penk@parliament.govt.nz',                   c:'#00529F'},
+  'Kelston':               {n:'Carmel Sepuloni',             p:'Labour',         e:'Carmel.Sepuloni@parliament.govt.nz',              c:'#D82A20'},
+  'Mana':                  {n:'Barbara Edmonds',             p:'Labour',         e:'Barbara.Edmonds@parliament.govt.nz',              c:'#D82A20'},
+  'Māngere':               {n:'Lemauga Lydia Sosene',        p:'Labour',         e:'Lemauga.Lydia.Sosene@parliament.govt.nz',         c:'#D82A20'},
+  'Manurewa':              {n:'Arena Williams',              p:'Labour',         e:'Arena.Williams@parliament.govt.nz',               c:'#D82A20'},
+  'Maungakiekie':          {n:'Greg Fleming',                p:'National',       e:'Greg.Fleming@parliament.govt.nz',                 c:'#00529F'},
+  'Mt Albert':             {n:'Helen White',                 p:'Labour',         e:'Helen.White@parliament.govt.nz',                  c:'#D82A20'},
+  'Mt Roskill':            {n:'Carlos Cheung',               p:'National',       e:'Carlos.Cheung@parliament.govt.nz',                c:'#00529F'},
+  'Napier':                {n:'Katie Nimon',                 p:'National',       e:'Katie.Nimon@parliament.govt.nz',                  c:'#00529F'},
+  'Nelson':                {n:'Rachel Boyack',               p:'Labour',         e:'Rachel.Boyack@parliament.govt.nz',                c:'#D82A20'},
+  'New Lynn':              {n:'Paulo Garcia',                p:'National',       e:'Paulo.Garcia@parliament.govt.nz',                 c:'#00529F'},
+  'New Plymouth':          {n:'David MacLeod',               p:'National',       e:'David.MacLeod@parliament.govt.nz',                c:'#00529F'},
+  'North Shore':           {n:'Simon Watts',                 p:'National',       e:'Simon.Watts@parliament.govt.nz',                  c:'#00529F'},
+  'Northcote':             {n:'Daniel Bidois',               p:'National',       e:'Dan.Bidois@parliament.govt.nz',                   c:'#00529F'},
+  'Northland':             {n:'Grant McCallum',              p:'National',       e:'Grant.McCallum@parliament.govt.nz',               c:'#00529F'},
+  'Ōhāriu':                {n:"Greg O'Connor",               p:'Labour',         e:'Greg.OConnor@parliament.govt.nz',                 c:'#D82A20'},
+  'Ōtaki':                 {n:'Tim Costley',                 p:'National',       e:'Tim.Costley@parliament.govt.nz',                  c:'#00529F'},
+  'Pakuranga':             {n:'Simeon Brown',                p:'National',       e:'Simeon.Brown@parliament.govt.nz',                 c:'#00529F'},
+  'Palmerston North':      {n:'Tangi Utikere',               p:'Labour',         e:'Tangi.Utikere@parliament.govt.nz',                c:'#D82A20'},
+  'Panmure-Ōtāhuhu':       {n:'Jenny Salesa',                p:'Labour',         e:'Jenny.Salesa@parliament.govt.nz',                 c:'#D82A20'},
+  'Papakura':              {n:'Judith Collins',              p:'National',       e:'Judith.Collins@parliament.govt.nz',               c:'#00529F'},
+  'Port Waikato':          {n:'Andrew Bayly',                p:'National',       e:'Andrew.Bayly@parliament.govt.nz',                 c:'#00529F'},
+  'Rangitata':             {n:'James Meager',                p:'National',       e:'James.Meager@parliament.govt.nz',                 c:'#00529F'},
+  'Rangitīkei':            {n:'Suze Redmayne',               p:'National',       e:'Suze.Redmayne@parliament.govt.nz',                c:'#00529F'},
+  'Remutaka':              {n:'Chris Hipkins',               p:'Labour',         e:'Chris.Hipkins@parliament.govt.nz',                c:'#D82A20'},
+  'Rongotai':              {n:'Julie Anne Genter',           p:'Green',          e:'JulieAnne.Genter@parliament.govt.nz',             c:'#098137'},
+  'Rotorua':               {n:'Todd McClay',                 p:'National',       e:'Todd.McClay@parliament.govt.nz',                  c:'#00529F'},
+  'Selwyn':                {n:'Nicola Grigg',                p:'National',       e:'Nicola.Grigg@parliament.govt.nz',                 c:'#00529F'},
+  'Southland':             {n:'Joseph Mooney',               p:'National',       e:'Joseph.Mooney@parliament.govt.nz',                c:'#00529F'},
+  'Taieri':                {n:'Ingrid Leary',                p:'Labour',         e:'Ingrid.Leary@parliament.govt.nz',                 c:'#D82A20'},
+  'Takanini':              {n:'Rima Nakhle',                 p:'National',       e:'Rima.Nakhle@parliament.govt.nz',                  c:'#00529F'},
+  'Tāmaki':                {n:'Brooke van Velden',           p:'ACT',            e:'Brooke.vanVelden@parliament.govt.nz',             c:'#FFC72C'},
+  'Taranaki-King Country': {n:'Barbara Kuriger',             p:'National',       e:'Barbara.Kuriger@parliament.govt.nz',              c:'#00529F'},
+  'Taupō':                 {n:'Louise Upston',               p:'National',       e:'Louise.Upston@parliament.govt.nz',                c:'#00529F'},
+  'Tauranga':              {n:'Sam Uffindell',               p:'National',       e:'Sam.Uffindell@parliament.govt.nz',                c:'#00529F'},
+  'Te Atatū':              {n:'Philip Twyford',              p:'Labour',         e:'Philip.Twyford@parliament.govt.nz',               c:'#D82A20'},
+  'Te Tai Hauāuru':        {n:'Debbie Ngarewa-Packer',       p:'Te Pāti Māori',  e:'Debbie.Ngarewa-Packer@parliament.govt.nz',        c:'#B5002B'},
+  'Te Tai Tokerau':        {n:'Mariameno Kapa-Kingi',        p:'Te Pāti Māori',  e:'Mariameno.Kapa-Kingi@parliament.govt.nz',         c:'#B5002B'},
+  'Te Tai Tonga':          {n:'Tākuta Ferris',               p:'Te Pāti Māori',  e:'Takuta.Ferris@parliament.govt.nz',                c:'#B5002B'},
+  'Tukituki':              {n:'Catherine Wedd',              p:'National',       e:'Catherine.Wedd@parliament.govt.nz',               c:'#00529F'},
+  'Upper Harbour':         {n:'Cameron Brewer',              p:'National',       e:'Cameron.Brewer@parliament.govt.nz',               c:'#00529F'},
+  'Waiariki':              {n:'Rawiri Waititi',              p:'Te Pāti Māori',  e:'Rawiri.Waititi@parliament.govt.nz',               c:'#B5002B'},
+  'Waikato':               {n:'Tim van de Molen',            p:'National',       e:'Tim.vandeMolen@parliament.govt.nz',               c:'#00529F'},
+  'Waimakariri':           {n:'Matt Doocey',                 p:'National',       e:'Matt.Doocey@parliament.govt.nz',                  c:'#00529F'},
+  'Wairarapa':             {n:'Mike Butterick',              p:'National',       e:'Mike.Butterick@parliament.govt.nz',               c:'#00529F'},
+  'Waitaki':               {n:'Miles Anderson',              p:'National',       e:'Miles.Anderson@parliament.govt.nz',               c:'#00529F'},
+  'Wellington Central':    {n:'Tamatha Paul',                p:'Green',          e:'Tamatha.Paul@parliament.govt.nz',                 c:'#098137'},
+  'West Coast-Tasman':     {n:'Maureen Pugh',                p:'National',       e:'Maureen.Pugh@parliament.govt.nz',                 c:'#00529F'},
+  'Whanganui':             {n:'Carl Bates',                  p:'National',       e:'Carl.Bates@parliament.govt.nz',                   c:'#00529F'},
+  'Whangaparāoa':          {n:'Mark Mitchell',               p:'National',       e:'Mark.Mitchell@parliament.govt.nz',                c:'#00529F'},
+  'Whangārei':             {n:'Shane Reti',                  p:'National',       e:'Shane.Reti@parliament.govt.nz',                   c:'#00529F'},
+  'Wigram':                {n:'Megan Woods',                 p:'Labour',         e:'Megan.Woods@parliament.govt.nz',                  c:'#D82A20'},
 };
 
 var SP = {
@@ -955,6 +1022,8 @@ function regionFrom(lat, lng) {
   if (lat > -38.5) return 'Bay of Plenty';
   if (lat > -40.0 && lng > 176.0) return "Hawke's Bay";
   if (lat > -39.8 && lng < 174.5) return 'Taranaki';
+  // Tararua / Kapiti Coast area: lat -40.3 to -41.0, lng 175.0-176.0 → Wellington region
+  if (lat > -41.2 && lat <= -40.5 && lng > 174.8 && lng < 176.3) return 'Wellington';
   if (lat > -40.5 && lng < 176.5) return 'Manawatu-Whanganui';
   if (lat > -41.5 && lng > 174.5) return 'Wellington';
   if (lat > -41.8 && lng > 172.5 && lng < 174.5) return 'Nelson';
@@ -982,7 +1051,12 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
 }
 
 function gstyle(sec, hover, sel) {
-  var fill = sec === 'S19_CONSERVATION_PARK' ? '#8B1A0A' : sec === 'S25_STEWARDSHIP_AREA' ? '#C0392B' : '#E67E22';
+  var fill;
+  if (sec === 'S19_CONSERVATION_PARK' || sec === 'S18_FOREST_PARK') fill = '#8B1A0A';
+  else if (sec === 'S25_STEWARDSHIP_AREA') fill = '#C0392B';
+  else if (sec === 'S17_SCENIC_RESERVE' || sec === 'S17_RECREATION_RESERVE') fill = '#E67E22';
+  else if (sec === 'S17_HISTORIC_RESERVE' || sec === 'S17_SCIENTIFIC_RESERVE') fill = '#9B59B6';
+  else fill = '#E67E22';
   var op   = hover ? 0.75 : 0.5;
   if (sel) { fill = '#E74C3C'; op = 0.9; }
   return { color: '#5A0A00', weight: sel ? 2 : 0.6, fillColor: fill, fillOpacity: op };
@@ -1039,7 +1113,7 @@ async function showInfo(p, sec) {
   document.getElementById('icard').style.display     = 'block';
   document.getElementById('ic-name').textContent     = name;
   document.getElementById('ic-det').innerHTML = [
-    ['Type', lbl], ha && ['Area', ha], ['Risk', 'Eligible for disposal']
+    ['Type', lbl], ha && ['Area', ha], ['Risk', 'Eligible for disposal/exchange']
   ].filter(Boolean).map(function(r){ return '<div class="irow"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div>'; }).join('');
 
   var lat = -41.5, lng = 172.5, minLat, minLng, maxLat, maxLng;
@@ -1062,11 +1136,11 @@ async function showInfo(p, sec) {
     var REG_EL = {
       'Northland':['Northland','Whangārei'],'Auckland':['Coromandel'],'Waikato':['Waikato','Taupō'],
       'Bay of Plenty':['Bay of Plenty','Rotorua'],"Hawke's Bay":["Hawke's Bay",'Tukituki'],
-      'Taranaki':['Taranaki-King Country','New Plymouth'],'Manawatu-Whanganui':['Rangitīkei','Whanganui'],
-      'Wellington':['Ōtaki','Wellington Central','Remutaka'],'Nelson':['Nelson','West Coast-Tasman'],
+      'Taranaki':['Taranaki-King Country','New Plymouth'],'Manawatu-Whanganui':['Rangitīkei','Whanganui','Ōtaki'],
+      'Wellington':['Ōtaki','Remutaka','Wellington Central'],'Nelson':['Nelson','West Coast-Tasman'],
       'Marlborough':['Kaikōura'],'West Coast':['West Coast-Tasman','Kaikōura'],
       'Canterbury':['Kaikōura','Selwyn','Rangitata','Ilam'],'Otago':['Waitaki','Taieri','Dunedin'],
-      'Southland':['Southland','Invercargill','Clutha-Southland'],
+      'Southland':['Southland','Invercargill'],
     };
     elNames = REG_EL[region] || ['Kaikōura'];
   }
@@ -1153,13 +1227,24 @@ document.addEventListener('click', function(e) {
   }
 });
 
+// At-risk section codes under the Conservation Amendment Bill 2026
+// Excluded (not at risk): S20_WILDERNESS_AREA, S23_NATURE_RESERVE, National Parks (NPA)
+var AT_RISK_SECTIONS = [
+  'S19_CONSERVATION_PARK','S18_FOREST_PARK','S25_STEWARDSHIP_AREA',
+  'S7_CONSERVATION_PURPOSES','S21_ECOLOGICAL_AREA','S22_SANCTUARY_AREA',
+  'S17_SCENIC_RESERVE','S17_RECREATION_RESERVE','S17_HISTORIC_RESERVE',
+  'S17_SCIENTIFIC_RESERVE','S17_GOVERNMENT_PURPOSE_RESERVE',
+  'S24_1_2_MOVEABLE_MARGINAL_STRIP','S24_3_FIXED_MARGINAL_STRIP'
+];
+
 async function loadDOC() {
   document.getElementById('map-ovmsg').textContent = 'Loading Conservation Act polygons…';
   var offset = 0, pages = 0;
   try {
     while (pages < 15) {
+      var sectionFilter = AT_RISK_SECTIONS.map(function(s){ return "Section='" + s + "'"; }).join(' OR ');
       var params = new URLSearchParams({
-        where: "Legislation='CONSERVATION_ACT'",
+        where: "(Legislation='CONSERVATION_ACT') AND (" + sectionFilter + ")",
         outFields: 'Name,Section,Legislation,Recorded_Area,Shape__Area',
         returnGeometry: 'true', f: 'geojson', outSR: '4326', geometryPrecision: '5',
         resultRecordCount: '1000', resultOffset: String(offset)
@@ -1186,14 +1271,17 @@ async function loadDOC() {
 
 function loadFallback() {
   var FB = [
-    {n:'Victoria Forest Park',s:'S19_CONSERVATION_PARK',ha:201000,box:[-42.4,171.3,-41.9,172.2]},
-    {n:'Tararua Forest Park',s:'S19_CONSERVATION_PARK',ha:116500,box:[-40.9,175.1,-40.3,175.8]},
-    {n:'Ruahine Forest Park',s:'S19_CONSERVATION_PARK',ha:90000,box:[-40.2,175.9,-39.4,176.6]},
+    {n:'Victoria Forest Park',s:'S18_FOREST_PARK',ha:201000,box:[-42.4,171.3,-41.9,172.2]},
+    {n:'Tararua Forest Park',s:'S18_FOREST_PARK',ha:116500,box:[-40.9,175.1,-40.3,175.8]},
+    {n:'Ruahine Forest Park',s:'S18_FOREST_PARK',ha:90000,box:[-40.2,175.9,-39.4,176.6]},
     {n:'West Coast Stewardship N',s:'S25_STEWARDSHIP_AREA',ha:165000,box:[-42.0,171.0,-41.4,172.1]},
     {n:'West Coast Stewardship S',s:'S25_STEWARDSHIP_AREA',ha:195000,box:[-43.8,168.4,-42.5,170.3]},
     {n:'Fiordland Stewardship',s:'S25_STEWARDSHIP_AREA',ha:220000,box:[-46.0,166.5,-44.8,168.2]},
     {n:'Otago Stewardship',s:'S25_STEWARDSHIP_AREA',ha:180000,box:[-45.5,168.5,-44.2,170.2]},
     {n:'Canterbury Stewardship',s:'S25_STEWARDSHIP_AREA',ha:155000,box:[-44.2,170.5,-43.1,172.3]},
+    {n:'Coromandel Scenic Reserve',s:'S17_SCENIC_RESERVE',ha:8500,box:[-37.3,175.5,-36.8,175.9]},
+    {n:'Marlborough Scenic Reserve',s:'S17_SCENIC_RESERVE',ha:4200,box:[-41.7,173.5,-41.4,174.0]},
+    {n:'Kaikōura Scenic Reserve',s:'S17_SCENIC_RESERVE',ha:1800,box:[-42.5,173.6,-42.2,174.0]},
   ];
   FB.forEach(function(d) {
     var s=d.box[0], w=d.box[1], n=d.box[2], e=d.box[3];
