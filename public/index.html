@@ -941,7 +941,7 @@ var PVOTES = {
 };
 
 var MPs = {
-  'Auckland Central':      {n:'Chloë Swarbrick',            p:'Green',          e:'Chloe.Swarbrick@parliament.govt.nz',              c:'#098137'},
+  'Auckland Central':      {n:'Chlöe Swarbrick',            p:'Green',          e:'Chloe.Swarbrick@parliament.govt.nz',              c:'#098137'},
   'Banks Peninsula':       {n:'Vanessa Weenink',             p:'National',       e:'Vanessa.Weenink@parliament.govt.nz',              c:'#00529F'},
   'Bay of Plenty':         {n:'Tom Rutherford',              p:'National',       e:'Tom.Rutherford@parliament.govt.nz',               c:'#00529F'},
   'Botany':                {n:'Christopher Luxon',           p:'National',       e:'Christopher.Luxon@parliament.govt.nz',            c:'#00529F'},
@@ -975,7 +975,7 @@ var MPs = {
   'North Shore':           {n:'Simon Watts',                 p:'National',       e:'Simon.Watts@parliament.govt.nz',                  c:'#00529F'},
   'Northcote':             {n:'Daniel Bidois',               p:'National',       e:'Dan.Bidois@parliament.govt.nz',                   c:'#00529F'},
   'Northland':             {n:'Grant McCallum',              p:'National',       e:'Grant.McCallum@parliament.govt.nz',               c:'#00529F'},
-  'Ōhāriu':                {n:"Greg O'Connor",               p:'Labour',         e:'Greg.OConnor@parliament.govt.nz',                 c:'#D82A20'},
+  'Ōhāriu':                {n:"Greg O'Connor",               p:'Labour',         e:"Greg.O'Connor@parliament.govt.nz",                c:'#D82A20'},
   'Ōtaki':                 {n:'Tim Costley',                 p:'National',       e:'Tim.Costley@parliament.govt.nz',                  c:'#00529F'},
   'Pakuranga':             {n:'Simeon Brown',                p:'National',       e:'Simeon.Brown@parliament.govt.nz',                 c:'#00529F'},
   'Palmerston North':      {n:'Tangi Utikere',               p:'Labour',         e:'Tangi.Utikere@parliament.govt.nz',                c:'#D82A20'},
@@ -1052,6 +1052,33 @@ function regionFrom(lat, lng) {
   return 'Southland';
 }
 
+// Normalise ASCII electorate names (as returned by Stats NZ WFS GED2020_V1_00_NAME_ASCII)
+// to the macron-correct modern names used as keys in the MPs{} object.
+var GED_NAME_FIX = {
+  'Ikaroa-Rawhiti':   'Ikaroa-Rāwhiti',
+  'Kaikoura':         'Kaikōura',
+  'Mangere':          'Māngere',
+  'Ohariu':           'Ōhāriu',
+  'Otaki':            'Ōtaki',
+  'Rangitikei':       'Rangitīkei',
+  'Tamaki':           'Tāmaki',
+  'Taupo':            'Taupō',
+  'Te Atatu':         'Te Atatū',
+  'Te Tai Hauauru':   'Te Tai Hauāuru',
+  'Whangarei':        'Whangārei',
+  'Whangaraoa':       'Whangaparāoa',
+  // 2014→2020 renamed electorates (old ASCII names that may still appear)
+  'Helensville':      'Kaipara ki Mahurangi',
+  'Hunua':            'Takanini',
+  'Manukau East':     'Panmure-Ōtāhuhu',
+  'Port Hills':       'Banks Peninsula',
+  'Rimutaka':         'Remutaka',
+  'Rodney':           'Whangaparāoa',
+  'Clutha-Southland': 'Southland',
+  'Dunedin North':    'Dunedin',
+  'Dunedin South':    'Dunedin',
+};
+
 async function getElectorates(minLng, minLat, maxLng, maxLat) {
   var bbox = minLat + ',' + minLng + ',' + maxLat + ',' + maxLng + ',urn:ogc:def:crs:EPSG::4326';
   var url = STATS_WFS + '?service=WFS&version=2.0.0&request=GetFeature&typeNames=layer-104580&outputFormat=application/json&propertyName=GED2020_V1_00_NAME_ASCII&BBOX=' + bbox;
@@ -1062,7 +1089,10 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
     var names = [];
     (data.features||[]).forEach(function(f) {
       var n = f.properties && f.properties.GED2020_V1_00_NAME_ASCII;
-      if (n && names.indexOf(n) === -1) names.push(n);
+      if (n) {
+        n = GED_NAME_FIX[n] || n; // normalise ASCII→macron and old→new names
+        if (names.indexOf(n) === -1) names.push(n);
+      }
     });
     return names.slice(0, 4);
   } catch(e) { return null; }
