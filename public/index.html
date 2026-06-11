@@ -1098,6 +1098,56 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
   } catch(e) { return null; }
 }
 
+// Auckland Council "Local Electoral Boundary" service — Local Boards layer.
+// Public, CORS-enabled and current, so it is reliable where the national
+// electorate lookup above is not. Used to resolve Auckland conservation
+// polygons to their actual local board, which then maps to the general
+// electorate(s) and sitting MP below. Previously Auckland areas fell back to
+// the Coromandel electorate (Scott Simpson), which is not an Auckland seat.
+// Source: https://data-aucklandcouncil.opendata.arcgis.com/datasets/cff8b5bdbe8447c1811cec6a25e0b99c
+var AKL_LB_API = 'https://services1.arcgis.com/n4yPwebTjJCmXB6W/arcgis/rest/services/LocalElectoralBoundary/FeatureServer/2/query';
+
+// Auckland local board → the general electorate(s) whose MP represents that area.
+var AKL_BOARD_EL = {
+  'Rodney':                ['Kaipara ki Mahurangi','Whangaparāoa'],
+  'Hibiscus and Bays':     ['Whangaparāoa','East Coast Bays'],
+  'Upper Harbour':         ['Upper Harbour'],
+  'Kaipātiki':             ['Northcote'],
+  'Devonport-Takapuna':    ['North Shore'],
+  'Henderson-Massey':      ['Te Atatū'],
+  'Waitākere Ranges':      ['New Lynn','Te Atatū'],
+  'Whau':                  ['New Lynn','Kelston'],
+  'Albert-Eden':           ['Mt Albert','Maungakiekie'],
+  'Puketāpapa':            ['Mt Roskill'],
+  'Waitematā':             ['Auckland Central'],
+  'Ōrākei':                ['Tāmaki','Epsom'],
+  'Maungakiekie-Tāmaki':   ['Maungakiekie','Panmure-Ōtāhuhu'],
+  'Howick':                ['Botany','Pakuranga'],
+  'Māngere-Ōtāhuhu':       ['Māngere','Panmure-Ōtāhuhu'],
+  'Ōtara-Papatoetoe':      ['Manurewa','Panmure-Ōtāhuhu'],
+  'Manurewa':              ['Manurewa','Takanini'],
+  'Papakura':              ['Papakura','Takanini'],
+  'Franklin':              ['Port Waikato','Papakura'],
+  'Aotea / Great Barrier': ['Coromandel'],
+  'Waiheke':               ['Auckland Central','Tāmaki'],
+};
+
+// Resolve an Auckland point to its general electorate(s) via the local board it sits in.
+async function getAucklandElectorates(lng, lat) {
+  var url = AKL_LB_API + '?geometry=' + lng + ',' + lat +
+    '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects' +
+    '&outFields=LocalBoardName&returnGeometry=false&f=json';
+  try {
+    var res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+    if (!res.ok) return null;
+    var data = await res.json();
+    var f = (data.features || [])[0];
+    var board = f && f.attributes && f.attributes.LocalBoardName;
+    if (!board) return null;
+    return AKL_BOARD_EL[board] || null;
+  } catch(e) { return null; }
+}
+
 function gstyle(sec, leg, hover, sel) {
   var fill;
   var s = (sec || '').toUpperCase();
@@ -1190,10 +1240,12 @@ async function showInfo(p, sec, leg) {
   mst('info');
 
   var elNames = null;
-  if (minLat !== undefined) elNames = await getElectorates(minLng, minLat, maxLng, maxLat);
+  // Auckland areas: resolve via Auckland Council local board boundaries (reliable & current).
+  if (region === 'Auckland') elNames = await getAucklandElectorates(lng, lat);
+  if ((!elNames || !elNames.length) && minLat !== undefined) elNames = await getElectorates(minLng, minLat, maxLng, maxLat);
   if (!elNames || !elNames.length) {
     var REG_EL = {
-      'Northland':['Northland','Whangārei'],'Auckland':['Coromandel'],'Waikato':['Waikato','Taupō'],
+      'Northland':['Northland','Whangārei'],'Auckland':['Te Atatū','New Lynn','Port Waikato'],'Waikato':['Waikato','Taupō'],
       'Bay of Plenty':['Bay of Plenty','Rotorua'],"Hawke's Bay":["Hawke's Bay",'Tukituki'],
       'Taranaki':['Taranaki-King Country','New Plymouth'],'Manawatu-Whanganui':['Rangitīkei','Whanganui','Ōtaki'],
       'Wellington':['Ōtaki','Remutaka','Wellington Central'],'Nelson':['Nelson','West Coast-Tasman'],
@@ -1238,7 +1290,7 @@ async function showInfo(p, sec, leg) {
 
   if (!mpHtml) mpHtml = '<p style="font-size:12px;color:var(--faint)">Electorate data unavailable.</p>';
   document.getElementById('ic-mp').innerHTML = mpHtml +
-    '<p style="font-size:10px;color:var(--faint);margin-top:6px">Source: Stats NZ 2020 boundaries. Large areas may span additional electorates.</p>' +
+    '<p style="font-size:10px;color:var(--faint);margin-top:6px">Sources: Stats NZ 2020 general electorate boundaries; Auckland areas resolved via Auckland Council local board boundaries. Large areas may span additional electorates.</p>' +
     '<a class="mbtn mbtn-ghost" href="https://www.parliament.nz/en/pb/sc/make-a-submission/" target="_blank" style="margin-top:8px">Parliament submission →</a>';
 }
 
