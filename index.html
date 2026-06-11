@@ -1013,7 +1013,8 @@ var SP = {
   'Southland':{a:['Kākāpō','Fiordland penguin','Rock wren','Yellowhead','Kea'],p:['Rātā','Olearia lacunosa','Celmisia spp.']},
 };
 
-var STATS_WFS = 'https://datafinder.stats.govt.nz/services;key=c4a76e7f47124de0a69b9c5a39ba3ac7/wfs/layer-104580/';
+// General Electorates 2020 — official Stats NZ boundaries, served via a public keyless ArcGIS copy
+var GED_API = 'https://services.arcgis.com/XTtANUDT8Va4DLwI/arcgis/rest/services/General_Electorates_2020/FeatureServer/0/query';
 
 function regionFrom(lat, lng) {
   if (lat > -36.5) return 'Northland';
@@ -1035,15 +1036,17 @@ function regionFrom(lat, lng) {
 }
 
 async function getElectorates(minLng, minLat, maxLng, maxLat) {
-  var bbox = minLat + ',' + minLng + ',' + maxLat + ',' + maxLng + ',urn:ogc:def:crs:EPSG::4326';
-  var url = STATS_WFS + '?service=WFS&version=2.0.0&request=GetFeature&typeNames=layer-104580&outputFormat=application/json&propertyName=GED2020_V1_00_NAME_ASCII&BBOX=' + bbox;
+  // Intersect the area's bounding box with the General Electorate polygons to find the local electorate(s).
+  var env = [minLng, minLat, maxLng, maxLat].join(',');
+  var url = GED_API + '?f=json&where=1%3D1&geometryType=esriGeometryEnvelope&inSR=4326'
+          + '&spatialRel=esriSpatialRelIntersects&outFields=GED_name&returnGeometry=false&geometry=' + env;
   try {
     var res = await fetch(url, { signal: AbortSignal.timeout(6000) });
     if (!res.ok) return null;
     var data = await res.json();
     var names = [];
     (data.features||[]).forEach(function(f) {
-      var n = f.properties && f.properties.GED2020_V1_00_NAME_ASCII;
+      var n = f.attributes && f.attributes.GED_name;
       if (n && names.indexOf(n) === -1) names.push(n);
     });
     return names.slice(0, 4);
@@ -1134,7 +1137,7 @@ async function showInfo(p, sec) {
   if (minLat !== undefined) elNames = await getElectorates(minLng, minLat, maxLng, maxLat);
   if (!elNames || !elNames.length) {
     var REG_EL = {
-      'Northland':['Northland','Whangārei'],'Auckland':['Coromandel'],'Waikato':['Waikato','Taupō'],
+      'Northland':['Northland','Whangārei'],'Auckland':['New Lynn','Te Atatū','Kelston','Kaipara ki Mahurangi'],'Waikato':['Waikato','Taupō'],
       'Bay of Plenty':['Bay of Plenty','Rotorua'],"Hawke's Bay":["Hawke's Bay",'Tukituki'],
       'Taranaki':['Taranaki-King Country','New Plymouth'],'Manawatu-Whanganui':['Rangitīkei','Whanganui','Ōtaki'],
       'Wellington':['Ōtaki','Remutaka','Wellington Central'],'Nelson':['Nelson','West Coast-Tasman'],
