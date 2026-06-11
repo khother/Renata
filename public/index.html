@@ -1031,7 +1031,12 @@ var SP = {
   'Southland':{a:['Kākāpō','Fiordland penguin','Rock wren','Yellowhead','Kea'],p:['Rātā','Olearia lacunosa','Celmisia spp.']},
 };
 
-var STATS_WFS = 'https://datafinder.stats.govt.nz/services;key=c4a76e7f47124de0a69b9c5a39ba3ac7/wfs/layer-104580/';
+// Bundled general electoral district boundaries, used to determine which
+// electorate(s) a conservation area sits in. Source: Stats NZ "General
+// Electoral District 2014" (the definitive boundaries defined by the
+// Representation Commission under the Electoral Act 1993, CC BY 4.0),
+// reprojected to WGS84 and simplified for in-browser point-in-polygon.
+var ELECTORATES_URL = 'data/electorates-2014.geojson';
 
 function regionFrom(lat, lng) {
   if (lat > -36.5) return 'Northland';
@@ -1079,23 +1084,67 @@ var GED_NAME_FIX = {
   'Dunedin South':    'Dunedin',
 };
 
-async function getElectorates(minLng, minLat, maxLng, maxLat) {
-  var bbox = minLat + ',' + minLng + ',' + maxLat + ',' + maxLng + ',urn:ogc:def:crs:EPSG::4326';
-  var url = STATS_WFS + '?service=WFS&version=2.0.0&request=GetFeature&typeNames=layer-104580&outputFormat=application/json&propertyName=GED2020_V1_00_NAME_ASCII&BBOX=' + bbox;
-  try {
-    var res = await fetch(url, { signal: AbortSignal.timeout(6000) });
-    if (!res.ok) return null;
-    var data = await res.json();
-    var names = [];
-    (data.features||[]).forEach(function(f) {
-      var n = f.properties && f.properties.GED2020_V1_00_NAME_ASCII;
-      if (n) {
-        n = GED_NAME_FIX[n] || n; // normalise ASCII→macron and old→new names
-        if (names.indexOf(n) === -1) names.push(n);
+// Loaded once, then cached. A FeatureCollection of electorate polygons whose
+// only property is `e` (the 2014 general electoral district name).
+var electoratesGeo = null, electoratesPromise = null;
+function loadElectorates() {
+  if (electoratesGeo) return Promise.resolve(electoratesGeo);
+  if (electoratesPromise) return electoratesPromise;
+  electoratesPromise = fetch(ELECTORATES_URL)
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){ electoratesGeo = d; return d; })
+    .catch(function(){ return null; });
+  return electoratesPromise;
+}
+
+// Ray-casting point-in-polygon. `ring` is an array of [lng,lat] pairs.
+function pointInRing(lng, lat, ring) {
+  var inside = false;
+  for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    var xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+    if (((yi > lat) !== (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)) inside = !inside;
+  }
+  return inside;
+}
+// A polygon is [outerRing, hole1, hole2, ...]: inside the outer ring and not in any hole.
+function pointInPolygon(lng, lat, poly) {
+  if (!pointInRing(lng, lat, poly[0])) return false;
+  for (var k = 1; k < poly.length; k++) if (pointInRing(lng, lat, poly[k])) return false; // inside a hole
+  return true;
+}
+function electorateAt(lng, lat) {
+  if (!electoratesGeo) return null;
+  var feats = electoratesGeo.features || [];
+  for (var i = 0; i < feats.length; i++) {
+    var g = feats[i].geometry, polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+    for (var p = 0; p < polys.length; p++) {
+      if (pointInPolygon(lng, lat, polys[p])) {
+        var n = feats[i].properties.e;
+        return GED_NAME_FIX[n] || n; // 2014 name → current electorate name
       }
-    });
-    return names.slice(0, 4);
-  } catch(e) { return null; }
+    }
+  }
+  return null;
+}
+
+// Resolve the conservation area's footprint to the general electorate(s) it
+// overlaps, by sampling its centre and bounding-box points against the bundled
+// boundaries. Returns current electorate names (deduped, area's centre first).
+async function getElectorates(minLng, minLat, maxLng, maxLat, cLng, cLat) {
+  if (!(await loadElectorates())) return null;
+  var midLng = (minLng + maxLng) / 2, midLat = (minLat + maxLat) / 2;
+  var samples = [
+    [cLng, cLat], [midLng, midLat],
+    [minLng, minLat], [maxLng, minLat], [minLng, maxLat], [maxLng, maxLat],
+    [midLng, minLat], [midLng, maxLat], [minLng, midLat], [maxLng, midLat]
+  ];
+  var names = [];
+  samples.forEach(function(s) {
+    if (s[0] === undefined || s[1] === undefined) return;
+    var el = electorateAt(s[0], s[1]);
+    if (el && names.indexOf(el) === -1) names.push(el);
+  });
+  return names.length ? names.slice(0, 4) : null;
 }
 
 function gstyle(sec, leg, hover, sel) {
@@ -1124,6 +1173,7 @@ function initMap() {
     maxZoom: 16
   }).addTo(leafMap);
   LG.risk = L.layerGroup().addTo(leafMap);
+  loadElectorates(); // warm the electorate boundary cache for the first click
   loadDOC();
 }
 
@@ -1190,20 +1240,15 @@ async function showInfo(p, sec, leg) {
   mst('info');
 
   var elNames = null;
-  if (minLat !== undefined) elNames = await getElectorates(minLng, minLat, maxLng, maxLat);
+  // Resolve to the general electorate(s) the area actually overlaps, by testing
+  // its centre and bounding box against the bundled Stats NZ boundaries.
+  if (minLat !== undefined) elNames = await getElectorates(minLng, minLat, maxLng, maxLat, lng, lat);
   if (!elNames || !elNames.length) {
-    var REG_EL = {
-      'Northland':['Northland','Whangārei'],'Auckland':['Coromandel'],'Waikato':['Waikato','Taupō'],
-      'Bay of Plenty':['Bay of Plenty','Rotorua'],"Hawke's Bay":["Hawke's Bay",'Tukituki'],
-      'Taranaki':['Taranaki-King Country','New Plymouth'],'Manawatu-Whanganui':['Rangitīkei','Whanganui','Ōtaki'],
-      'Wellington':['Ōtaki','Remutaka','Wellington Central'],'Nelson':['Nelson','West Coast-Tasman'],
-      'Marlborough':['Kaikōura'],'West Coast':['West Coast-Tasman','Kaikōura'],
-      'Canterbury':['Kaikōura','Selwyn','Rangitata','Ilam'],'Otago':['Waitaki','Taieri','Dunedin'],
-      'Southland':['Southland','Invercargill'],
-    };
-    elNames = REG_EL[region] || ['Kaikōura'];
+    var single = electorateAt(lng, lat);
+    if (single) elNames = [single];
   }
 
+  if (!elNames) elNames = [];
   var bills = ['Conservation Amendment Bill 2026','Fisheries Amendment Bill 2026','Fast-track Approvals Act 2024'];
   var allVotes = {
     'Conservation Amendment Bill 2026':{ 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
@@ -1236,9 +1281,9 @@ async function showInfo(p, sec, leg) {
     '</div>';
   }).join('');
 
-  if (!mpHtml) mpHtml = '<p style="font-size:12px;color:var(--faint)">Electorate data unavailable.</p>';
+  if (!mpHtml) mpHtml = '<p style="font-size:12px;color:var(--faint)">No general electorate found for this area (it may fall outside mapped electorate boundaries).</p>';
   document.getElementById('ic-mp').innerHTML = mpHtml +
-    '<p style="font-size:10px;color:var(--faint);margin-top:6px">Source: Stats NZ 2020 boundaries. Large areas may span additional electorates.</p>' +
+    '<p style="font-size:10px;color:var(--faint);margin-top:6px">Sources: electorate boundaries from Stats NZ General Electoral District (Representation Commission, CC BY 4.0); members and contact details from the Parliamentary member contact list (22 July 2025). Large areas may span additional electorates.</p>' +
     '<a class="mbtn mbtn-ghost" href="https://www.parliament.nz/en/pb/sc/make-a-submission/" target="_blank" style="margin-top:8px">Parliament submission →</a>';
 }
 
