@@ -1322,7 +1322,7 @@ var RA_EXCLUDED_SECTIONS = [
 var ISLAND_BBOX = { minLat: -37.167, maxLat: -35.833, minLng: 174.583, maxLng: 177.0 };
 // Mercury Islands exception (these 4 ARE eligible): Red Mercury/Whakau, Ātiu/Middle, Green, Korapuki
 // We can't easily filter by island name in the API, so we filter client-side in addFeature()
-var MERCURY_EXCEPTIONS = ['red mercury','whakau','\u0101tiu','middle island','green island','korapuki'];
+var MERCURY_EXCEPTIONS = ['red mercury','whakau','\u0101tiu','middle island','green island','korapuki','coromandel'];
 
 function isIslandExcluded(feat) {
   // Returns true if this feature falls in the Hauraki Gulf island exclusion zone
@@ -1339,7 +1339,11 @@ function isIslandExcluded(feat) {
     var cLng = lngSum / ring.length, cLat = latSum / ring.length;
     if (cLat >= ISLAND_BBOX.minLat && cLat <= ISLAND_BBOX.maxLat &&
         cLng >= ISLAND_BBOX.minLng && cLng <= ISLAND_BBOX.maxLng) {
-      // In bbox — check if it's a Mercury Islands exception
+      // Coromandel Peninsula mainland carve-out — not an island
+      var PENINSULA_BBOX = { minLat: -37.25, maxLat: -36.25, minLng: 175.35, maxLng: 176.0 };
+      if (cLat >= PENINSULA_BBOX.minLat && cLat <= PENINSULA_BBOX.maxLat &&
+          cLng >= PENINSULA_BBOX.minLng && cLng <= PENINSULA_BBOX.maxLng) return false;
+      // In bbox — check if it's a named exception
       var name = ((feat.properties && feat.properties.Name) || '').toLowerCase();
       var isMercuryException = MERCURY_EXCEPTIONS.some(function(e){ return name.indexOf(e) > -1; });
       return !isMercuryException; // excluded unless it's an exception island
@@ -1372,6 +1376,16 @@ async function loadDOC() {
       // Reserves Act: exclude nature, scientific, national reserves and marine reserves by Section
       var raExclude = RA_EXCLUDED_SECTIONS.map(function(s){ return "Section<>'" + s + "'"; }).join(' AND ');
       // Also exclude ecological/sanctuary areas from Conservation Act (they're in Sch 5)
+      var NAMED_INCLUSIONS = [
+        'Whangamarino Wetland Management Reserve',
+        'Whangamarino Government Purpose Reserve',
+        'Kopuatai Wetland Management Reserve',
+        'Marginal Strip - Manawatu Estuary',
+        'Lake Wairarapa Wetland Conservation Area',
+        'Foxton Conservation Area',
+        'Foxton Harbour Improvements Reserve'
+      ];
+      var namedInclude = NAMED_INCLUSIONS.map(function(n){ return "Name='" + n + "'"; }).join(' OR ');
       var combinedWhere =
         "(Legislation='CONSERVATION_ACT' AND (" + caFilter + "))" +
         " OR " +
@@ -1380,7 +1394,8 @@ async function loadDOC() {
           " AND (Name NOT LIKE '%Marine Reserve%')" +
           " AND (Name NOT LIKE '%Nature Reserve%')" +
           " AND (Name NOT LIKE '%Scientific Reserve%')" +
-        ")";
+        ")" +
+        " OR (" + namedInclude + ")";
       var params = new URLSearchParams({
         where: combinedWhere,
         outFields: 'Name,Section,Legislation,Recorded_Area,Shape__Area',
