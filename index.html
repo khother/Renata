@@ -185,18 +185,12 @@ body:not(.is-admin) .admin-only{display:none!important;}
 
 
 <!--
-  ╔══════════════════════════════════════════════════════════════╗
-  ║  CHANGE 8 — Proposed nav tab symbols (choose your favourites)
-  ╠══════════════════════════════════════════════════════════════╣
-  ║  Conservation Map:  🌿 🗺️ 🏔️ 🌲 🦅 🌄 📍
-  ║  About Me:          🙋 👤 🌱 ✍️ 🙂 💬
-  ║  Blog:              📓 📝 💭 🗒️ ✍️
-  ║  Facts & Figures:   📊 📈 🔢 📋 🧮
-  ║  Resources:         📁 📚 📥 🗂️ 📎
-  ║
-  ║  To change a symbol, find the nav link by id (nl-act etc)
-  ║  and replace the emoji before the text label.
-  ╚══════════════════════════════════════════════════════════════╝
+  CHANGE 8 — Nav tab symbol options (swap the emoji in the nav links above):
+  🌿 Conservation Map:  also try 🗺️  🏔️  🌲  🦅  📍  🌄
+  🙋 About Me:          also try 👤  🌱  ✍️  💬  🙂
+  📓 Blog:              also try 📝  💭  🗒️  ✏️
+  📊 Facts & Figures:   also try 📈  🔢  📋  🧮  📉
+  📁 Resources:         also try 📚  📥  🗂️  📎  🔗
 -->
 <nav>
   <div class="nav-brand">Local Matters</div>
@@ -298,7 +292,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
         <div class="act-vote">
           <div class="avb for"><div class="vn">68</div><div class="vl">Voted FOR bill<br>Nat · ACT · NZ First</div></div>
           <div class="avb against"><div class="vn">54</div><div class="vl">Voted AGAINST<br>Labour · Green · TPM</div></div>
-          <div class="avb note" style="background:#FEF9C3;border-color:#FDE047"><div class="vn" style="font-size:12px;margin-top:4px;color:#713F12">Submission<br>deadline<br>2 July 2026</div></div>
+          <div class="avb note" style="background:rgba(254,249,195,.15);"><div class="vn" style="font-size:11px;margin-top:2px;color:#FEF9C3;font-weight:600">Submission<br>deadline<br>2 July 2026</div></div>
         </div>
         <div class="hero-wallpaper" aria-hidden="true">
           <span>Denniston Plateau</span><span>(drilling for coal)</span>
@@ -380,20 +374,20 @@ body:not(.is-admin) .admin-only{display:none!important;}
     <div class="page" id="pg-facts">
       <div class="act-header">
         <h2>Facts &amp; Figures</h2>
-        <p>Key data on the Conservation Amendment Bill 2026 and what is at stake for public conservation land in Aotearoa New Zealand.</p>
+        <p>Key data and context on the Conservation Amendment Bill 2026 and what is at stake for public conservation land in Aotearoa New Zealand.</p>
       </div>
-      <div class="act-body">
-        <div style="flex:1;padding:40px 52px;max-width:780px">
-          <div class="new-post-box admin-only" id="facts-new-post">
+      <div style="display:flex;flex:1;min-height:0;">
+        <div style="flex:1;padding:40px 52px;max-width:780px;">
+          <div class="new-post-box admin-only">
             <h4>New post</h4>
-            <input class="field" type="text" id="fp-title" placeholder="Title…">
-            <textarea class="field" id="fp-body" placeholder="Write here…"></textarea>
+            <input class="field" type="text" id="ff-title" placeholder="Title…">
+            <textarea class="field" id="ff-body" placeholder="Write here…" style="min-height:120px"></textarea>
             <button class="post-btn" onclick="addPost('facts')">Publish</button>
           </div>
           <div class="blog-feed" id="facts-feed"></div>
         </div>
-        <div class="act-sb" style="width:240px;flex-shrink:0;border-left:1px solid var(--border);padding:32px 20px;display:flex;flex-direction:column;gap:0">
-          <div class="side-h">Key posts</div>
+        <div style="width:220px;flex-shrink:0;border-left:1px solid var(--border);background:var(--surface);padding:28px 18px;">
+          <div class="side-h">Posts</div>
           <div id="facts-sidebar" style="font-size:12px;color:var(--mid);line-height:1.6"></div>
         </div>
       </div>
@@ -403,20 +397,25 @@ body:not(.is-admin) .admin-only{display:none!important;}
     <div class="page" id="pg-resources">
       <div class="act-header">
         <h2>Resources</h2>
-        <p>Documents, reports, and materials to help you understand and act on the Conservation Amendment Bill 2026.</p>
+        <p>Documents, reports and materials to help you understand and act on the Conservation Amendment Bill 2026. Click any document to download.</p>
       </div>
-      <div style="padding:40px 52px;max-width:900px">
-        <div class="admin-only" style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;margin-bottom:32px;cursor:pointer;background:var(--paper)" onclick="document.getElementById('res-file-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--sage)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleResourceDrop(event)">
-          <div style="font-size:32px;margin-bottom:8px">📄</div>
-          <p style="font-size:14px;color:var(--mid);margin:0">Upload a document (PDF, Word, etc)</p>
-          <p style="font-size:12px;color:var(--faint);margin:4px 0 12px">Drag &amp; drop or click to browse</p>
-          <button class="post-btn" onclick="event.stopPropagation();document.getElementById('res-file-input').click()">Choose file</button>
-          <input type="file" id="res-file-input" accept=".pdf,.doc,.docx,.xlsx,.pptx,.txt,.csv" onchange="handleResourceUpload(this.files)" style="display:none">
-          <div style="margin-top:10px">
-            <input class="field" type="text" id="res-desc" placeholder="Description of this document (write before uploading)…" onclick="event.stopPropagation()" style="max-width:420px">
-          </div>
+      <div style="padding:40px 52px;max-width:920px;">
+        <div class="admin-only" id="res-upload-area"
+          style="border:2px dashed var(--leafl);border-radius:8px;padding:28px;text-align:center;margin-bottom:32px;cursor:pointer;background:var(--sagel);transition:background .15s;"
+          onclick="document.getElementById('res-file-input').click()"
+          ondragover="event.preventDefault();this.style.borderColor='var(--sage)'"
+          ondragleave="this.style.borderColor='var(--leafl)'"
+          ondrop="handleResourceDrop(event)">
+          <div style="font-size:36px;margin-bottom:8px">📄</div>
+          <p style="font-size:14px;color:var(--sage);margin:0 0 4px">Upload a document</p>
+          <p style="font-size:12px;color:var(--faint);margin:0 0 14px">Drag &amp; drop or click &middot; PDF, Word, Excel, etc.</p>
+          <input class="field" type="text" id="res-desc" placeholder="Write a description before uploading…"
+            onclick="event.stopPropagation()" style="max-width:420px;margin:0 auto 12px;display:block;">
+          <button class="upload-btn" onclick="event.stopPropagation();document.getElementById('res-file-input').click()">Choose file</button>
+          <input type="file" id="res-file-input" accept=".pdf,.doc,.docx,.xlsx,.pptx,.txt,.csv"
+            onchange="handleResourceUpload(this.files)" style="display:none">
         </div>
-        <div id="resources-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px"></div>
+        <div id="resources-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:18px;"></div>
       </div>
     </div>
   </div><!-- /main-col -->
@@ -851,6 +850,7 @@ var blogCache = { personal: null, act: null, facts: null };
 var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json', facts: 'meta/blog-facts.json' };
 var BLOG_SEEDS = {
   personal: [{ id:1, title:'Why I started this site', date:'2026-05-10', body:'This is a place for me to share what I\'m seeing, thinking about, and caring about. The landscape, the birds, the politics — all of it.' }],
+  facts:    [],
   act:      [{ id:1, title:'Bill introduced — 7 May 2026', date:'2026-05-07', body:'The Conservation Amendment Bill was introduced today. First reading passed 68\u201354 along coalition/opposition lines. The bill removes disposal protections from stewardship areas and opens conservation parks to commercial infrastructure.' }]
 };
 
@@ -869,15 +869,15 @@ async function loadOneFeed(type) {
 }
 
 async function loadBlogs() {
-  var results = await Promise.all([loadOneFeed('personal'), loadOneFeed('act')]);
+  var results = await Promise.all([loadOneFeed('personal'), loadOneFeed('act'), loadOneFeed('facts')]);
   blogCache.personal = results[0];
   blogCache.act      = results[1];
-  blogCache.facts    = results[2] || [];
+  blogCache.facts    = results[2];
   renderFeed('personal', 'blog-feed');
-  renderFeed('facts', 'facts-feed');
-  if (typeof renderFactsSidebar === 'function') renderFactsSidebar();
   renderFeed('act',      'act-feed');
+  renderFeed('facts',    'facts-feed');
   renderSideRecent();
+  renderFactsSidebar();
 }
 
 function renderFeed(type, elId) {
@@ -890,7 +890,7 @@ function renderFeed(type, elId) {
     return;
   }
   el.innerHTML = posts.slice().reverse().map(function(p) {
-    return '<div class="bpost" id="' + elId.replace('-feed','') + '-post-' + p.id + '">' +
+    return '<div class="bpost" id="' + elId.replace('-feed','') + '-' + p.id + '">' +
       '<div class="bpost-date">' + p.date + '</div>' +
       '<div class="bpost-title">' + p.title + '</div>' +
       '<div class="bpost-body">' + p.body.replace(/\n/g,'<br>') + '</div>' +
@@ -912,10 +912,11 @@ async function saveFeed(type) {
 
 async function addPost(type) {
   if (!isAdmin()) { showPasswordModal(); return; }
-  var isAct = type === 'act';
-  var tid   = isAct ? 'act-title' : 'bp-title';
-  var bid   = isAct ? 'act-body'  : 'bp-body';
-  var fid   = isAct ? 'act-feed'  : 'blog-feed';
+  var isAct   = type === 'act';
+  var isFacts = type === 'facts';
+  var tid   = isAct ? 'act-title' : isFacts ? 'ff-title'  : 'bp-title';
+  var bid   = isAct ? 'act-body'  : isFacts ? 'ff-body'   : 'bp-body';
+  var fid   = isAct ? 'act-feed'  : isFacts ? 'facts-feed': 'blog-feed';
   var title = document.getElementById(tid).value.trim();
   var body  = document.getElementById(bid).value.trim();
   if (!title || !body) { toast('Add a title and text first'); return; }
@@ -926,7 +927,7 @@ async function addPost(type) {
   document.getElementById(bid).value = '';
   renderFeed(type, fid);
   renderSideRecent();
-  if (type === 'facts' && typeof renderFactsSidebar === 'function') renderFactsSidebar();
+  if (isFacts) renderFactsSidebar();
   toast('Saving…', 2000);
   try { await saveFeed(type); toast('Published'); }
   catch(e) { toast('Saved locally, sync failed: ' + e.message, 5000); }
@@ -937,7 +938,7 @@ async function delPost(type, id, fid) {
   blogCache[type] = (blogCache[type]||[]).filter(function(p){ return String(p.id) !== String(id); });
   renderFeed(type, fid);
   renderSideRecent();
-  if (type === 'facts' && typeof renderFactsSidebar === 'function') renderFactsSidebar();
+  if (type === 'facts') renderFactsSidebar();
   try { await saveFeed(type); toast('Deleted'); }
   catch(e) { toast('Deleted locally, sync failed: ' + e.message, 5000); }
 }
@@ -945,12 +946,15 @@ async function delPost(type, id, fid) {
 function renderSideRecent() {
   var a   = (blogCache.act||[]).slice().sort(function(a,b){ return b.id - a.id; }).slice(0,6);
   var el  = document.getElementById('side-recent');
-  if (el) el.innerHTML = a.map(function(x){
-    return '<div style="margin-bottom:10px"><div style="font-size:10px;color:var(--faint)">' + x.date + '</div>' +
-      '<div style="font-size:12px;color:var(--ink2);line-height:1.4">' +
-      '<a href="#" onclick="nav('act');setTimeout(function(){var el=document.getElementById('act-post-'+  ''+ x.id +'');if(el)el.scrollIntoView({behavior:'smooth'});},200);return false;" style="color:var(--sage3);text-decoration:none;">' + x.title + '</a>' +
-      '</div></div>';
-  }).join('');
+  if (!el) return;
+  el.innerHTML = a.length ? a.map(function(x){
+    return '<div style="margin-bottom:10px">'
+      + '<div style="font-size:10px;color:var(--faint)">' + x.date + '</div>'
+      + '<div style="font-size:12px;line-height:1.4"><a href="#" '
+      + 'onclick="nav(\'act\');setTimeout(function(){var e=document.getElementById(\'ap-' + x.id + '\');if(e)e.scrollIntoView({behavior:\'smooth\'});},300);return false;" '
+      + 'style="color:var(--sage3);text-decoration:none;">' + x.title + '</a></div>'
+      + '</div>';
+  }).join('') : '<p style="font-size:12px;color:var(--faint)">No posts yet.</p>';
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1395,9 +1399,11 @@ var MERCURY_EXCEPTIONS = [
   'coromandel',
   // Mainland areas wrongly caught by Hauraki Gulf bbox:
   'turanga creek','pakuranga creek','pakuranga highway','tamaki river',
-  'whakatiri','mātaitai forest','mātaitai scenic','te morehu',
-  'richardson scenic','landels bush','wairoa gorge','plows road',
-  'mangatāwhiri forest','mangatāwhiri','vining scenic','vining'
+  'whakatiri',
+  'mātaitai forest','mātaitai scenic',
+  'te morehu','richardson scenic','landels bush',
+  'wairoa gorge','plows road',
+  'mangatāwhiri','vining scenic','vining'
 ];
 
 function isIslandExcluded(feat) {
@@ -1431,8 +1437,9 @@ function isIslandExcluded(feat) {
 // Two specific named scenic reserves are also ineligible per Sch 5 cl.8:
 // Kaikoura Island Scenic Reserve and Rakitu Island Scenic Reserve
 var NAMED_EXCLUSIONS = [
-  'kaikoura island scenic reserve','rakitu island scenic reserve',
-  // RAMSAR wetlands — internationally protected, not eligible for disposal:
+  'kaikoura island scenic reserve',
+  'rakitu island scenic reserve',
+  // RAMSAR internationally-protected wetlands — ineligible for disposal under Sch 5:
   'whangamarino wetland management reserve',
   'whangamarino government purpose reserve',
   'kopuatai wetland management reserve',
@@ -1462,8 +1469,6 @@ async function loadDOC() {
       // Reserves Act: exclude nature, scientific, national reserves and marine reserves by Section
       var raExclude = RA_EXCLUDED_SECTIONS.map(function(s){ return "Section<>'" + s + "'"; }).join(' AND ');
       // Also exclude ecological/sanctuary areas from Conservation Act (they're in Sch 5)
-      var NAMED_INCLUSIONS = []; // Ramsar wetlands removed — now excluded via isNamedExclusion
-      var namedInclude = NAMED_INCLUSIONS.map(function(n){ return "Name='" + n + "'"; }).join(' OR ');
       var combinedWhere =
         "(Legislation='CONSERVATION_ACT' AND (" + caFilter + "))" +
         " OR " +
@@ -1523,9 +1528,6 @@ function loadFallback() {
   toast('DOC API unavailable — showing key areas.', 5000);
 }
 
-// ═══════════════════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
 // FACTS & FIGURES SIDEBAR
@@ -1534,97 +1536,121 @@ function renderFactsSidebar() {
   var posts = (blogCache.facts || []).slice().sort(function(a,b){ return b.id - a.id; });
   var el = document.getElementById('facts-sidebar');
   if (!el) return;
-  el.innerHTML = posts.map(function(p) {
-    return '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">' +
-      '<div style="font-size:10px;color:var(--faint)">' + p.date + '</div>' +
-      '<a href="#" onclick="document.getElementById('facts-post-' + p.id + '').scrollIntoView({behavior:'smooth'});return false;" style="font-size:12px;color:var(--sage3);text-decoration:none;line-height:1.4;display:block">' + p.title + '</a>' +
-      '</div>';
-  }).join('') || '<p style="font-size:12px;color:var(--faint)">No posts yet.</p>';
+  el.innerHTML = posts.length ? posts.map(function(p) {
+    return '<div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">'
+      + '<div style="font-size:10px;color:var(--faint)">' + p.date + '</div>'
+      + '<a href="#" onclick="nav(\'facts\');setTimeout(function(){'
+      + 'var e=document.getElementById(\'facts-feed-' + p.id + '\');'
+      + 'if(e)e.scrollIntoView({behavior:\'smooth\'});},300);return false;"'
+      + ' style="font-size:12px;color:var(--sage3);text-decoration:none;line-height:1.4;display:block">'
+      + p.title + '</a></div>';
+  }).join('') : '<p style="font-size:12px;color:var(--faint)">No posts yet.</p>';
 }
 
 // ═══════════════════════════════════════════════════════════════
-// RESOURCES PAGE — upload & render
+// RESOURCES
 // ═══════════════════════════════════════════════════════════════
-var resourcesCache = null;
-var RESOURCES_KEY = 'meta/resources.json';
+var resourcesCache = [];
+var RES_KEY = 'meta/resources.json';
 
 async function loadResources() {
   try {
-    var res = await fetch(apiUrl('get', RESOURCES_KEY));
-    resourcesCache = res.ok ? await res.json() : [];
+    var res = await fetch(apiUrl('get', RES_KEY));
+    if (res.ok) {
+      var t = await res.text();
+      try { resourcesCache = JSON.parse(t) || []; } catch(e) { resourcesCache = []; }
+    }
   } catch(e) { resourcesCache = []; }
   renderResources();
+}
+
+function resourceIcon(name) {
+  var n = (name||'').toLowerCase();
+  if (n.endsWith('.pdf'))  return '📄';
+  if (n.endsWith('.docx') || n.endsWith('.doc')) return '📝';
+  if (n.endsWith('.xlsx') || n.endsWith('.xls')) return '📊';
+  if (n.endsWith('.pptx') || n.endsWith('.ppt')) return '📑';
+  return '📁';
 }
 
 function renderResources() {
   var el = document.getElementById('resources-grid');
   if (!el) return;
-  var items = resourcesCache || [];
-  if (!items.length) {
-    el.innerHTML = '<p style="font-size:14px;color:var(--mid);grid-column:1/-1">No resources uploaded yet.</p>';
+  var admin = isAdmin();
+  if (!resourcesCache.length) {
+    el.innerHTML = '<p style="font-size:14px;color:var(--mid);grid-column:1/-1">'
+      + (admin ? 'No resources yet — upload one above.' : 'No resources uploaded yet.') + '</p>';
     return;
   }
-  el.innerHTML = items.map(function(r) {
-    return '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;display:flex;flex-direction:column">' +
-      '<a href="' + r.url + '" target="_blank" style="display:flex;align-items:center;justify-content:center;height:120px;background:var(--paper);text-decoration:none;font-size:48px">' +
-      (r.name.endsWith('.pdf') ? '📄' : r.name.endsWith('.docx')||r.name.endsWith('.doc') ? '📝' : r.name.endsWith('.xlsx') ? '📊' : '📁') +
-      '</a>' +
-      '<div style="padding:12px;flex:1;display:flex;flex-direction:column;gap:6px">' +
-      '<div style="font-size:12px;font-weight:600;color:var(--ink2);word-break:break-word">' + (r.desc || r.name) + '</div>' +
-      '<div style="font-size:10px;color:var(--faint)">' + r.date + ' · ' + r.name + '</div>' +
-      (isAdmin() ? '<button onclick="delResource('' + r.id + '')" style="margin-top:auto;font-size:10px;color:#c0392b;background:none;border:none;cursor:pointer;text-align:left">Delete</button>' : '') +
-      '</div></div>';
+  el.innerHTML = resourcesCache.map(function(r) {
+    return '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;display:flex;flex-direction:column;">'
+      + '<a href="' + r.url + '" target="_blank" download style="display:flex;align-items:center;justify-content:center;'
+      + 'height:110px;background:var(--sagel);text-decoration:none;font-size:44px;transition:background .15s;"'
+      + ' onmouseover="this.style.background='var(--sagelm)'" onmouseout="this.style.background='var(--sagel)'">'
+      + resourceIcon(r.name) + '</a>'
+      + '<div style="padding:11px 13px;flex:1;display:flex;flex-direction:column;gap:5px;">'
+      + '<div style="font-size:12px;font-weight:600;color:var(--ink2);line-height:1.4">' + esc(r.desc || r.name) + '</div>'
+      + '<div style="font-size:10px;color:var(--faint)">' + r.date + ' &middot; ' + esc(r.name) + '</div>'
+      + (admin ? '<button onclick="delResource('' + r.id + '')" style="margin-top:auto;font-size:10px;color:#c0392b;background:none;border:none;cursor:pointer;text-align:left;padding:0;">Delete</button>' : '')
+      + '</div></div>';
   }).join('');
 }
 
-async function handleResourceDrop(event) {
-  event.preventDefault();
-  event.currentTarget.style.borderColor = 'var(--border)';
-  if (!isAdmin()) { toast('Sign in as admin to upload.'); return; }
-  var files = event.dataTransfer.files;
-  if (files.length) await uploadResource(files[0]);
+async function saveResources() {
+  var blob = new Blob([JSON.stringify(resourcesCache)], { type: 'application/json' });
+  var form = new FormData();
+  form.append('file', blob, 'resources.json');
+  form.append('year', 'meta');
+  form.append('name', 'resources.json');
+  await fetch(apiUrl('upload', null, RES_KEY), { method: 'POST', body: form });
 }
 
-async function handleResourceUpload(files) {
+function handleResourceDrop(event) {
+  event.preventDefault();
+  document.getElementById('res-upload-area').style.borderColor = 'var(--leafl)';
   if (!isAdmin()) { toast('Sign in as admin to upload.'); return; }
-  if (files.length) await uploadResource(files[0]);
+  if (event.dataTransfer.files.length) uploadResource(event.dataTransfer.files[0]);
+}
+
+function handleResourceUpload(files) {
+  if (!isAdmin()) { toast('Sign in as admin to upload.'); return; }
+  if (files.length) uploadResource(files[0]);
 }
 
 async function uploadResource(file) {
-  var desc = document.getElementById('res-desc') ? document.getElementById('res-desc').value.trim() : '';
+  var desc = (document.getElementById('res-desc') || {}).value || '';
+  desc = desc.trim();
+  if (!desc) { toast('Please write a description first.'); return; }
   toast('Uploading ' + file.name + '…');
   var form = new FormData();
   form.append('file', file, file.name);
+  form.append('year', 'resources');
   form.append('name', file.name);
   try {
-    var res = await fetch(apiUrl('upload', null, 'resources/' + file.name), { method:'POST', body: form });
-    if (!res.ok) throw new Error('Upload failed');
+    var res = await fetch(apiUrl('upload', null, 'resources/' + file.name), { method: 'POST', body: form });
+    if (!res.ok) throw new Error('Upload failed ' + res.status);
     var data = await res.json();
-    var item = { id: Date.now(), name: file.name, url: data.url || apiUrl('get','resources/'+file.name), desc: desc, date: new Date().toISOString().slice(0,10) };
-    resourcesCache = (resourcesCache || []).concat([item]);
+    var url = (data && data.url) ? data.url : apiUrl('get', 'resources/' + file.name);
+    resourcesCache.push({ id: Date.now(), name: file.name, url: url, desc: desc,
+      date: new Date().toISOString().slice(0,10) });
     await saveResources();
     renderResources();
-    toast('Uploaded: ' + file.name);
     if (document.getElementById('res-desc')) document.getElementById('res-desc').value = '';
-  } catch(e) { toast('Upload failed: ' + e.message); }
-}
-
-async function saveResources() {
-  var blob = new Blob([JSON.stringify(resourcesCache)], { type:'application/json' });
-  var form = new FormData();
-  form.append('file', blob, 'resources.json');
-  form.append('name', 'resources.json');
-  await fetch(apiUrl('upload', null, RESOURCES_KEY), { method:'POST', body: form });
+    document.getElementById('res-file-input').value = '';
+    toast('Uploaded: ' + file.name);
+  } catch(e) { toast('Upload failed: ' + e.message, 5000); }
 }
 
 async function delResource(id) {
   if (!confirm('Delete this resource?')) return;
-  resourcesCache = (resourcesCache||[]).filter(function(r){ return String(r.id) !== String(id); });
+  resourcesCache = resourcesCache.filter(function(r){ return String(r.id) !== String(id); });
   await saveResources();
   renderResources();
   toast('Deleted.');
 }
-
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
 checkSavedPassword();
 Promise.all([loadPhotos(), loadStories(), loadBlogs(), loadResources()]).then(function() {
   renderStories();
