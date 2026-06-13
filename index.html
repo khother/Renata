@@ -183,12 +183,29 @@ body:not(.is-admin) .admin-only{display:none!important;}
 </head>
 <body>
 
+
+<!--
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  CHANGE 8 — Proposed nav tab symbols (choose your favourites)
+  ╠══════════════════════════════════════════════════════════════╣
+  ║  Conservation Map:  🌿 🗺️ 🏔️ 🌲 🦅 🌄 📍
+  ║  About Me:          🙋 👤 🌱 ✍️ 🙂 💬
+  ║  Blog:              📓 📝 💭 🗒️ ✍️
+  ║  Facts & Figures:   📊 📈 🔢 📋 🧮
+  ║  Resources:         📁 📚 📥 🗂️ 📎
+  ║
+  ║  To change a symbol, find the nav link by id (nl-act etc)
+  ║  and replace the emoji before the text label.
+  ╚══════════════════════════════════════════════════════════════╝
+-->
 <nav>
   <div class="nav-brand">Local Matters</div>
   <div class="nav-main">
-    <a href="#" onclick="nav('home')"  id="nl-home" class="on">Stories</a>
-    <a href="#" onclick="nav('blog')"  id="nl-blog">Blog</a>
-    <a href="#" onclick="nav('act')"   id="nl-act">Conservation Map</a>
+    <a href="#" onclick="nav('act')"        id="nl-act"       class="on">🌿 Conservation Map</a>
+    <a href="#" onclick="nav('home')"        id="nl-home">🙋 About Me</a>
+    <a href="#" onclick="nav('blog')"        id="nl-blog">📓 Blog</a>
+    <a href="#" onclick="nav('facts')"       id="nl-facts">📊 Facts &amp; Figures</a>
+    <a href="#" onclick="nav('resources')"   id="nl-resources">📁 Resources</a>
   </div>
   <div class="admin-badge" id="admin-badge">
     <span class="admin-dot"></span><span>Admin</span>
@@ -196,17 +213,18 @@ body:not(.is-admin) .admin-only{display:none!important;}
   </div>
   <a href="https://www.forestandbird.org.nz" target="_blank" class="nav-side-link">Forest &amp; Bird</a>
   <a href="https://fmc.org.nz" target="_blank" class="nav-side-link">FMC</a>
+  <a href="mailto:mylocalmatters@gmail.com" class="nav-side-link">mylocalmatters@gmail.com</a>
 </nav>
 
 <div class="shell">
   <div class="main-col">
 
     <!-- STORIES PAGE -->
-    <div class="page on" id="pg-home">
+    <div class="page" id="pg-home">
       <div class="home-hero">
         <h1>My <em>local</em> matters.</h1>
         <p>The places you and I love and what we can do to protect them.</p>
-        <p style="font-size:15px;color:rgba(255,255,255,.85);max-width:680px;line-height:1.8;font-weight:300;margin-top:14px;font-style:italic;border-left:3px solid rgba(138,184,122,.6);padding-left:16px;"><strong style="font-style:normal;color:#8FBD5A">ALERT!</strong> Right now the government wants to change the why and the how of the Conservation Act. At present we, as the public, through conservation boards get a say in how our public lands are used. The proposed changes not only open public lands to ‘disposal’ (for commercial use) but also places that sometimes irreversible decision in the hands of one person — a Minister who reflects the thinking of the day. Our forests, mountains and rivers deserve a more thoughtful approach.</p>
+        <p style="font-size:15px;color:rgba(255,255,255,.85);max-width:680px;line-height:1.8;font-weight:300;margin-top:14px;font-style:italic;border-left:3px solid rgba(138,184,122,.6);padding-left:16px;"><strong style="font-style:normal;color:#8FBD5A">ALERT!</strong> Right now the government wants to change the why and the how of the Conservation Act. At present we, as the public, through conservation boards get a say in how our public lands are used. The proposed changes not only open public lands to ‘disposal’ (for commercial use) but also places that sometimes irreversible decision in the hands of one person — a politician who reflects the thinking of the day. Our forests, mountains and rivers deserve a more thoughtful approach.</p>
         <div class="hero-wallpaper" aria-hidden="true">
           <span>Denniston Plateau</span><span>(drilling for coal)</span>
           <span>Te Kuha</span><span>(open-cast coal mine)</span>
@@ -273,14 +291,14 @@ body:not(.is-admin) .admin-only{display:none!important;}
     </div>
 
     <!-- CONSERVATION MAP PAGE -->
-    <div class="page" id="pg-act">
+    <div class="page on" id="pg-act">
       <div class="act-header">
         <h2>Conservation Map</h2>
         <p>Sixty percent of our conservation land is at risk. This map shows you which areas, which MPs represent them, and how those MPs have voted on the environment. Click a place you love — their contact details are on the right. Phone users: turn your screen horizontal. Below the map is what I’m learning as I dig into the politicians’ claims about why this land should go.</p>
         <div class="act-vote">
           <div class="avb for"><div class="vn">68</div><div class="vl">Voted FOR bill<br>Nat · ACT · NZ First</div></div>
           <div class="avb against"><div class="vn">54</div><div class="vl">Voted AGAINST<br>Labour · Green · TPM</div></div>
-          <div class="avb note"><div class="vn" style="font-size:12px;margin-top:4px">First reading<br>May 2026</div></div>
+          <div class="avb note" style="background:#FEF9C3;border-color:#FDE047"><div class="vn" style="font-size:12px;margin-top:4px;color:#713F12">Submission<br>deadline<br>2 July 2026</div></div>
         </div>
         <div class="hero-wallpaper" aria-hidden="true">
           <span>Denniston Plateau</span><span>(drilling for coal)</span>
@@ -315,7 +333,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
               <div class="lr"><div class="ls" style="background:#8B1A0A;opacity:.8"></div>Conservation/Forest Park</div>
               <div class="lr"><div class="ls" style="background:#C0392B;opacity:.7"></div>Stewardship Area</div>
               <div class="lr"><div class="ls" style="background:#E67E22;opacity:.6"></div>Scenic/Recreation Reserve</div>
-              <div class="lr"><div class="ls" style="background:#9B59B6;opacity:.6"></div>Historic/Scientific Reserve</div>
+              <div class="lr"><div class="ls" style="background:#9B59B6;opacity:.6"></div>Historic Reserve</div>
             </div>
           </div>
         </div>
@@ -357,6 +375,50 @@ body:not(.is-admin) .admin-only{display:none!important;}
       </div>
     </div>
 
+
+    <!-- FACTS & FIGURES PAGE -->
+    <div class="page" id="pg-facts">
+      <div class="act-header">
+        <h2>Facts &amp; Figures</h2>
+        <p>Key data on the Conservation Amendment Bill 2026 and what is at stake for public conservation land in Aotearoa New Zealand.</p>
+      </div>
+      <div class="act-body">
+        <div style="flex:1;padding:40px 52px;max-width:780px">
+          <div class="new-post-box admin-only" id="facts-new-post">
+            <h4>New post</h4>
+            <input class="field" type="text" id="fp-title" placeholder="Title…">
+            <textarea class="field" id="fp-body" placeholder="Write here…"></textarea>
+            <button class="post-btn" onclick="addPost('facts')">Publish</button>
+          </div>
+          <div class="blog-feed" id="facts-feed"></div>
+        </div>
+        <div class="act-sb" style="width:240px;flex-shrink:0;border-left:1px solid var(--border);padding:32px 20px;display:flex;flex-direction:column;gap:0">
+          <div class="side-h">Key posts</div>
+          <div id="facts-sidebar" style="font-size:12px;color:var(--mid);line-height:1.6"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESOURCES PAGE -->
+    <div class="page" id="pg-resources">
+      <div class="act-header">
+        <h2>Resources</h2>
+        <p>Documents, reports, and materials to help you understand and act on the Conservation Amendment Bill 2026.</p>
+      </div>
+      <div style="padding:40px 52px;max-width:900px">
+        <div class="admin-only" style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;margin-bottom:32px;cursor:pointer;background:var(--paper)" onclick="document.getElementById('res-file-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--sage)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleResourceDrop(event)">
+          <div style="font-size:32px;margin-bottom:8px">📄</div>
+          <p style="font-size:14px;color:var(--mid);margin:0">Upload a document (PDF, Word, etc)</p>
+          <p style="font-size:12px;color:var(--faint);margin:4px 0 12px">Drag &amp; drop or click to browse</p>
+          <button class="post-btn" onclick="event.stopPropagation();document.getElementById('res-file-input').click()">Choose file</button>
+          <input type="file" id="res-file-input" accept=".pdf,.doc,.docx,.xlsx,.pptx,.txt,.csv" onchange="handleResourceUpload(this.files)" style="display:none">
+          <div style="margin-top:10px">
+            <input class="field" type="text" id="res-desc" placeholder="Description of this document (write before uploading)…" onclick="event.stopPropagation()" style="max-width:420px">
+          </div>
+        </div>
+        <div id="resources-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px"></div>
+      </div>
+    </div>
   </div><!-- /main-col -->
 
   <div class="side-col">
@@ -365,15 +427,19 @@ body:not(.is-admin) .admin-only{display:none!important;}
       <a href="#" onclick="nav('act');return false;" class="side-link">🌿 Conservation Map<small>Tracking the amendment bill</small></a>
       <a href="https://www.forestandbird.org.nz" target="_blank" class="side-link">🦅 Forest &amp; Bird NZ</a>
       <a href="https://fmc.org.nz" target="_blank" class="side-link">🥾 Federated Mountain Clubs</a>
-      <a href="https://www.parliament.nz/en/pb/sc/make-a-submission/" target="_blank" class="side-link">✍️ Make a submission<small>Parliament NZ</small></a>
+      <a href="https://www3.parliament.nz/en/pb/sc/make-a-submission/document/54SCENV_SCF_BD7D0F89-D8CB-42F7-9C5F-08DEABEDA048/conservation-amendment-bill" target="_blank" class="side-link">✍️ Make a submission<small>Parliament NZ</small></a>
     </div>
     <div>
-      <div class="side-h">Recent posts</div>
+      <div class="side-h">About the map</div>
       <div id="side-recent" style="font-size:12px;color:var(--mid);line-height:1.6"></div>
     </div>
     <div style="margin-top:auto">
       <div class="side-h">Photo stats</div>
       <div id="side-stats" style="font-size:12px;color:var(--mid);line-height:1.8"></div>
+      <div style="margin-top:14px;font-size:11px;color:var(--faint);line-height:1.6;border-top:1px solid var(--border);padding-top:12px;">
+        <strong style="color:var(--mid)">Disclaimer</strong><br>
+        Site created 2026. I take responsibility for the information found on this site. I do my best to make sure it is correct. If you find information that is not correct, please contact me at <a href="mailto:mylocalmatters@gmail.com" style="color:var(--leaf);text-decoration:none;">mylocalmatters@gmail.com</a>
+      </div>
     </div>
     <div>
       <div class="side-h">Admin</div>
@@ -781,8 +847,8 @@ document.addEventListener('keydown', function(e) {
 // ═══════════════════════════════════════════════════════════════
 // BLOG — stored in Netlify Blobs
 // ═══════════════════════════════════════════════════════════════
-var blogCache = { personal: null, act: null };
-var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json' };
+var blogCache = { personal: null, act: null, facts: null };
+var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json', facts: 'meta/blog-facts.json' };
 var BLOG_SEEDS = {
   personal: [{ id:1, title:'Why I started this site', date:'2026-05-10', body:'This is a place for me to share what I\'m seeing, thinking about, and caring about. The landscape, the birds, the politics — all of it.' }],
   act:      [{ id:1, title:'Bill introduced — 7 May 2026', date:'2026-05-07', body:'The Conservation Amendment Bill was introduced today. First reading passed 68\u201354 along coalition/opposition lines. The bill removes disposal protections from stewardship areas and opens conservation parks to commercial infrastructure.' }]
@@ -806,7 +872,10 @@ async function loadBlogs() {
   var results = await Promise.all([loadOneFeed('personal'), loadOneFeed('act')]);
   blogCache.personal = results[0];
   blogCache.act      = results[1];
+  blogCache.facts    = results[2] || [];
   renderFeed('personal', 'blog-feed');
+  renderFeed('facts', 'facts-feed');
+  if (typeof renderFactsSidebar === 'function') renderFactsSidebar();
   renderFeed('act',      'act-feed');
   renderSideRecent();
 }
@@ -821,7 +890,7 @@ function renderFeed(type, elId) {
     return;
   }
   el.innerHTML = posts.slice().reverse().map(function(p) {
-    return '<div class="bpost">' +
+    return '<div class="bpost" id="' + elId.replace('-feed','') + '-post-' + p.id + '">' +
       '<div class="bpost-date">' + p.date + '</div>' +
       '<div class="bpost-title">' + p.title + '</div>' +
       '<div class="bpost-body">' + p.body.replace(/\n/g,'<br>') + '</div>' +
@@ -857,6 +926,7 @@ async function addPost(type) {
   document.getElementById(bid).value = '';
   renderFeed(type, fid);
   renderSideRecent();
+  if (type === 'facts' && typeof renderFactsSidebar === 'function') renderFactsSidebar();
   toast('Saving…', 2000);
   try { await saveFeed(type); toast('Published'); }
   catch(e) { toast('Saved locally, sync failed: ' + e.message, 5000); }
@@ -867,17 +937,19 @@ async function delPost(type, id, fid) {
   blogCache[type] = (blogCache[type]||[]).filter(function(p){ return String(p.id) !== String(id); });
   renderFeed(type, fid);
   renderSideRecent();
+  if (type === 'facts' && typeof renderFactsSidebar === 'function') renderFactsSidebar();
   try { await saveFeed(type); toast('Deleted'); }
   catch(e) { toast('Deleted locally, sync failed: ' + e.message, 5000); }
 }
 
 function renderSideRecent() {
-  var p   = (blogCache.personal||[]).map(function(x){ return Object.assign({}, x, {tag:'Personal'}); });
-  var a   = (blogCache.act||[]).map(function(x){ return Object.assign({}, x, {tag:'Act'}); });
-  var all = p.concat(a).sort(function(a,b){ return b.id - a.id; }).slice(0,4);
+  var a   = (blogCache.act||[]).slice().sort(function(a,b){ return b.id - a.id; }).slice(0,6);
   var el  = document.getElementById('side-recent');
-  if (el) el.innerHTML = all.map(function(x){
-    return '<div style="margin-bottom:10px"><div style="font-size:10px;color:var(--faint)">' + x.date + ' · ' + x.tag + '</div><div style="font-size:12px;color:var(--ink2);line-height:1.4">' + x.title + '</div></div>';
+  if (el) el.innerHTML = a.map(function(x){
+    return '<div style="margin-bottom:10px"><div style="font-size:10px;color:var(--faint)">' + x.date + '</div>' +
+      '<div style="font-size:12px;color:var(--ink2);line-height:1.4">' +
+      '<a href="#" onclick="nav('act');setTimeout(function(){var el=document.getElementById('act-post-'+  ''+ x.id +'');if(el)el.scrollIntoView({behavior:'smooth'});},200);return false;" style="color:var(--sage3);text-decoration:none;">' + x.title + '</a>' +
+      '</div></div>';
   }).join('');
 }
 
@@ -890,28 +962,41 @@ var secCounts = {};
 var DOC_API = 'https://services1.arcgis.com/3JjYDyG3oajxU6HO/ArcGIS/rest/services/DOC_Public_Conservation_Land/FeatureServer/0/query';
 
 var SLABELS = {
-  // Conservation Act land — excluded from disposal (NOT shown on map)
-  // 'S14_NATIONAL_PARK' — National Parks Act, not in this dataset
-  // 'S20_WILDERNESS_AREA' — not eligible for disposal
-  // 'S23_NATURE_RESERVE' — not eligible for disposal
-
-  // AT-RISK: eligible for disposal/exchange under the bill
+  // Conservation Act — at-risk
   'S19_CONSERVATION_PARK':   'Conservation Park',
   'S18_FOREST_PARK':         'Forest Park',
   'S25_STEWARDSHIP_AREA':    'Stewardship Area',
   'S7_CONSERVATION_PURPOSES':'Conservation Purposes',
-  'S21_ECOLOGICAL_AREA':     'Ecological Area',
-  'S22_SANCTUARY_AREA':      'Sanctuary Area',
-  // Scenic & Recreation reserves — explicitly named in the bill as eligible
-  'S17_SCENIC_RESERVE':      'Scenic Reserve',
-  'S17_RECREATION_RESERVE':  'Recreation Reserve',
-  'S17_HISTORIC_RESERVE':    'Historic Reserve',
-  'S17_SCIENTIFIC_RESERVE':  'Scientific Reserve',
-  'S17_GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
-  // Marginal strips (lower risk but under Conservation Act)
   'S24_1_2_MOVEABLE_MARGINAL_STRIP':'Marginal Strip',
   'S24_3_FIXED_MARGINAL_STRIP':'Fixed Marginal Strip',
+  // Reserves Act — at-risk (scenic, recreation, historic, govt purpose)
+  'S17_SCENIC_RESERVE':      'Scenic Reserve',
+  'SCENIC_RESERVE':          'Scenic Reserve',
+  'SCENIC':                  'Scenic Reserve',
+  'S16_SCENIC_RESERVE':      'Scenic Reserve',
+  'S17_RECREATION_RESERVE':  'Recreation Reserve',
+  'RECREATION_RESERVE':      'Recreation Reserve',
+  'S18_RECREATION_RESERVE':  'Recreation Reserve',
+  'S17_HISTORIC_RESERVE':    'Historic Reserve',
+  'HISTORIC_RESERVE':        'Historic Reserve',
+  'S17_GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
+  'GOVERNMENT_PURPOSE_RESERVE': 'Government Purpose Reserve',
 };
+
+function sectionLabel(sec, legislation) {
+  if (SLABELS[sec]) return SLABELS[sec];
+  if (legislation === 'RESERVES_ACT') {
+    if (!sec) return 'Reserve';
+    var s = sec.toUpperCase();
+    if (s.indexOf('SCENIC') > -1)      return 'Scenic Reserve';
+    if (s.indexOf('RECREATION') > -1)  return 'Recreation Reserve';
+    if (s.indexOf('HISTORIC') > -1)    return 'Historic Reserve';
+    if (s.indexOf('GOVERNMENT') > -1)  return 'Government Purpose Reserve';
+    if (s.indexOf('LOCAL') > -1)       return 'Local Purpose Reserve';
+    return 'Reserve';
+  }
+  return sec || 'Conservation Area';
+}
 
 var PVOTES = {
   'National':{ for:true, icon:'❌', label:'Voted FOR bill' },
@@ -923,7 +1008,7 @@ var PVOTES = {
 };
 
 var MPs = {
-  'Auckland Central':      {n:'Chloë Swarbrick',            p:'Green',          e:'Chloe.Swarbrick@parliament.govt.nz',              c:'#098137'},
+  'Auckland Central':      {n:'Chlöe Swarbrick',            p:'Green',          e:'Chloe.Swarbrick@parliament.govt.nz',              c:'#098137'},
   'Banks Peninsula':       {n:'Vanessa Weenink',             p:'National',       e:'Vanessa.Weenink@parliament.govt.nz',              c:'#00529F'},
   'Bay of Plenty':         {n:'Tom Rutherford',              p:'National',       e:'Tom.Rutherford@parliament.govt.nz',               c:'#00529F'},
   'Botany':                {n:'Christopher Luxon',           p:'National',       e:'Christopher.Luxon@parliament.govt.nz',            c:'#00529F'},
@@ -957,7 +1042,7 @@ var MPs = {
   'North Shore':           {n:'Simon Watts',                 p:'National',       e:'Simon.Watts@parliament.govt.nz',                  c:'#00529F'},
   'Northcote':             {n:'Daniel Bidois',               p:'National',       e:'Dan.Bidois@parliament.govt.nz',                   c:'#00529F'},
   'Northland':             {n:'Grant McCallum',              p:'National',       e:'Grant.McCallum@parliament.govt.nz',               c:'#00529F'},
-  'Ōhāriu':                {n:"Greg O'Connor",               p:'Labour',         e:'Greg.OConnor@parliament.govt.nz',                 c:'#D82A20'},
+  'Ōhāriu':                {n:"Greg O'Connor",               p:'Labour',         e:"Greg.O'Connor@parliament.govt.nz",                c:'#D82A20'},
   'Ōtaki':                 {n:'Tim Costley',                 p:'National',       e:'Tim.Costley@parliament.govt.nz',                  c:'#00529F'},
   'Pakuranga':             {n:'Simeon Brown',                p:'National',       e:'Simeon.Brown@parliament.govt.nz',                 c:'#00529F'},
   'Palmerston North':      {n:'Tangi Utikere',               p:'Labour',         e:'Tangi.Utikere@parliament.govt.nz',                c:'#D82A20'},
@@ -1034,6 +1119,33 @@ function regionFrom(lat, lng) {
   return 'Southland';
 }
 
+// Normalise ASCII electorate names (as returned by Stats NZ WFS GED2020_V1_00_NAME_ASCII)
+// to the macron-correct modern names used as keys in the MPs{} object.
+var GED_NAME_FIX = {
+  'Ikaroa-Rawhiti':   'Ikaroa-Rāwhiti',
+  'Kaikoura':         'Kaikōura',
+  'Mangere':          'Māngere',
+  'Ohariu':           'Ōhāriu',
+  'Otaki':            'Ōtaki',
+  'Rangitikei':       'Rangitīkei',
+  'Tamaki':           'Tāmaki',
+  'Taupo':            'Taupō',
+  'Te Atatu':         'Te Atatū',
+  'Te Tai Hauauru':   'Te Tai Hauāuru',
+  'Whangarei':        'Whangārei',
+  'Whangaraoa':       'Whangaparāoa',
+  // 2014→2020 renamed electorates (old ASCII names that may still appear)
+  'Helensville':      'Kaipara ki Mahurangi',
+  'Hunua':            'Takanini',
+  'Manukau East':     'Panmure-Ōtāhuhu',
+  'Port Hills':       'Banks Peninsula',
+  'Rimutaka':         'Remutaka',
+  'Rodney':           'Whangaparāoa',
+  'Clutha-Southland': 'Southland',
+  'Dunedin North':    'Dunedin',
+  'Dunedin South':    'Dunedin',
+};
+
 async function getElectorates(minLng, minLat, maxLng, maxLat) {
   var bbox = minLat + ',' + minLng + ',' + maxLat + ',' + maxLng + ',urn:ogc:def:crs:EPSG::4326';
   var url = STATS_WFS + '?service=WFS&version=2.0.0&request=GetFeature&typeNames=layer-104580&outputFormat=application/json&propertyName=GED2020_V1_00_NAME_ASCII&BBOX=' + bbox;
@@ -1044,20 +1156,29 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
     var names = [];
     (data.features||[]).forEach(function(f) {
       var n = f.properties && f.properties.GED2020_V1_00_NAME_ASCII;
-      if (n && names.indexOf(n) === -1) names.push(n);
+      if (n) {
+        n = GED_NAME_FIX[n] || n; // normalise ASCII→macron and old→new names
+        if (names.indexOf(n) === -1) names.push(n);
+      }
     });
     return names.slice(0, 4);
   } catch(e) { return null; }
 }
 
-function gstyle(sec, hover, sel) {
+function gstyle(sec, leg, hover, sel) {
   var fill;
-  if (sec === 'S19_CONSERVATION_PARK' || sec === 'S18_FOREST_PARK') fill = '#8B1A0A';
-  else if (sec === 'S25_STEWARDSHIP_AREA') fill = '#C0392B';
-  else if (sec === 'S17_SCENIC_RESERVE' || sec === 'S17_RECREATION_RESERVE') fill = '#E67E22';
-  else if (sec === 'S17_HISTORIC_RESERVE' || sec === 'S17_SCIENTIFIC_RESERVE') fill = '#9B59B6';
+  var s = (sec || '').toUpperCase();
+  var l = (leg || '');
+  if (s === 'S19_CONSERVATION_PARK' || s === 'S18_FOREST_PARK') fill = '#8B1A0A';
+  else if (s === 'S25_STEWARDSHIP_AREA') fill = '#C0392B';
+  else if (l === 'RESERVES_ACT') {
+    if (s.indexOf('SCENIC') > -1) fill = '#E67E22';
+    else if (s.indexOf('RECREATION') > -1) fill = '#D4880A';
+    else if (s.indexOf('HISTORIC') > -1 || s.indexOf('SCIENTIFIC') > -1) fill = '#9B59B6';
+    else fill = '#E67E22';
+  }
   else fill = '#E67E22';
-  var op   = hover ? 0.75 : 0.5;
+  var op = hover ? 0.75 : 0.5;
   if (sel) { fill = '#E74C3C'; op = 0.9; }
   return { color: '#5A0A00', weight: sel ? 2 : 0.6, fillColor: fill, fillOpacity: op };
 }
@@ -1080,23 +1201,28 @@ function toggleL(name, btn) {
 }
 
 function addFeature(f) {
+  // Client-side Schedule 5 exclusions that can't easily be done in the API query:
+  // 1. Hauraki Gulf island bbox (cl.13) — except Mercury Islands exceptions
+  // 2. Two named scenic reserves (cl.8)
+  if (isIslandExcluded(f) || isNamedExclusion(f)) return;
   var p   = f.properties || {};
   var sec = p.Section || '';
-  var lbl = SLABELS[sec] || sec || 'Other';
+  var leg = p.Legislation || '';
+  var lbl = sectionLabel(sec, leg);
   secCounts[lbl] = (secCounts[lbl] || 0) + 1;
   try {
     var gl = L.geoJSON(f, {
-      style: function(){ return gstyle(sec, false, false); },
+      style: function(){ return gstyle(sec, leg, false, false); },
       onEachFeature: function(feat, layer) {
         layer.on('click', function() {
-          if (selLyr) try { selLyr.setStyle(gstyle(selLyr._sec, false, false)); } catch(e) {}
-          layer.setStyle(gstyle(sec, false, true));
+          if (selLyr) try { selLyr.setStyle(gstyle(selLyr._sec, selLyr._leg, false, false)); } catch(e) {}
+          layer.setStyle(gstyle(sec, leg, false, true));
           layer.bringToFront();
-          selLyr = layer; selLyr._sec = sec;
-          showInfo(feat.properties, sec);
+          selLyr = layer; selLyr._sec = sec; selLyr._leg = leg;
+          showInfo(feat.properties, sec, leg);
         });
-        layer.on('mouseover', function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, true, false)); });
-        layer.on('mouseout',  function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, false, false)); });
+        layer.on('mouseover', function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, leg, true, false)); });
+        layer.on('mouseout',  function(){ if (layer !== selLyr) layer.setStyle(gstyle(sec, leg, false, false)); });
       }
     });
     gl.addTo(LG.risk);
@@ -1104,9 +1230,9 @@ function addFeature(f) {
   } catch(e) {}
 }
 
-async function showInfo(p, sec) {
+async function showInfo(p, sec, leg) {
   var name = p.Name || p.name || 'Unnamed area';
-  var lbl  = SLABELS[sec] || sec || 'Unknown';
+  var lbl  = sectionLabel(sec, leg || p.Legislation || '');
   var ha   = p.Recorded_Area ? Math.round(p.Recorded_Area).toLocaleString() + ' ha'
            : (p.Shape__Area  ? Math.round(p.Shape__Area / 10000).toLocaleString() + ' ha' : null);
   document.getElementById('map-empty').style.display = 'none';
@@ -1145,10 +1271,11 @@ async function showInfo(p, sec) {
     elNames = REG_EL[region] || ['Kaikōura'];
   }
 
-  var bills = ['Conservation Amendment Bill 2026','Fisheries Amendment Bill 2026','Fast-track Approvals Act 2024'];
+  var bills = ['Conservation Amendment Bill 2026','Crown Minerals Amendment Act 2024','Fisheries Amendment Bill 2026','Fast-track Approvals Act 2024'];
   var allVotes = {
     'Conservation Amendment Bill 2026':{ 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
     'Fisheries Amendment Bill 2026':   { 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR (partial U-turn on size limits)'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
+    'Crown Minerals Amendment Act 2024':{ 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
     'Fast-track Approvals Act 2024':   { 'National':{for:true,lbl:'Voted FOR'},'ACT':{for:true,lbl:'Voted FOR'},'NZ First':{for:true,lbl:'Voted FOR'},'Labour':{for:false,lbl:'Voted AGAINST'},'Green':{for:false,lbl:'Voted AGAINST'},'Te Pāti Māori':{for:false,lbl:'Voted AGAINST'} },
   };
 
@@ -1161,7 +1288,7 @@ async function showInfo(p, sec) {
       return '<div class="vote-line"><span class="vi">' + (v.for ? '❌' : '✅') + '</span><span style="flex:1"><span style="color:var(--ink2)">' + bill + '</span><br><span style="color:' + (v.for ? '#8B1A0A' : 'var(--sage3)') + ';font-size:10px">' + v.lbl + '</span></span></div>';
     }).join('');
     var subj = 'Conservation Act Amendment Bill — ' + name;
-    var body = 'Dear ' + mp.n + ',\n\nI am writing about the Conservation Amendment Bill 2026 and its impact on ' + name + '.\n\n[add your reasons for writing your MP, e.g. concern about disposal, who makes the decision about disposal, etc]\n\nYours sincerely';
+    var body = 'Dear ' + mp.n + ',\n\nI am writing about the Conservation Amendment Bill 2026 and its impact on ' + name + '.\n\n[add your reasons for writing to your MP, e.g. concern about sale/lease, transparency, disclosure, notification, participation, etc]\n\nYours sincerely';
     var fullEmail = 'To: ' + mp.e + '\nSubject: ' + subj + '\n\n' + body;
     var taId = 'mp-email-' + i;
     return '<div class="mp-box" style="margin-bottom:10px">' +
@@ -1180,7 +1307,7 @@ async function showInfo(p, sec) {
   if (!mpHtml) mpHtml = '<p style="font-size:12px;color:var(--faint)">Electorate data unavailable.</p>';
   document.getElementById('ic-mp').innerHTML = mpHtml +
     '<p style="font-size:10px;color:var(--faint);margin-top:6px">Source: Stats NZ 2020 boundaries. Large areas may span additional electorates.</p>' +
-    '<a class="mbtn mbtn-ghost" href="https://www.parliament.nz/en/pb/sc/make-a-submission/" target="_blank" style="margin-top:8px">Parliament submission →</a>';
+    '<a class="mbtn mbtn-ghost" href="https://www3.parliament.nz/en/pb/sc/make-a-submission/document/54SCENV_SCF_BD7D0F89-D8CB-42F7-9C5F-08DEABEDA048/conservation-amendment-bill" target="_blank" style="margin-top:8px">Parliament submission →</a>';
 }
 
 function buildFilters() {
@@ -1227,24 +1354,128 @@ document.addEventListener('click', function(e) {
   }
 });
 
-// At-risk section codes under the Conservation Amendment Bill 2026
-// Excluded (not at risk): S20_WILDERNESS_AREA, S23_NATURE_RESERVE, National Parks (NPA)
-var AT_RISK_SECTIONS = [
+// Schedule 5 of the Conservation Amendment Bill 2026 — Land INELIGIBLE for exchange/disposal:
+// Conservation Act: wilderness areas (s.18AA/18(1)(a)), ecological areas (b), sanctuary areas (c)
+// National Parks Act: national parks
+// Reserves Act: national reserves (s.13), nature reserves (s.20), SCIENTIFIC reserves (s.21),
+//               wilderness areas (s.47(1))
+// Marine Reserves Act: marine reserves (s.4(1))
+// Wildlife Act: wildlife sanctuaries (s.9(1))
+// Ramsar wetlands
+// Otahu Dedicated Area, Parakawai Geological Area
+// ALL conservation land on islands in bbox lat 35°50'S–37°10'S, lon 174°35'E–177°E
+//   EXCEPT: Red Mercury (Whakau), Ātiu/Middle, Green, Korapuki islands
+
+// Conservation Act at-risk section codes (ecological areas & sanctuary areas are INELIGIBLE per Sch 5)
+var CA_AT_RISK_SECTIONS = [
   'S19_CONSERVATION_PARK','S18_FOREST_PARK','S25_STEWARDSHIP_AREA',
-  'S7_CONSERVATION_PURPOSES','S21_ECOLOGICAL_AREA','S22_SANCTUARY_AREA',
-  'S17_SCENIC_RESERVE','S17_RECREATION_RESERVE','S17_HISTORIC_RESERVE',
-  'S17_SCIENTIFIC_RESERVE','S17_GOVERNMENT_PURPOSE_RESERVE',
+  'S7_CONSERVATION_PURPOSES',
   'S24_1_2_MOVEABLE_MARGINAL_STRIP','S24_3_FIXED_MARGINAL_STRIP'
 ];
 
+// Reserves Act: include scenic (s.17), recreation (s.18), historic (s.19), govt purpose (s.23) reserves
+// EXCLUDE: nature reserves (s.20), scientific reserves (s.21), national reserves (s.13),
+//          wilderness areas within reserves (s.47), marine reserves
+var RA_EXCLUDED_SECTIONS = [
+  'S26_NATURE_RESERVE','NATURE_RESERVE',
+  'S21_SCIENTIFIC_RESERVE','SCIENTIFIC_RESERVE','SCIENTIFIC',
+  'S13_NATIONAL_RESERVE','NATIONAL_RESERVE',
+  'S47_WILDERNESS_AREA',
+  'MARINE_RESERVE'
+];
+
+// Hauraki Gulf island exclusion bbox from Schedule 5 cl.13
+// lat 35°50'S = -35.833, lat 37°10'S = -37.167, lon 174°35'E = 174.583, lon 177°E = 177.0
+// All conservation land in this bbox is ineligible EXCEPT the 4 named Mercury Islands
+var ISLAND_BBOX = { minLat: -37.167, maxLat: -35.833, minLng: 174.583, maxLng: 177.0 };
+// Mercury Islands exception (these 4 ARE eligible): Red Mercury/Whakau, Ātiu/Middle, Green, Korapuki
+// We can't easily filter by island name in the API, so we filter client-side in addFeature()
+var MERCURY_EXCEPTIONS = [
+  'red mercury','whakau','ātiu','middle island','green island','korapuki',
+  'coromandel',
+  // Mainland areas wrongly caught by Hauraki Gulf bbox:
+  'turanga creek','pakuranga creek','pakuranga highway','tamaki river',
+  'whakatiri','mātaitai forest','mātaitai scenic','te morehu',
+  'richardson scenic','landels bush','wairoa gorge','plows road',
+  'mangatāwhiri forest','mangatāwhiri','vining scenic','vining'
+];
+
+function isIslandExcluded(feat) {
+  // Returns true if this feature falls in the Hauraki Gulf island exclusion zone
+  // and is NOT one of the 4 Mercury Island exceptions
+  try {
+    var coords = feat.geometry && feat.geometry.coordinates;
+    if (!coords) return false;
+    // Get centroid approximation from first coordinate ring
+    var ring = feat.geometry.type === 'Polygon' ? coords[0] :
+               feat.geometry.type === 'MultiPolygon' ? coords[0][0] : null;
+    if (!ring || !ring.length) return false;
+    var lngSum = 0, latSum = 0;
+    ring.forEach(function(c){ lngSum += c[0]; latSum += c[1]; });
+    var cLng = lngSum / ring.length, cLat = latSum / ring.length;
+    if (cLat >= ISLAND_BBOX.minLat && cLat <= ISLAND_BBOX.maxLat &&
+        cLng >= ISLAND_BBOX.minLng && cLng <= ISLAND_BBOX.maxLng) {
+      // Coromandel Peninsula mainland carve-out — not an island
+      var PENINSULA_BBOX = { minLat: -37.25, maxLat: -36.25, minLng: 175.35, maxLng: 176.0 };
+      if (cLat >= PENINSULA_BBOX.minLat && cLat <= PENINSULA_BBOX.maxLat &&
+          cLng >= PENINSULA_BBOX.minLng && cLng <= PENINSULA_BBOX.maxLng) return false;
+      // In bbox — check if it's a named exception
+      var name = ((feat.properties && feat.properties.Name) || '').toLowerCase();
+      var isMercuryException = MERCURY_EXCEPTIONS.some(function(e){ return name.indexOf(e) > -1; });
+      return !isMercuryException; // excluded unless it's an exception island
+    }
+  } catch(e) {}
+  return false;
+}
+
+// Two specific named scenic reserves are also ineligible per Sch 5 cl.8:
+// Kaikoura Island Scenic Reserve and Rakitu Island Scenic Reserve
+var NAMED_EXCLUSIONS = [
+  'kaikoura island scenic reserve','rakitu island scenic reserve',
+  // RAMSAR wetlands — internationally protected, not eligible for disposal:
+  'whangamarino wetland management reserve',
+  'whangamarino government purpose reserve',
+  'kopuatai wetland management reserve',
+  'marginal strip - manawatu estuary',
+  'lake wairarapa wetland conservation area',
+  'foxton conservation area',
+  'foxton harbour improvements reserve'
+];
+function isNamedExclusion(feat) {
+  var name = ((feat.properties && feat.properties.Name) || '').toLowerCase();
+  return NAMED_EXCLUSIONS.some(function(e){ return name.indexOf(e) > -1; });
+}
+
+
+
 async function loadDOC() {
-  document.getElementById('map-ovmsg').textContent = 'Loading Conservation Act polygons…';
+  document.getElementById('map-ovmsg').textContent = 'Loading at-risk conservation land…';
   var offset = 0, pages = 0;
   try {
     while (pages < 15) {
-      var sectionFilter = AT_RISK_SECTIONS.map(function(s){ return "Section='" + s + "'"; }).join(' OR ');
+      // Two-part filter:
+      // 1. Conservation Act land — filter by known at-risk section codes
+      // 2. Reserves Act land — include all (scenic, recreation, historic, scientific, govt purpose)
+      //    but exclude nature reserves which are not eligible for disposal
+      // Conservation Act at-risk sections
+      var caFilter = CA_AT_RISK_SECTIONS.map(function(s){ return "Section='" + s + "'"; }).join(' OR ');
+      // Reserves Act: exclude nature, scientific, national reserves and marine reserves by Section
+      var raExclude = RA_EXCLUDED_SECTIONS.map(function(s){ return "Section<>'" + s + "'"; }).join(' AND ');
+      // Also exclude ecological/sanctuary areas from Conservation Act (they're in Sch 5)
+      var NAMED_INCLUSIONS = []; // Ramsar wetlands removed — now excluded via isNamedExclusion
+      var namedInclude = NAMED_INCLUSIONS.map(function(n){ return "Name='" + n + "'"; }).join(' OR ');
+      var combinedWhere =
+        "(Legislation='CONSERVATION_ACT' AND (" + caFilter + "))" +
+        " OR " +
+        "(Legislation='RESERVES_ACT' AND " + raExclude +
+          " AND Section<>'S20_WILDERNESS_AREA'" +
+          " AND (Name NOT LIKE '%Marine Reserve%')" +
+          " AND (Name NOT LIKE '%Nature Reserve%')" +
+          " AND (Name NOT LIKE '%Scientific Reserve%')" +
+        ")" +
+        " OR (" + namedInclude + ")";
       var params = new URLSearchParams({
-        where: "(Legislation='CONSERVATION_ACT') AND (" + sectionFilter + ")",
+        where: combinedWhere,
         outFields: 'Name,Section,Legislation,Recorded_Area,Shape__Area',
         returnGeometry: 'true', f: 'geojson', outSR: '4326', geometryPrecision: '5',
         resultRecordCount: '1000', resultOffset: String(offset)
@@ -1295,8 +1526,107 @@ function loadFallback() {
 // ═══════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════
+// FACTS & FIGURES SIDEBAR
+// ═══════════════════════════════════════════════════════════════
+function renderFactsSidebar() {
+  var posts = (blogCache.facts || []).slice().sort(function(a,b){ return b.id - a.id; });
+  var el = document.getElementById('facts-sidebar');
+  if (!el) return;
+  el.innerHTML = posts.map(function(p) {
+    return '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">' +
+      '<div style="font-size:10px;color:var(--faint)">' + p.date + '</div>' +
+      '<a href="#" onclick="document.getElementById('facts-post-' + p.id + '').scrollIntoView({behavior:'smooth'});return false;" style="font-size:12px;color:var(--sage3);text-decoration:none;line-height:1.4;display:block">' + p.title + '</a>' +
+      '</div>';
+  }).join('') || '<p style="font-size:12px;color:var(--faint)">No posts yet.</p>';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RESOURCES PAGE — upload & render
+// ═══════════════════════════════════════════════════════════════
+var resourcesCache = null;
+var RESOURCES_KEY = 'meta/resources.json';
+
+async function loadResources() {
+  try {
+    var res = await fetch(apiUrl('get', RESOURCES_KEY));
+    resourcesCache = res.ok ? await res.json() : [];
+  } catch(e) { resourcesCache = []; }
+  renderResources();
+}
+
+function renderResources() {
+  var el = document.getElementById('resources-grid');
+  if (!el) return;
+  var items = resourcesCache || [];
+  if (!items.length) {
+    el.innerHTML = '<p style="font-size:14px;color:var(--mid);grid-column:1/-1">No resources uploaded yet.</p>';
+    return;
+  }
+  el.innerHTML = items.map(function(r) {
+    return '<div style="border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;display:flex;flex-direction:column">' +
+      '<a href="' + r.url + '" target="_blank" style="display:flex;align-items:center;justify-content:center;height:120px;background:var(--paper);text-decoration:none;font-size:48px">' +
+      (r.name.endsWith('.pdf') ? '📄' : r.name.endsWith('.docx')||r.name.endsWith('.doc') ? '📝' : r.name.endsWith('.xlsx') ? '📊' : '📁') +
+      '</a>' +
+      '<div style="padding:12px;flex:1;display:flex;flex-direction:column;gap:6px">' +
+      '<div style="font-size:12px;font-weight:600;color:var(--ink2);word-break:break-word">' + (r.desc || r.name) + '</div>' +
+      '<div style="font-size:10px;color:var(--faint)">' + r.date + ' · ' + r.name + '</div>' +
+      (isAdmin() ? '<button onclick="delResource('' + r.id + '')" style="margin-top:auto;font-size:10px;color:#c0392b;background:none;border:none;cursor:pointer;text-align:left">Delete</button>' : '') +
+      '</div></div>';
+  }).join('');
+}
+
+async function handleResourceDrop(event) {
+  event.preventDefault();
+  event.currentTarget.style.borderColor = 'var(--border)';
+  if (!isAdmin()) { toast('Sign in as admin to upload.'); return; }
+  var files = event.dataTransfer.files;
+  if (files.length) await uploadResource(files[0]);
+}
+
+async function handleResourceUpload(files) {
+  if (!isAdmin()) { toast('Sign in as admin to upload.'); return; }
+  if (files.length) await uploadResource(files[0]);
+}
+
+async function uploadResource(file) {
+  var desc = document.getElementById('res-desc') ? document.getElementById('res-desc').value.trim() : '';
+  toast('Uploading ' + file.name + '…');
+  var form = new FormData();
+  form.append('file', file, file.name);
+  form.append('name', file.name);
+  try {
+    var res = await fetch(apiUrl('upload', null, 'resources/' + file.name), { method:'POST', body: form });
+    if (!res.ok) throw new Error('Upload failed');
+    var data = await res.json();
+    var item = { id: Date.now(), name: file.name, url: data.url || apiUrl('get','resources/'+file.name), desc: desc, date: new Date().toISOString().slice(0,10) };
+    resourcesCache = (resourcesCache || []).concat([item]);
+    await saveResources();
+    renderResources();
+    toast('Uploaded: ' + file.name);
+    if (document.getElementById('res-desc')) document.getElementById('res-desc').value = '';
+  } catch(e) { toast('Upload failed: ' + e.message); }
+}
+
+async function saveResources() {
+  var blob = new Blob([JSON.stringify(resourcesCache)], { type:'application/json' });
+  var form = new FormData();
+  form.append('file', blob, 'resources.json');
+  form.append('name', 'resources.json');
+  await fetch(apiUrl('upload', null, RESOURCES_KEY), { method:'POST', body: form });
+}
+
+async function delResource(id) {
+  if (!confirm('Delete this resource?')) return;
+  resourcesCache = (resourcesCache||[]).filter(function(r){ return String(r.id) !== String(id); });
+  await saveResources();
+  renderResources();
+  toast('Deleted.');
+}
+
 checkSavedPassword();
-Promise.all([loadPhotos(), loadStories(), loadBlogs()]).then(function() {
+Promise.all([loadPhotos(), loadStories(), loadBlogs(), loadResources()]).then(function() {
   renderStories();
   updateSideStats();
 });
