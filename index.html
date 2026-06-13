@@ -186,20 +186,20 @@ body:not(.is-admin) .admin-only{display:none!important;}
 
 <!--
   CHANGE 8 — Nav tab symbol options (swap the emoji in the nav links above):
-  🌿 Conservation Map:  also try 🗺️  🏔️  🌲  🦅  📍  🌄
-  🙋 About Me:          also try 👤  🌱  ✍️  💬  🙂
-  📓 Blog:              also try 📝  💭  🗒️  ✏️
-  📊 Facts & Figures:   also try 📈  🔢  📋  🧮  📉
-  📁 Resources:         also try 📚  📥  🗂️  📎  🔗
+  Conservation Map:  also try 🗺️  🏔️  🌲  🦅  📍  🌄
+  About Me:          also try 👤  🌱  ✍️  💬  🙂
+  Blog:              also try 📝  💭  🗒️  ✏️
+  Facts & Figures:   also try 📈  🔢  📋  🧮  📉
+  Resources:         also try 📚  📥  🗂️  📎  🔗
 -->
 <nav>
   <div class="nav-brand">Local Matters</div>
   <div class="nav-main">
-    <a href="#" onclick="nav('act')"        id="nl-act"       class="on">🌿 Conservation Map</a>
-    <a href="#" onclick="nav('home')"        id="nl-home">🙋 About Me</a>
-    <a href="#" onclick="nav('blog')"        id="nl-blog">📓 Blog</a>
-    <a href="#" onclick="nav('facts')"       id="nl-facts">📊 Facts &amp; Figures</a>
-    <a href="#" onclick="nav('resources')"   id="nl-resources">📁 Resources</a>
+    <a href="#" onclick="nav('act')"        id="nl-act"       class="on">Conservation Map</a>
+    <a href="#" onclick="nav('home')"        id="nl-home">About Me</a>
+    <a href="#" onclick="nav('blog')"        id="nl-blog">Blog</a>
+    <a href="#" onclick="nav('facts')"       id="nl-facts">Facts &amp; Figures</a>
+    <a href="#" onclick="nav('resources')"   id="nl-resources">Resources</a>
   </div>
   <div class="admin-badge" id="admin-badge">
     <span class="admin-dot"></span><span>Admin</span>
@@ -273,7 +273,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
     <div class="page" id="pg-blog">
       <div class="blog-wrap">
         <h2>Blog</h2>
-        <p class="sub">Personal notes and reflections</p>
+        <p class="sub">Day-to-day notes on what I am learning about the Conservation Act Amendment Bill</p>
         <div class="new-post-box admin-only">
           <h4>New post</h4>
           <input class="field" type="text" id="bp-title" placeholder="Title…">
@@ -287,12 +287,22 @@ body:not(.is-admin) .admin-only{display:none!important;}
     <!-- CONSERVATION MAP PAGE -->
     <div class="page on" id="pg-act">
       <div class="act-header">
-        <h2>Conservation Map</h2>
-        <p>Sixty percent of our conservation land is at risk. This map shows you which areas, which MPs represent them, and how those MPs have voted on the environment. Click a place you love — their contact details are on the right. Phone users: turn your screen horizontal. Below the map is what I’m learning as I dig into the politicians’ claims about why this land should go.</p>
+        <h2>Conservation Land is OUR land</h2>
+        <p style="font-size:15px;font-weight:500;color:rgba(255,255,255,.95);margin-bottom:8px"><em>60% of our conservation land is at risk of being sold off or leased. This government is putting (foreign) companies and short-term payouts over our people and places.</em></p>
+        <p style="margin-bottom:6px">Protect New Zealand's Conservation Land by writing to Parliament and your local MP. Simply click on the link. It only takes 5 minutes.</p>
+        <p style="margin-bottom:6px">It doesn't matter who you vote for, or where you come from, our Conservation Land is part of who I am, you are — we are.</p>
+        <p style="margin-bottom:10px">This map shows which areas are at-risk, which MPs represent them, and how those MPs have voted on the environment so that you can write to them and let them know this is not okay.</p>
+        <p style="font-size:14px;font-weight:700;color:var(--leaf);margin-bottom:6px">Act Now</p>
+        <ol style="margin:0 0 10px 20px;font-size:13px;line-height:1.9;color:rgba(255,255,255,.8)">
+          <li>Click a place you love or where you come from</li>
+          <li>Find their contact details on the right. Click to send an email.</li>
+          <li>Copy and paste and/or just tell them how you feel. And if it will affect your vote. This is what matters to them.</li>
+        </ol>
+        <p style="font-size:12px;color:rgba(255,255,255,.55);font-style:italic">Phone users: if you are using your phone turn your screen horizontal. Below the map is how I made the map and what I am learning about specific places at risk. Write me if you think I am missing something or have something wrong.</p>
         <div class="act-vote">
           <div class="avb for"><div class="vn">68</div><div class="vl">Voted FOR bill<br>Nat · ACT · NZ First</div></div>
           <div class="avb against"><div class="vn">54</div><div class="vl">Voted AGAINST<br>Labour · Green · TPM</div></div>
-          <div class="avb note" style="background:rgba(254,249,195,.15);"><div class="vn" style="font-size:11px;margin-top:2px;color:#FEF9C3;font-weight:600">Submission<br>deadline<br>2 July 2026</div></div>
+          <div class="avb note"><div class="vn">📅</div><div class="vl">Submission deadline<br>2 July 2026</div></div>
         </div>
         <div class="hero-wallpaper" aria-hidden="true">
           <span>Denniston Plateau</span><span>(drilling for coal)</span>
@@ -357,8 +367,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
         </div>
       </div>
       <div class="act-blog-wrap blog-wrap">
-        <h3 style="font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:6px">What I'm learning</h3>
-        <p class="sub">Day-to-day notes on the Conservation Amendment Bill</p>
+        <h3 style="font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:6px">About the map</h3>
         <div class="new-post-box admin-only">
           <h4>Add a note</h4>
           <input class="field" type="text" id="act-title" placeholder="Title…">
@@ -423,7 +432,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
   <div class="side-col">
     <div>
       <div class="side-h">Things that matter to me</div>
-      <a href="#" onclick="nav('act');return false;" class="side-link">🌿 Conservation Map<small>Tracking the amendment bill</small></a>
+      <a href="#" onclick="nav('act');return false;" class="side-link">Conservation Map<small>Tracking the amendment bill</small></a>
       <a href="https://www.forestandbird.org.nz" target="_blank" class="side-link">🦅 Forest &amp; Bird NZ</a>
       <a href="https://fmc.org.nz" target="_blank" class="side-link">🥾 Federated Mountain Clubs</a>
       <a href="https://www3.parliament.nz/en/pb/sc/make-a-submission/document/54SCENV_SCF_BD7D0F89-D8CB-42F7-9C5F-08DEABEDA048/conservation-amendment-bill" target="_blank" class="side-link">✍️ Make a submission<small>Parliament NZ</small></a>
