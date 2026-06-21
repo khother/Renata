@@ -41,13 +41,13 @@ nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:5000;backgro
 .page{display:none;}
 .page.on{display:block;}
 /* HOME */
-.home-hero{background:linear-gradient(135deg,var(--moss) 0%,var(--sage) 60%,var(--sage2) 100%);color:#fff;padding:60px 52px 52px;position:relative;overflow:hidden;}
+.home-hero{background:linear-gradient(135deg,rgba(20,45,15,.80) 0%,rgba(46,74,38,.66) 55%,rgba(74,103,65,.55) 100%),url("/.netlify/functions/photos?action=get&key=2023%2F1780189679920-Ruapehu_1_2023.JPG") center/cover no-repeat;color:#fff;padding:60px 52px 52px;position:relative;overflow:hidden;}
 .home-hero h1{font-family:var(--serif);font-size:clamp(36px,5vw,56px);font-weight:600;line-height:1.15;margin-bottom:12px;}
 .home-hero h1 em{font-style:italic;font-weight:400;color:var(--leaf);}
 .home-hero p{font-size:15px;color:rgba(255,255,255,.7);max-width:480px;line-height:1.7;font-weight:300;}
 /* WALLPAPER STRIP */
 .hero-wallpaper{position:absolute;top:0;right:0;bottom:0;width:220px;display:flex;flex-direction:column;justify-content:center;padding:16px 18px;pointer-events:none;overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.45) 28%,rgba(0,0,0,.45) 100%);}
-.hero-wallpaper span{display:block;font-family:var(--serif);font-size:11px;color:rgba(255,255,255,.18);line-height:1.9;letter-spacing:.2px;white-space:nowrap;}
+.hero-wallpaper span{display:block;font-family:var(--serif);font-size:11px;font-weight:600;color:rgba(255,255,255,.26);line-height:1.9;letter-spacing:.2px;white-space:nowrap;}
 .stories-main{padding:40px 52px;position:relative;overflow:hidden;}
 .stories-wallpaper{position:absolute;top:0;right:0;bottom:0;width:200px;display:flex;flex-direction:column;justify-content:flex-start;padding:40px 18px;pointer-events:none;overflow:hidden;mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.6) 30%,rgba(0,0,0,.6) 100%);}
 .stories-wallpaper span{display:block;font-family:var(--serif);font-size:11px;color:rgba(74,103,65,.22);line-height:2.0;letter-spacing:.2px;white-space:nowrap;}
@@ -214,42 +214,8 @@ body:not(.is-admin) .admin-only{display:none!important;}
         <h1>My <em>local</em> matters.</h1>
         <p>My name is Kerren. And these are the places (and people) I love. I started this site to raise awareness on how we can protect New Zealand's conservation lands.</p>
         <p style="font-size:15px;color:rgba(255,255,255,.85);max-width:680px;line-height:1.8;font-weight:300;margin-top:14px;font-style:italic;border-left:3px solid rgba(138,184,122,.6);padding-left:16px;"><strong style="font-style:normal;color:#8FBD5A">ALERT!</strong> Right now the government wants to change the why and the how of the Conservation Act. At present we, as the public, through conservation boards get a say in how our public lands are used. The proposed changes not only open public lands to ‘disposal’ (for commercial use) but also places that sometimes irreversible decision in the hands of one person — a politician. Our forests, mountains and rivers deserve a more thoughtful approach. Toitū te whenua.</p>
-        <div class="hero-wallpaper" aria-hidden="true">
-          <span>Denniston Plateau</span><span>(drilling for coal)</span>
-          <span>Te Kuha</span><span>(open-cast coal mine)</span>
-          <span>Waitaha River</span><span>(damming)</span>
-          <span>Reefton native forest</span><span>(coal)</span>
-          <span>Victoria (gold)</span>
-          <span>Te Waahīpounamu</span><span>(gold and coal)</span>
-          <span>Mt Aspiring (tungsten)</span>
-          <span>Coromandel (gold)</span>
-          <span>Rotorua (lithium)</span>
-          <span>Denniston Plateau</span><span>(drilling for coal)</span>
-          <span>Te Kuha</span><span>(open-cast coal mine)</span>
-          <span>Waitaha River</span><span>(damming)</span>
-        </div>
       </div>
       <div class="stories-main">
-        <div class="stories-wallpaper" aria-hidden="true">
-          <span>Denniston Plateau</span><span>(drilling for coal)</span>
-          <span>Te Kuha</span><span>(open-cast coal mine)</span>
-          <span>Waitaha River (damming)</span>
-          <span>Reefton native forest</span><span>(coal)</span>
-          <span>Victoria (gold)</span>
-          <span>Te Waahīpounamu</span><span>(gold and coal)</span>
-          <span>Mt Aspiring (tungsten)</span>
-          <span>Coromandel (gold)</span>
-          <span>Rotorua (lithium)</span>
-          <span>Denniston Plateau</span><span>(drilling for coal)</span>
-          <span>Te Kuha</span><span>(open-cast coal mine)</span>
-          <span>Waitaha River (damming)</span>
-          <span>Reefton native forest</span><span>(coal)</span>
-          <span>Victoria (gold)</span>
-          <span>Te Waahīpounamu</span><span>(gold and coal)</span>
-          <span>Mt Aspiring (tungsten)</span>
-          <span>Coromandel (gold)</span>
-          <span>Rotorua (lithium)</span>
-        </div>
         <div class="upload-bar admin-only" onclick="document.getElementById('ph-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handleDrop(event)">
           <span style="font-size:24px;opacity:.5">📷</span>
           <p>Add photos<small>Drag & drop or click · Year auto-detected from filename</small></p>
@@ -297,7 +263,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
         <div class="act-vote">
           <div class="avb for"><div class="vn">68</div><div class="vl">Voted FOR bill<br>Nat · ACT · NZ First</div></div>
           <div class="avb against"><div class="vn">54</div><div class="vl">Voted AGAINST<br>Labour · Green · TPM</div></div>
-          <div class="avb note"><div class="vn">&#x1F4C5;</div><div class="vl">Submission deadline<br>2 July 2026</div></div>
+          <div class="avb note"><div class="vn">&#x1F4C5;</div><div class="vl">Submission deadline<br>2 July 2026<br><strong id="submission-countdown" style="color:#8FBD5A;font-size:13px"></strong></div></div>
         </div>
         <p style="font-size:11px;color:rgba(255,255,255,.5);font-style:italic;margin-top:10px">Phone users: turn your screen horizontal.</p>
       </div>
@@ -855,7 +821,8 @@ document.addEventListener('keydown', function(e) {
 // BLOG — stored in Netlify Blobs
 // ═══════════════════════════════════════════════════════════════
 var blogCache = { personal: null, act: null, FAQs: null };
-var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json', FAQs: 'meta/blog-FAQs.json' };
+// FAQs feed keeps its original storage key so existing posts (e.g. the NZIER article) stay intact after the page was renamed from "Facts & Figures".
+var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json', FAQs: 'meta/blog-facts.json' };
 var BLOG_SEEDS = {
   personal: [{ id:1, title:'Why I started this site', date:'2026-05-10', body:'This is a place for me to share what I\'m seeing, thinking about, and caring about. The landscape, the birds, the politics — all of it.' }],
   act:      [{ id:1, title:'Bill introduced — 7 May 2026', date:'2026-05-07', body:'The Conservation Amendment Bill was introduced today. First reading passed 68\u201354 along coalition/opposition lines. The bill removes disposal protections from stewardship areas and opens conservation parks to commercial infrastructure.' }]
@@ -1611,7 +1578,7 @@ function renderResources() {
     el.innerHTML = '<p style="font-size:14px;color:var(--mid)">' + (admin ? 'No links yet — add one above.' : 'No resources added yet.') + '</p>';
     return;
   }
-  el.innerHTML = resourcesCache.map(function(r) {
+  el.innerHTML = resourcesCache.slice().reverse().map(function(r) {
     return '<div style="border-bottom:1px solid var(--border);padding:18px 0;display:flex;align-items:flex-start;gap:14px;">'
       + '<div style="font-size:26px;flex-shrink:0;margin-top:2px">🔗</div>'
       + '<div style="flex:1;">'
@@ -1657,6 +1624,22 @@ async function delResource(id) {
 // INIT
 // ═══════════════════════════════════════════════════════════════
 checkSavedPassword();
+
+// Countdown to the 2 July 2026 submission deadline, shown beside the date on the map page.
+function updateSubmissionCountdown() {
+  var el = document.getElementById('submission-countdown');
+  if (!el) return;
+  var now = new Date();
+  var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  var deadline = new Date(2026, 6, 2); // month is 0-indexed: 6 = July
+  var days = Math.round((deadline - today) / 86400000);
+  if (days > 1)       el.textContent = days + ' days to go';
+  else if (days === 1) el.textContent = '1 day to go';
+  else if (days === 0) el.textContent = 'Closes today';
+  else                 el.textContent = 'Submissions closed';
+}
+updateSubmissionCountdown();
+
 Promise.all([loadPhotos(), loadStories(), loadBlogs(), loadResources()]).then(function() {
   renderStories();
   updateSideStats();
