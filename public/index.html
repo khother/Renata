@@ -193,7 +193,7 @@ body:not(.is-admin) .admin-only{display:none!important;}
     <a href="#" onclick="nav('act')"   id="nl-act" class="on">Conservation Map</a>
     <a href="#" onclick="nav('home')"  id="nl-home">About Me</a>
     <a href="#" onclick="nav('blog')"  id="nl-blog">Blog</a>
-    <a href="#" onclick="nav('facts')" id="nl-facts">Facts &amp; Figures</a>
+    <a href="#" onclick="nav('FAQs')" id="nl-FAQs">FAQs &amp; Figures</a>
     <a href="#" onclick="nav('resources')" id="nl-resources">Resources</a>
   </div>
   <div class="admin-badge" id="admin-badge">
@@ -364,11 +364,11 @@ body:not(.is-admin) .admin-only{display:none!important;}
     </div>
 
 
-    <!-- FACTS & FIGURES PAGE -->
-    <div class="page" id="pg-facts">
+    <!-- FAQs & FIGURES PAGE -->
+    <div class="page" id="pg-FAQs">
       <div class="act-header">
-        <h2>FAQs</h2>
-        <p>Frequently asked questions and an attempt to pull together some basic facts.</p>
+        <h2>FAQs &amp; Figures</h2>
+        <p>Frequently asked questions and an attempt to pull together some basic FAQs &amp; Figures.</p>
         <div class="hero-wallpaper" aria-hidden="true">
           <span>Denniston Plateau</span><span>(drilling for coal)</span>
           <span>Te Kuha</span><span>(open-cast coal mine)</span>
@@ -387,13 +387,13 @@ body:not(.is-admin) .admin-only{display:none!important;}
             <h4>New post</h4>
             <input class="field" type="text" id="ff-title" placeholder="Title…">
             <textarea class="field" id="ff-body" placeholder="Write here…" style="min-height:120px"></textarea>
-            <button class="post-btn" onclick="addPost('facts')">Publish</button>
+            <button class="post-btn" onclick="addPost('FAQs')">Publish</button>
           </div>
-          <div class="blog-feed" id="facts-feed"></div>
+          <div class="blog-feed" id="FAQs-feed"></div>
         </div>
         <div style="width:220px;flex-shrink:0;border-left:1px solid var(--border);background:var(--surface);padding:28px 18px;">
           <div class="side-h">Posts</div>
-          <div id="facts-sidebar" style="font-size:12px;color:var(--mid);line-height:1.6"></div>
+          <div id="FAQs-sidebar" style="font-size:12px;color:var(--mid);line-height:1.6"></div>
         </div>
       </div>
     </div>
@@ -854,8 +854,8 @@ document.addEventListener('keydown', function(e) {
 // ═══════════════════════════════════════════════════════════════
 // BLOG — stored in Netlify Blobs
 // ═══════════════════════════════════════════════════════════════
-var blogCache = { personal: null, act: null, facts: null };
-var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json', facts: 'meta/blog-facts.json' };
+var blogCache = { personal: null, act: null, FAQs: null };
+var BLOG_KEYS = { personal: 'meta/blog-personal.json', act: 'meta/blog-act.json', FAQs: 'meta/blog-FAQs.json' };
 var BLOG_SEEDS = {
   personal: [{ id:1, title:'Why I started this site', date:'2026-05-10', body:'This is a place for me to share what I\'m seeing, thinking about, and caring about. The landscape, the birds, the politics — all of it.' }],
   act:      [{ id:1, title:'Bill introduced — 7 May 2026', date:'2026-05-07', body:'The Conservation Amendment Bill was introduced today. First reading passed 68\u201354 along coalition/opposition lines. The bill removes disposal protections from stewardship areas and opens conservation parks to commercial infrastructure.' }]
@@ -876,15 +876,15 @@ async function loadOneFeed(type) {
 }
 
 async function loadBlogs() {
-  var results = await Promise.all([loadOneFeed('personal'), loadOneFeed('act'), loadOneFeed('facts')]);
+  var results = await Promise.all([loadOneFeed('personal'), loadOneFeed('act'), loadOneFeed('FAQs')]);
   blogCache.personal = results[0];
   blogCache.act      = results[1];
-  blogCache.facts    = results[2];
+  blogCache.FAQs    = results[2];
   renderFeed('personal', 'blog-feed');
   renderFeed('act',      'act-feed');
-  renderFeed('facts',    'facts-feed');
+  renderFeed('FAQs',    'FAQs-feed');
   renderSideRecent();
-  renderFactsSidebar();
+  renderFAQsSidebar();
 }
 
 function renderFeed(type, elId) {
@@ -924,7 +924,7 @@ async function savePost(type, id, fid) {
   post.title = tEl.innerText.trim();
   post.body  = bEl.innerText.trim();
   renderSideRecent();
-  if (type === 'facts') renderFactsSidebar();
+  if (type === 'FAQs') renderFAQsSidebar();
   toast('Saving…', 2000);
   try { await saveFeed(type); toast('Saved'); }
   catch(e) { toast('Save failed: ' + e.message, 5000); }
@@ -944,10 +944,10 @@ async function saveFeed(type) {
 async function addPost(type) {
   if (!isAdmin()) { showPasswordModal(); return; }
   var isAct   = type === 'act';
-  var isFacts = type === 'facts';
-  var tid = isAct ? 'act-title' : isFacts ? 'ff-title'  : 'bp-title';
-  var bid = isAct ? 'act-body'  : isFacts ? 'ff-body'   : 'bp-body';
-  var fid = isAct ? 'act-feed'  : isFacts ? 'facts-feed': 'blog-feed';
+  var isFAQs = type === 'FAQs';
+  var tid = isAct ? 'act-title' : isFAQs ? 'ff-title'  : 'bp-title';
+  var bid = isAct ? 'act-body'  : isFAQs ? 'ff-body'   : 'bp-body';
+  var fid = isAct ? 'act-feed'  : isFAQs ? 'FAQs-feed': 'blog-feed';
   var title = document.getElementById(tid).value.trim();
   var body  = document.getElementById(bid).value.trim();
   if (!title || !body) { toast('Add a title and text first'); return; }
@@ -978,13 +978,13 @@ function renderSideRecent() {
   }
   var all = tag(blogCache.act,'act','act')
     .concat(tag(blogCache.personal,'personal','blog'))
-    .concat(tag(blogCache.facts,'facts','facts'))
+    .concat(tag(blogCache.FAQs,'FAQs','FAQs'))
     .sort(function(a,b){ return b.id - a.id; });
   var el = document.getElementById('side-recent');
   if (!el) return;
   el.innerHTML = all.length ? all.map(function(x){
-    var label = x._page === 'act' ? 'Map' : x._page === 'facts' ? 'Facts' : 'Blog';
-    var color = x._page === 'act' ? 'var(--sage3)' : x._page === 'facts' ? '#5a6e2a' : 'var(--mid)';
+    var label = x._page === 'act' ? 'Map' : x._page === 'FAQs' ? 'FAQs' : 'Blog';
+    var color = x._page === 'act' ? 'var(--sage3)' : x._page === 'FAQs' ? '#5a6e2a' : 'var(--mid)';
     return '<div style="margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border)">'
       + '<div style="font-size:10px;color:var(--faint)">' + x.date + ' &middot; <span style="color:' + color + '">' + label + '</span></div>'
       + '<a href="#" onclick="nav(\'' + x._page + '\');setTimeout(function(){var e=document.getElementById(\'' + x._type + '-' + x.id + '\');if(e)e.scrollIntoView({behavior:\'smooth\'});},300);return false;"'
@@ -1574,16 +1574,16 @@ function loadFallback() {
 
 
 // ══════════════════════════════════════
-// FACTS SIDEBAR
+// FAQs SIDEBAR
 // ══════════════════════════════════════
-function renderFactsSidebar() {
-  var posts = (blogCache.facts || []).slice().sort(function(a,b){ return b.id - a.id; });
-  var el = document.getElementById('facts-sidebar');
+function renderFAQsSidebar() {
+  var posts = (blogCache.FAQs || []).slice().sort(function(a,b){ return b.id - a.id; });
+  var el = document.getElementById('FAQs-sidebar');
   if (!el) return;
   el.innerHTML = posts.length ? posts.map(function(p) {
     return '<div style="margin-bottom:11px;padding-bottom:11px;border-bottom:1px solid var(--border)">'
       + '<div style="font-size:10px;color:var(--faint)">' + p.date + '</div>'
-      + '<a href="#" onclick="nav(\'facts\');setTimeout(function(){var e=document.getElementById(\'facts-' + p.id + '\');if(e)e.scrollIntoView({behavior:\'smooth\'});},300);return false;"'
+      + '<a href="#" onclick="nav(\'FAQs\');setTimeout(function(){var e=document.getElementById(\'FAQs-' + p.id + '\');if(e)e.scrollIntoView({behavior:\'smooth\'});},300);return false;"'
       + ' style="font-size:12px;color:var(--sage3);text-decoration:none;line-height:1.4;display:block">'
       + p.title + '</a></div>';
   }).join('') : '<p style="font-size:12px;color:var(--faint)">No posts yet.</p>';
