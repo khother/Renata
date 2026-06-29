@@ -10,8 +10,8 @@
 <meta property="og:description" content="Information and action on the Conservation Amendment Bill 2026.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mylocalmatters.org/">
-<meta property="og:image" content="https://mylocalmatters.org/assets/social-preview.jpg">
-<meta property="og:image:secure_url" content="https://mylocalmatters.org/assets/social-preview.jpg">
+<meta property="og:image" content="https://mylocalmatters.org/assets/social-preview.jpg?v=2">
+<meta property="og:image:secure_url" content="https://mylocalmatters.org/assets/social-preview.jpg?v=2">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="859">
 <meta property="og:image:height" content="408">
@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Local Matters">
 <meta name="twitter:description" content="Information and action on the Conservation Amendment Bill 2026.">
-<meta name="twitter:image" content="https://mylocalmatters.org/assets/social-preview.jpg">
+<meta name="twitter:image" content="https://mylocalmatters.org/assets/social-preview.jpg?v=2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -433,6 +433,10 @@ body:not(.is-admin) .admin-only{display:none!important;}
   </div><!-- /main-col -->
 
   <div class="side-col">
+    <div>
+      <a href="https://www.instagram.com/mylocalmatters/" target="_blank" rel="noopener" class="side-link">Instagram<small>@mylocalmatters</small></a>
+      <a href="https://www.facebook.com/profile.php?id=536805991" target="_blank" rel="noopener" class="side-link">Facebook<small>My Local Matters</small></a>
+    </div>
     <div>
       <div class="side-h">Things that matter to me</div>
       <a href="https://www.legislation.govt.nz/bill/government/2026/309/en/latest/" target="_blank" class="side-link">Conservation Act Amendment Bill<small>Legislation NZ</small></a>
@@ -1181,6 +1185,13 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
   } catch(e) { return null; }
 }
 
+function addRelatedElectorates(elNames) {
+  if (elNames.indexOf('Nelson') !== -1 || elNames.indexOf('West Coast-Tasman') !== -1) {
+    if (elNames.indexOf('Kaikōura') === -1) elNames.push('Kaikōura');
+  }
+  return elNames;
+}
+
 function gstyle(sec, leg, hover, sel) {
   var fill;
   var s = (sec || '').toUpperCase();
@@ -1286,6 +1297,7 @@ async function showInfo(p, sec, leg) {
     };
     elNames = REG_EL[region] || ['Kaikōura'];
   }
+  elNames = addRelatedElectorates(elNames);
 
   var bills = ['Conservation Amendment Bill 2026','Crown Minerals Amendment Act 2024','Fisheries Amendment Bill 2026','Fast-track Approvals Act 2024'];
   var allVotes = {
