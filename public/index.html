@@ -1184,6 +1184,13 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
   } catch(e) { return null; }
 }
 
+function addRelatedElectorates(elNames) {
+  if (elNames.indexOf('Nelson') !== -1 || elNames.indexOf('West Coast-Tasman') !== -1) {
+    if (elNames.indexOf('Kaikōura') === -1) elNames.push('Kaikōura');
+  }
+  return elNames;
+}
+
 function gstyle(sec, leg, hover, sel) {
   var fill;
   var s = (sec || '').toUpperCase();
@@ -1289,6 +1296,7 @@ async function showInfo(p, sec, leg) {
     };
     elNames = REG_EL[region] || ['Kaikōura'];
   }
+  elNames = addRelatedElectorates(elNames);
 
   var bills = ['Conservation Amendment Bill 2026','Crown Minerals Amendment Act 2024','Fisheries Amendment Bill 2026','Fast-track Approvals Act 2024'];
   var allVotes = {
