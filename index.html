@@ -1186,6 +1186,9 @@ async function getElectorates(minLng, minLat, maxLng, maxLat) {
 }
 
 function addRelatedElectorates(elNames) {
+  if ((elNames.indexOf('Rangitīkei') !== -1 || elNames.indexOf('Tukituki') !== -1) && elNames.indexOf('Wairarapa') === -1) {
+    elNames.push('Wairarapa');
+  }
   if (elNames.indexOf('Nelson') !== -1 || elNames.indexOf('West Coast-Tasman') !== -1) {
     if (elNames.indexOf('Kaikōura') === -1) elNames.push('Kaikōura');
   }
