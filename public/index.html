@@ -271,11 +271,11 @@ body:not(.is-admin) .admin-only{display:none!important;}
           <li>Find the local MPs contact details on the right.</li>
           <li>Click on “Copy the email” to copy and paste the message into an email to the local MP.</li>
           <li>Just tell them how you feel. And if it will affect your vote. This is what matters to them. And/or</li>
-          <li>Click on "Parliament Submission” to make a submission through the Parliament Submission Portal BEFORE 2 JULY </ol>
+          <li>Click on "Parliament Submission” to make a submission through the Parliament Submission Portal BEFORE 13 JULY </ol>
         <div class="act-vote">
           <div class="avb for"><div class="vn">68</div><div class="vl">Voted FOR bill<br>Nat · ACT · NZ First</div></div>
           <div class="avb against"><div class="vn">54</div><div class="vl">Voted AGAINST<br>Labour · Green · TPM</div></div>
-          <div class="avb note"><div class="vn">&#x1F4C5;</div><div class="vl">Submission deadline<br>2 July 2026<br><strong id="submission-countdown" style="color:#8FBD5A;font-size:13px"></strong></div></div>
+          <div class="avb note"><div class="vn">&#x1F4C5;</div><div class="vl">Submission deadline<br>13 July 2026<br><strong id="submission-countdown" style="color:#8FBD5A;font-size:13px"></strong></div></div>
         </div>
         <p style="font-size:11px;color:rgba(255,255,255,.5);font-style:italic;margin-top:10px">Phone users: turn your screen horizontal.</p>
       </div>
@@ -1649,13 +1649,13 @@ async function delResource(id) {
 // ═══════════════════════════════════════════════════════════════
 checkSavedPassword();
 
-// Countdown to the 2 July 2026 submission deadline, shown beside the date on the map page.
+// Countdown to the 13 July 2026 submission deadline, shown beside the date on the map page.
 function updateSubmissionCountdown() {
   var el = document.getElementById('submission-countdown');
   if (!el) return;
   var now = new Date();
   var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  var deadline = new Date(2026, 6, 2); // month is 0-indexed: 6 = July
+  var deadline = new Date(2026, 6, 13); // month is 0-indexed: 6 = July
   var days = Math.round((deadline - today) / 86400000);
   if (days > 1)       el.textContent = days + ' days to go';
   else if (days === 1) el.textContent = '1 day to go';
